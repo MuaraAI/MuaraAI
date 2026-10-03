@@ -87,6 +87,7 @@ Stores community member profiles, credentials, role hierarchies, and dues validi
 | `registration_status`| `text` | `'pending'` | `'pending'`, `'approved'`, `'rejected'` |
 | `is_active` | `boolean` | `true` | Active status. Set to `false` if dues are overdue >30 days |
 | `dues_valid_until` | `date` | - | Active validity date for paid community dues |
+| `total_commits` | `integer` | `0` | Aggregated commits across MuaraAI repositories |
 | `reviewed_by`| `uuid` | - | References `auth.users(id)` |
 | `reviewed_at`| `timestamptz` | - | Timestamp when approved/rejected |
 | `created_at` | `timestamptz` | `now()` | Registration timestamp |
@@ -180,7 +181,7 @@ Built with Server Components for optimal SEO and instant load speeds:
    - **Creative Hub**: Editorial-grade generative image and cinematic video productions.
 6. **The Craft Standard (Anti-Slop Manifesto)**:
    - Comparison matrix contrasting naive raw prompting vs. Muara AI agentic harnesses, test-driven pipelines, and verifiable outputs.
-7. **Member Hierarchy & The Syndicate (Roster)**:
+7. **Member Hierarchy & The Syndicate (Roster with Top Commits)**:
    - Structural explanation of the 4-layer meritocracy:
      - **Founder**: Yuken Velino (@Curzyori) - Architecture, strategy, and ecosystem direction.
      - **Co-Founders**: M Raffli Aldiansyah (@Seeyaa77) & Verzio (@MyKineID) - Core infrastructure & scraper engineering.
@@ -190,10 +191,11 @@ Built with Server Components for optimal SEO and instant load speeds:
    - Live query from `public.members` where `registration_status = 'approved'`.
    - Client-side category tab filter:
      - `All`: Shows all verified members.
+     - `Top Commits`: Leaderboard sorted descending by `total_commits` with `Top Committer` spotlight badge.
      - `Core Team`: Filter by `hierarchy = 'maintainer'`.
      - `Builder`: Filter by `division = 'builder'`.
      - `Creative`: Filter by `division = 'creative'`.
-   - Card displays: GitHub avatar, real name, primary `role_title`, badge list (`titles`), track, and GitHub/Portfolio links.
+   - Card displays: GitHub avatar, real name, primary `role_title`, badge list (`titles`), commit metric pill (e.g. `142 Commits`), track, and GitHub/Portfolio links.
 8. **Member Benefits (Keuntungan Bergabung)**:
    - Grid kartu benefit resmi:
      1. **GitHub Org Membership**: Akses kolaborasi di `github.com/MuaraAI` dengan branch permissions.
