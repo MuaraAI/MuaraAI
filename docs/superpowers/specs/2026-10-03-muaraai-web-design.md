@@ -165,18 +165,28 @@ Built with Server Components for optimal SEO and instant load speeds:
    - Subhead: Concrete statement defining Muara AI as an independent studio and research laboratory, rejecting passive theory.
    - Interactive Terminal / Live Code Component: Real-time cycling code snippet demonstrating agentic scraping, AES-256 vault generation, and pipeline tests.
    - Dual CTA: *"Explore Projects"* (smooth scroll) & *"Submit Proof-of-Work"*.
-3. **Live Metrics Bar**:
+3. **Live Metrics & Achievements**:
    - `116+` Automated Tests Passing (Offline & CI).
    - `6` University Services Aggregated.
    - `0%` AI-Slop (Zero uncurated generation allowed).
    - `100%` Open-Source & Independent.
-4. **The Hall of Projects (Showcase)**:
+   - Flagship production milestones (UBSI API v1.1 live, Ciel autonomous assistant).
+4. **Visi & Misi**:
+   - **Visi**: Menjadi muara ekosistem praktisi dan pengembang AI rekayasa terkemuka dari Kalimantan Barat yang menghasilkan karya berstandar global.
+   - **Misi**: Menegakkan disiplin software engineering ketat (anti-slop, TDD), memproduksi minimal satu rilis produk atau submission lomba per semester, dan menyediakan shared infrastructure bagi anggota.
+5. **The Hall of Projects (Showcase)**:
    - **UBSI API** (`v1.1.5`): Fast, secure REST aggregator with multi-tenant AES-256 credential vault.
    - **AI Bot Ciel**: Autonomous student agent with memory retention and WhatsApp ingest.
    - **Creative Hub**: Editorial-grade generative image and cinematic video productions.
-5. **The Craft Standard (Anti-Slop Manifesto)**:
+6. **The Craft Standard (Anti-Slop Manifesto)**:
    - Comparison matrix contrasting naive raw prompting vs. Muara AI agentic harnesses, test-driven pipelines, and verifiable outputs.
-6. **The Syndicate (Member Roster)**:
+7. **Member Hierarchy & The Syndicate (Roster)**:
+   - Structural explanation of the 4-layer meritocracy:
+     - **Founder**: Yuken Velino (@Curzyori) - Architecture, strategy, and ecosystem direction.
+     - **Co-Founders**: M Raffli Aldiansyah (@Seeyaa77) & Verzio (@MyKineID) - Core infrastructure & scraper engineering.
+     - **Division Heads**: Head of Builder & Head of Creative.
+     - **Project Leads**: Technical lead per active repository/initiative.
+     - **Members**: Builder (Code/Cloud/Agents) & Creative (Visual/Video/Copy).
    - Live query from `public.members` where `registration_status = 'approved'`.
    - Client-side category tab filter:
      - `All`: Shows all verified members.
@@ -184,17 +194,25 @@ Built with Server Components for optimal SEO and instant load speeds:
      - `Builder`: Filter by `division = 'builder'`.
      - `Creative`: Filter by `division = 'creative'`.
    - Card displays: GitHub avatar, real name, primary `role_title`, badge list (`titles`), track, and GitHub/Portfolio links.
-7. **Open Treasury Preview (Two Clean Metrics)**:
+8. **Member Benefits (Keuntungan Bergabung)**:
+   - Grid kartu benefit resmi:
+     1. **GitHub Org Membership**: Akses kolaborasi di `github.com/MuaraAI` dengan branch permissions.
+     2. **Muara Learn Knowledge Base**: Akses materi riset internal, prompt harnesses, dan rekaman arsitektur.
+     3. **Shared Compute & Resources**: Subsidi kuota compute/API untuk riset bersama.
+     4. **Kompetisi & Delegasi**: Biaya registrasi lomba/hackathon nasional didukung kas komunitas.
+     5. **Verified Portfolio Showcase**: Profil karya dipajang di domain resmi `muaraai.com`.
+9. **Open Treasury Preview (Two Clean Metrics)**:
    - Metric 1: **Total Kas Saat Ini** (Net balance: `SUM(income) - SUM(expense)`).
    - Metric 2: **Total Pengeluaran Kas** (`SUM(expense)`).
    - Subtitle: Transparent open-book note; dues management and payment forms are located within the Member Dashboard.
-8. **Join Flow Section**:
-   - 3-step timeline:
-     1. Authenticate with GitHub.
-     2. Submit verifiable repository or portfolio Proof of Work.
-     3. Receive automatic invitation to `github.com/MuaraAI` organization.
-9. **Footer**:
-   - MIT License disclosure, GitHub Org link, server health status indicator.
+10. **Join Flow Section**:
+    - 3-step timeline:
+      1. Authenticate with GitHub.
+      2. Submit verifiable repository or portfolio Proof of Work.
+      3. Receive automatic invitation to `github.com/MuaraAI` organization.
+11. **Footer & Compliance Links**:
+    - MIT License disclosure, GitHub Org link, server health status indicator.
+    - Legal routes: `/terms` (Terms of Service), `/privacy` (Privacy Policy), `/code-of-conduct` (Code of Conduct).
 
 ---
 
@@ -209,12 +227,12 @@ Built with Server Components for optimal SEO and instant load speeds:
      - Generates dynamic QRIS via Pakasir API.
      - Auto-polls or listens to Supabase Realtime for instant payment confirmation.
    - **Ledger History**: Public transparent table showing past incoming and outgoing transactions.
-3. **Multi-Project Vault (`/dashboard/vault`)**:
-   - Generate and manage API keys for UBSI API and AI Labs compute.
-4. **Muara Learn (`/dashboard/learn`)**:
+3. **Muara Learn (`/dashboard/learn`)**:
    - Feed of engineering and creative materials shared by maintainers.
    - Card displays: Title, description, optional cover image, division tag (`all`, `builder`, `creative`), and publication date.
    - **Click & Read Tracking**: When a member clicks the resource link (PDF / Google Drive / Notion / Repo), the client sends an audit event inserting a row into `public.learning_material_reads` with the exact server timestamp (`now()`), marking it as read.
+
+*(Note on Project API Keys: Vault & API Key generation are intentionally decoupled from `muaraai.com` and hosted directly inside each project's sub-domain, e.g. `ubsi-api.muaraai.com` and `ai.muaraai.com`, utilizing shared SSO sessions across `*.muaraai.com`)*
 
 ---
 
