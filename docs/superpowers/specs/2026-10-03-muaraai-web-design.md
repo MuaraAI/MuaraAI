@@ -106,6 +106,46 @@ Ledger of community cash flows (QRIS dues collected and operational expenses).
 | `payment_ref`| `text` | - | External payment reference (Pakasir order ID) |
 | `created_at` | `timestamptz` | `now()` | Creation timestamp |
 
+### 3.3 `public.learning_materials`
+Knowledge repository for internal syndicate engineering guides, decks, and research.
+
+| Column | Type | Default | Description |
+|---|---|---|---|
+| `id` | `uuid` (PK) | `gen_random_uuid()` | Unique material ID |
+| `title` | `text` | - | Headline title of the material |
+| `description`| `text` | - | Brief summary / context |
+| `cover_url` | `text` | - | Optional banner / image thumbnail |
+| `resource_url`| `text`| - | Resource link (PDF, GDrive, Notion, Repo) |
+| `division` | `text` | `'all'` | Target audience: `'all'`, `'builder'`, `'creative'` |
+| `created_by` | `uuid` | - | References `public.members(id)` |
+| `created_at` | `timestamptz` | `now()` | Server creation timestamp |
+| `updated_at` | `timestamptz` | `now()` | Last modification timestamp |
+
+### 3.4 `public.learning_material_reads`
+Audit log tracking which members have accessed and opened each learning material.
+
+| Column | Type | Default | Description |
+|---|---|---|---|
+| `id` | `uuid` (PK) | `gen_random_uuid()` | Unique read record ID |
+| `material_id`| `uuid` | - | References `public.learning_materials(id)` |
+| `member_id` | `uuid` | - | References `public.members(id)` |
+| `opened_at` | `timestamptz` | `now()` | Server click/read timestamp |
+
+*(Constraint: `UNIQUE (material_id, member_id)` ensures idempotent tracking per member)*
+
+### 3.5 `public.sent_emails`
+Outbox log for maintainer broadcasts sent through the Resend API.
+
+| Column | Type | Default | Description |
+|---|---|---|---|
+| `id` | `uuid` (PK) | `gen_random_uuid()` | Unique email log ID |
+| `recipient_type` | `text` | `'custom'` | Target: `'all'`, `'builder'`, `'creative'`, `'custom'` |
+| `recipient_email`| `text` | - | Destination address |
+| `subject` | `text` | - | Email subject header |
+| `body` | `text` | - | Markdown / HTML body content |
+| `sent_by` | `uuid` | - | Maintainer who dispatched the email |
+| `created_at` | `timestamptz` | `now()` | Dispatch timestamp |
+
 ---
 
 ## 4. Page Specifications & User Journeys
@@ -168,8 +208,12 @@ Built with Server Components for optimal SEO and instant load speeds:
      - Generates dynamic QRIS via Pakasir API.
      - Auto-polls or listens to Supabase Realtime for instant payment confirmation.
    - **Ledger History**: Public transparent table showing past incoming and outgoing transactions.
-3. **Multi-Project Vault**:
+3. **Multi-Project Vault (`/dashboard/vault`)**:
    - Generate and manage API keys for UBSI API and AI Labs compute.
+4. **Muara Learn (`/dashboard/learn`)**:
+   - Feed of engineering and creative materials shared by maintainers.
+   - Card displays: Title, description, optional cover image, division tag (`all`, `builder`, `creative`), and publication date.
+   - **Click & Read Tracking**: When a member clicks the resource link (PDF / Google Drive / Notion / Repo), the client sends an audit event inserting a row into `public.learning_material_reads` with the exact server timestamp (`now()`), marking it as read.
 
 ---
 
@@ -181,9 +225,17 @@ Built with Server Components for optimal SEO and instant load speeds:
    - **Reject Action**: Updates status to `rejected` with recorded reason.
 2. **Treasury Management (`/admin/treasury`)**:
    - Form to log operational expenses (amount, category, description, invoice URL).
-3. **Membership Auditing**:
+3. **Membership Auditing (`/admin/members`)**:
    - Filter members whose `dues_valid_until < CURRENT_DATE - INTERVAL '30 days'`.
    - Toggle blacklist / deactivate (`is_active = false`) for chronic non-payers.
+4. **Learning Materials Management (`/admin/learn`)**:
+   - Form to publish new materials: Title, description, optional cover photo URL, resource link (PDF/GDrive), and target division.
+   - **Read Audit Inspector**: Shows who has clicked/read the material with their avatar, name, and exact server timestamp.
+5. **Mail Center (`/admin/mail`)**:
+   - Maintainer email dispatch console powered by the Resend API (from `admin@muaraai.com`).
+   - Recipient selection: "All Members", "Builder Division", "Creative Division", or custom individual email.
+   - Subject header and Markdown message composer.
+   - Sent email history log recorded into `public.sent_emails`.
 
 ---
 
