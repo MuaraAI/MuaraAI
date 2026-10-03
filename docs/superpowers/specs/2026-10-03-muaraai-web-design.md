@@ -253,7 +253,7 @@ Built with Server Components for optimal SEO and instant load speeds:
 2. **Treasury & Dues Tab (`/dashboard/treasury`)**:
    - Shows individual dues status: `dues_valid_until` date and remaining active days.
    - **Pay Dues Module**:
-     - Fee: **Rp 3,000 / week** (selectable: 1 week = Rp 3k, 2 weeks = Rp 6k, 4 weeks = Rp 12k).
+     - Nominal Fix: **Rp 3.000 / minggu** atau **Rp 12.000 / bulan** (opsi pembayaran: 1 minggu Rp 3.000, 1 bulan Rp 12.000).
      - Generates dynamic QRIS via Pakasir API.
      - Auto-polls or listens to Supabase Realtime for instant payment confirmation.
    - **Ledger History**: Public transparent table showing past incoming and outgoing transactions.
