@@ -9,6 +9,37 @@
 **Tech Stack:** Next.js 15, React 19, TypeScript, Tailwind CSS, `@supabase/ssr`, Resend SDK, Vitest, Testing Library, Local Google Fonts (Inter & Space Grotesk), Google Material Symbols.
 
 **Spec:** `docs/superpowers/specs/2026-10-03-muaraai-web-design.md`
+**PRD:** `docs/prd/2026-10-03-muaraai-web.md`
+
+## PRD Traceability Matrix
+
+| Requirement | Description | Target Task | Priority |
+|---|---|---|---|
+| FR-1 | Sticky Navbar (Monogram M, links, Auth CTA) | Task 3 | P0 |
+| FR-2 | Hero section (Terminal code loop, tagline) | Task 4 | P0 |
+| FR-3 | Metrics ticker (126+ tests, 6 services, 0% slop) | Task 4 | P0 |
+| FR-4 | Hall of Projects (UBSI API & AI Gateway) | Task 4 | P0 |
+| FR-5 | Accolades (Certificates from `public.achievements` + zoom) | Task 5 | P0 |
+| FR-6 | Syndicate Roster (Live from `public.members` + Top Commits) | Task 5 | P0 |
+| FR-7 | Open Treasury Preview (2 clean metrics) | Task 5 | P0 |
+| FR-8 | Compliance routes (`/terms`, `/privacy`, `/code-of-conduct`) | Task 3 | P1 |
+| FR-9 | 100% GitHub OAuth SSO with `.muaraai.com` cookie | Task 2, Task 6 | P0 |
+| FR-10 | PoW onboarding form (Portfolio, track, toolchain) | Task 6 | P0 |
+| FR-11 | PoW submission recording (pending status) + multi-channel alert | Task 6 | P0 |
+| FR-12 | Route guard blocking unapproved users | Task 7 | P0 |
+| FR-13 | Dynamic dues config from `public.community_settings` | Task 2, Task 7 | P0 |
+| FR-14 | Pakasir dynamic QRIS checkout generation | Task 7 | P0 |
+| FR-15 | Accumulated arrears billing (3k, 6k, 9k, 12k) | Task 7 | P0 |
+| FR-16 | Webhook handler with fail-closed Pakasir verify | Task 9 | P0 |
+| FR-17 | 30-day arrears auto-flag / blacklist toggle | Task 8, Task 9 | P0 |
+| FR-18 | Muara Learn feed (`/dashboard/learn`) | Task 7 | P1 |
+| FR-19 | Idempotent click-to-read tracking with server timestamp | Task 7 | P1 |
+| FR-20 | Maintainer reader audit table | Task 8 | P1 |
+| FR-21 | Maintainer role guard on `/admin/*` | Task 8 | P0 |
+| FR-22 | Review queue 1-click approve + auto-invite GitHub Org API | Task 8 | P0 |
+| FR-23 | Treasury expense logging form + invoice link | Task 8 | P0 |
+| FR-24 | Resend mail broadcast console + `public.sent_emails` outbox | Task 8 | P1 |
+| FR-25 | Certificate uploader for `public.achievements` | Task 8 | P1 |
 
 ## Global Constraints
 
