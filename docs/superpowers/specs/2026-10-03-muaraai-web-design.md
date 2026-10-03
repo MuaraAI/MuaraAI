@@ -60,6 +60,16 @@ Muara AI is an independent, proof-of-work engineering and creative syndicate fou
 ### 3.1 `public.members`
 Stores community member profiles, credentials, role hierarchies, and dues validity.
 
+- **Dues & Arrears Accumulation Model (Tagihan Bertingkat)**:
+  * Biaya dasar: Rp 3.000 / minggu.
+  * 1 bulan terdiri dari 4 siklus minggu.
+  * Tagihan menumpuk secara akumulatif jika belum dibayar:
+    - Nunggak 1 minggu: Rp 3.000
+    - Nunggak 2 minggu: Rp 6.000
+    - Nunggak 3 minggu: Rp 9.000
+    - Nunggak 4 minggu: Rp 12.000 (1 bulan penuh)
+  * Jika lewat dari 30 hari (> 4 minggu menunggak): member otomatis di-blacklist / dinonaktifkan (`is_active = false`), akses API dan branch revoked sampai tagihan lunas.
+
 | Column | Type | Default | Description |
 |---|---|---|---|
 | `id` | `uuid` (PK) | - | References `auth.users(id)` ON DELETE CASCADE |
