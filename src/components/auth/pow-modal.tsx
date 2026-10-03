@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { submitProofOfWork, PoWInput } from "@/app/actions/pow";
+import { submitProofOfWork } from "@/app/actions/pow";
+import { PoWInput } from "@/lib/validation";
 
 export default function PoWForm() {
   const [formData, setFormData] = useState<PoWInput>({

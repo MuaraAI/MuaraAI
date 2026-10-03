@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { validatePoWSubmission } from "../src/app/actions/pow";
+import { validatePoWSubmission } from "../src/lib/validation";
 import { notifyMaintainers } from "../src/lib/notify";
 
 describe("Proof of Work Validation", () => {
