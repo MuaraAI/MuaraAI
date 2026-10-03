@@ -1,0 +1,53 @@
+import React from "react";
+
+export default function MetricsBar() {
+  const metrics = [
+    {
+      value: "126+",
+      label: "Automated Tests",
+      sub: "100% Offline Passing",
+      icon: "verified_user",
+    },
+    {
+      value: "6",
+      label: "Layanan Kampus",
+      sub: "StudentV2, MyBest, Library, etc.",
+      icon: "hub",
+    },
+    {
+      value: "0%",
+      label: "AI-Slop Tolerance",
+      sub: "Zero uncurated raw outputs",
+      icon: "shield",
+    },
+    {
+      value: "100%",
+      label: "Open Source",
+      sub: "Independent & Self-funded",
+      icon: "code_blocks",
+    },
+  ];
+
+  return (
+    <section className="border-b border-border/50 bg-surface/30 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+          {metrics.map((m, idx) => (
+            <div key={idx} className="flex flex-col items-center sm:items-start p-2">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="material-symbols-rounded text-muara-cyan text-xl">
+                  {m.icon}
+                </span>
+                <span className="font-display font-bold text-2xl sm:text-3xl text-white tracking-tight">
+                  {m.value}
+                </span>
+              </div>
+              <div className="text-sm font-semibold text-slate-200">{m.label}</div>
+              <div className="text-xs text-slate-500 mt-0.5">{m.sub}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
