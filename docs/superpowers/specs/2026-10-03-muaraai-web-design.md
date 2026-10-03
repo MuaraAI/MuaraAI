@@ -148,6 +148,21 @@ Outbox log for maintainer broadcasts sent through the Resend API.
 | `sent_by` | `uuid` | - | Maintainer who dispatched the email |
 | `created_at` | `timestamptz` | `now()` | Dispatch timestamp |
 
+### 3.6 `public.achievements`
+Official repository of credentials, hackathon wins, and professional certificates (distinct from software projects).
+
+| Column | Type | Default | Description |
+|---|---|---|---|
+| `id` | `uuid` (PK) | `gen_random_uuid()` | Unique achievement ID |
+| `title` | `text` | - | Award title (e.g. "Juara 1 Hackathon 2026") |
+| `issuer` | `text` | - | Issuing institution/organizer |
+| `issue_date` | `date` | - | Date issued |
+| `image_url` | `text` | - | High-res certificate image preview URL |
+| `credential_url`| `text` | - | Optional verification/credential URL |
+| `recipient_names`| `text[]`| `ARRAY[]::text[]` | Name(s) of members who earned it |
+| `recipient_ids`| `uuid[]` | `ARRAY[]::uuid[]` | References `public.members(id)` |
+| `created_at` | `timestamptz` | `now()` | Timestamp added |
+
 ---
 
 ## 4. Page Specifications & User Journeys
@@ -156,7 +171,7 @@ Outbox log for maintainer broadcasts sent through the Resend API.
 Built with Server Components for optimal SEO and instant load speeds:
 1. **Header / Sticky Navbar**:
    - Monogram `M` brand mark.
-   - Quick navigation: `#projects`, `#manifesto`, `#syndicate`, `#treasury`.
+   - Quick navigation: `#projects`, `#accolades`, `#manifesto`, `#syndicate`, `#treasury`.
    - Dynamic CTA button:
      - Unauthenticated: *"Login with GitHub"*.
      - Authenticated: *"Dashboard →"*.
@@ -166,22 +181,26 @@ Built with Server Components for optimal SEO and instant load speeds:
    - Subhead: Concrete statement defining Muara AI as an independent studio and research laboratory, rejecting passive theory.
    - Interactive Terminal / Live Code Component: Real-time cycling code snippet demonstrating agentic scraping, AES-256 vault generation, and pipeline tests.
    - Dual CTA: *"Explore Projects"* (smooth scroll) & *"Submit Proof-of-Work"*.
-3. **Live Metrics & Achievements**:
+3. **Live Metrics Bar**:
    - `116+` Automated Tests Passing (Offline & CI).
    - `6` University Services Aggregated.
    - `0%` AI-Slop (Zero uncurated generation allowed).
    - `100%` Open-Source & Independent.
-   - Flagship production milestones (UBSI API v1.1 live, Ciel autonomous assistant).
 4. **Visi & Misi**:
    - **Visi**: Menjadi muara ekosistem praktisi dan pengembang AI rekayasa terkemuka dari Kalimantan Barat yang menghasilkan karya berstandar global.
    - **Misi**: Menegakkan disiplin software engineering ketat (anti-slop, TDD), memproduksi minimal satu rilis produk atau submission lomba per semester, dan menyediakan shared infrastructure bagi anggota.
-5. **The Hall of Projects (Showcase)**:
-   - **UBSI API** (`v1.1.5`): Fast, secure REST aggregator with multi-tenant AES-256 credential vault.
-   - **AI Bot Ciel**: Autonomous student agent with memory retention and WhatsApp ingest.
-   - **Creative Hub**: Editorial-grade generative image and cinematic video productions.
-6. **The Craft Standard (Anti-Slop Manifesto)**:
+5. **The Hall of Projects (Karya & Produk)**:
+   - Live software applications & production repositories:
+     * **UBSI API** (`v1.1.5`): Fast, secure REST aggregator with multi-tenant AES-256 credential vault.
+     * **AI Bot Ciel**: Autonomous student agent with memory retention and WhatsApp ingest.
+     * **Creative Hub**: Editorial-grade generative image and cinematic video productions.
+6. **The Accolades / Hall of Fame (Sertifikat & Prestasi)**:
+   - Distinct from software projects: Exhibits verifiable certificates, hackathon rankings, and competition accolades.
+   - Interactive certificate card grid (fetched live from `public.achievements`).
+   - Card features: High-resolution certificate preview with lightbox modal zoom, award title, issuing institution, recipients list, date, and external verification link.
+7. **The Craft Standard (Anti-Slop Manifesto)**:
    - Comparison matrix contrasting naive raw prompting vs. Muara AI agentic harnesses, test-driven pipelines, and verifiable outputs.
-7. **Member Hierarchy & The Syndicate (Roster with Top Commits)**:
+8. **Member Hierarchy & The Syndicate (Roster with Top Commits)**:
    - Structural explanation of the 4-layer meritocracy:
      - **Founder**: Yuken Velino (@Curzyori) - Architecture, strategy, and ecosystem direction.
      - **Co-Founders**: M Raffli Aldiansyah (@Seeyaa77) & Verzio (@MyKineID) - Core infrastructure & scraper engineering.
@@ -196,23 +215,23 @@ Built with Server Components for optimal SEO and instant load speeds:
      - `Builder`: Filter by `division = 'builder'`.
      - `Creative`: Filter by `division = 'creative'`.
    - Card displays: GitHub avatar, real name, primary `role_title`, badge list (`titles`), commit metric pill (e.g. `142 Commits`), track, and GitHub/Portfolio links.
-8. **Member Benefits (Keuntungan Bergabung)**:
+9. **Member Benefits (Keuntungan Bergabung)**:
    - Grid kartu benefit resmi:
      1. **GitHub Org Membership**: Akses kolaborasi di `github.com/MuaraAI` dengan branch permissions.
      2. **Muara Learn Knowledge Base**: Akses materi riset internal, prompt harnesses, dan rekaman arsitektur.
      3. **Shared Compute & Resources**: Subsidi kuota compute/API untuk riset bersama.
      4. **Kompetisi & Delegasi**: Biaya registrasi lomba/hackathon nasional didukung kas komunitas.
      5. **Verified Portfolio Showcase**: Profil karya dipajang di domain resmi `muaraai.com`.
-9. **Open Treasury Preview (Two Clean Metrics)**:
-   - Metric 1: **Total Kas Saat Ini** (Net balance: `SUM(income) - SUM(expense)`).
-   - Metric 2: **Total Pengeluaran Kas** (`SUM(expense)`).
-   - Subtitle: Transparent open-book note; dues management and payment forms are located within the Member Dashboard.
-10. **Join Flow Section**:
+10. **Open Treasury Preview (Two Clean Metrics)**:
+    - Metric 1: **Total Kas Saat Ini** (Net balance: `SUM(income) - SUM(expense)`).
+    - Metric 2: **Total Pengeluaran Kas** (`SUM(expense)`).
+    - Subtitle: Transparent open-book note; dues management and payment forms are located within the Member Dashboard.
+11. **Join Flow Section**:
     - 3-step timeline:
       1. Authenticate with GitHub.
       2. Submit verifiable repository or portfolio Proof of Work.
       3. Receive automatic invitation to `github.com/MuaraAI` organization.
-11. **Footer & Compliance Links**:
+12. **Footer & Compliance Links**:
     - MIT License disclosure, GitHub Org link, server health status indicator.
     - Legal routes: `/terms` (Terms of Service), `/privacy` (Privacy Policy), `/code-of-conduct` (Code of Conduct).
 
@@ -257,6 +276,9 @@ Built with Server Components for optimal SEO and instant load speeds:
    - Recipient selection: "All Members", "Builder Division", "Creative Division", or custom individual email.
    - Subject header and Markdown message composer.
    - Sent email history log recorded into `public.sent_emails`.
+6. **Achievements Manager (`/admin/achievements`)**:
+   - Form to upload and manage community competition wins and certificates.
+   - Fields: Title, issuer, issue date, certificate image URL, verification URL, recipient member(s).
 
 ---
 
