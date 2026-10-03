@@ -48,7 +48,8 @@ Muara AI is an independent, proof-of-work engineering and creative syndicate fou
 - **Framework**: Next.js 15 (App Router, Server Components default, React 19).
 - **Styling**: Tailwind CSS with "Deep Water" design tokens (Dark-first `#070B14`, cyan accents `#06B6D4`, muted borders).
 - **Typography & Icons**: Local self-hosted Inter & Space Grotesk (`/public/fonts/`); Google Material Symbols (zero remote font CDNs, zero emojis in UI).
-- **Database & Auth**: Supabase PostgreSQL (`awlwvcmrknkdxnwolcoy`) + Supabase Auth (GitHub OAuth provider).
+- **Database & Auth**: Supabase PostgreSQL (`awlwvcmrknkdxnwolcoy`) + Supabase Auth (**Strictly 100% GitHub OAuth Only** — email/password & magic link disabled; identity, username & avatar tied to GitHub).
+- **Email Architecture**: Direct Resend SDK via Next.js Server Actions (separate from Supabase Auth) for maintainer broadcast (`/admin/mail`) and operational transactional emails from `admin@muaraai.com`.
 - **Payment Gateway**: Pakasir Dynamic QRIS API + Webhook endpoint with HMAC/signature verification.
 - **Maintainer Alerts**: Resend SDK + Discord webhook + Telegram Bot HTTP API (`Promise.allSettled`).
 
