@@ -1,0 +1,111 @@
+import React from "react";
+import { createClient } from "@/lib/supabase/server";
+import { Member } from "@/types/database";
+import Link from "next/link";
+
+export default async function DashboardProfilePage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: memberData } = await supabase
+    .from("members")
+    .select("*")
+    .eq("id", user?.id)
+    .single();
+
+  const member = memberData as Member;
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-white mb-1">
+          Profil Anggota & Status Keanggotaan
+        </h1>
+        <p className="text-xs text-slate-400">
+          Informasi portofolio terverifikasi, spesialisasi divisi, dan peran dalam ekosistem Muara AI.
+        </p>
+      </div>
+
+      {member.registration_status === "pending" && (
+        <div className="rounded-xl border border-amber-500/40 bg-amber-950/20 p-5 text-xs text-amber-200 flex items-start gap-3">
+          <span className="material-symbols-rounded text-lg text-amber-400 shrink-0">pending</span>
+          <div>
+            <div className="font-bold text-sm text-white mb-0.5">Status Pendaftaran: Menunggu Review</div>
+            Berkas Proof of Work Anda sedang ditinjau oleh Core Team. Anda akan menerima undangan resmi ke GitHub Org setelah diverifikasi.
+          </div>
+        </div>
+      )}
+
+      {/* Main Details Card */}
+      <div className="rounded-xl border border-border bg-surface p-6 sm:p-8 space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-border">
+          <div>
+            <div className="text-xs font-mono text-slate-500 uppercase">Nama Lengkap</div>
+            <div className="font-display text-xl font-bold text-white mt-0.5">{member.full_name}</div>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {member.titles?.map((title, idx) => (
+              <span
+                key={idx}
+                className="rounded-md bg-muara-cyan/10 border border-muara-cyan/30 px-2.5 py-1 text-xs font-mono text-muara-cyan font-semibold"
+              >
+                {title}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-xs">
+          <div>
+            <div className="text-slate-500 uppercase font-mono mb-1">GitHub Account</div>
+            <div className="text-slate-200 font-mono">@{member.github_username}</div>
+          </div>
+          <div>
+            <div className="text-slate-500 uppercase font-mono mb-1">Divisi & Track</div>
+            <div className="text-slate-200 font-mono capitalize">
+              {member.division} ({member.track || "General"})
+            </div>
+          </div>
+          <div>
+            <div className="text-slate-500 uppercase font-mono mb-1">Total Commits</div>
+            <div className="text-slate-200 font-mono">{member.total_commits || 0} commits</div>
+          </div>
+          <div>
+            <div className="text-slate-500 uppercase font-mono mb-1">Status Keaktifan</div>
+            <div className="text-slate-200 font-mono">
+              {member.is_active ? "Aktif" : "Dinonaktifkan / Tunggakan"}
+            </div>
+          </div>
+          <div>
+            <div className="text-slate-500 uppercase font-mono mb-1">Masa Aktif Iuran Kas</div>
+            <div className="text-slate-200 font-mono">
+              {member.dues_valid_until || "Belum dibayar"}
+            </div>
+          </div>
+          <div>
+            <div className="text-slate-500 uppercase font-mono mb-1">Tautan Portofolio / PoW</div>
+            <Link
+              href={member.portfolio_url || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muara-cyan hover:underline truncate block font-mono"
+            >
+              {member.portfolio_url || "Belum ada link"}
+            </Link>
+          </div>
+        </div>
+
+        {member.bio && (
+          <div className="pt-4 border-t border-border">
+            <div className="text-slate-500 uppercase font-mono text-xs mb-1.5">Toolchain & Workflow</div>
+            <p className="text-xs text-slate-300 leading-relaxed font-mono whitespace-pre-wrap">
+              {member.bio}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
