@@ -95,20 +95,21 @@ git commit -m "chore: scaffold Next.js 15, Tailwind Deep Water theme, and local 
 
 **Interfaces:**
 - Consumes: `@supabase/ssr`, Next.js cookies
-- Produces: `Member`, `TreasuryTransaction`, `LearningMaterial`, `Achievement`, `SentEmail` TypeScript interfaces; `createBrowserClient` with `.muaraai.com` cookie domain; `createServerClient`.
+- Produces: `Member`, `TreasuryTransaction`, `LearningMaterial`, `Achievement`, `SentEmail`, `CommunitySetting` TypeScript interfaces; `createBrowserClient` with `.muaraai.com` cookie domain; `createServerClient`.
 
 - [ ] **Step 1: Write the failing test**
 
 ```typescript
 // tests/types-and-client.test.ts
 import { describe, it, expect } from "vitest";
-import { COOKIE_NAME, COOKIE_DOMAIN, DUES_WEEKLY_FEE } from "../src/lib/constants";
+import { COOKIE_NAME, COOKIE_DOMAIN, DUES_WEEKLY_FEE, DUES_MONTHLY_FEE } from "../src/lib/constants";
 
 describe("Constants and Domain Config", () => {
   it("has correct cookie domain and dues pricing", () => {
     expect(COOKIE_NAME).toBe("sb-muaraai-auth-token");
     expect(COOKIE_DOMAIN).toBe(".muaraai.com");
     expect(DUES_WEEKLY_FEE).toBe(3000);
+    expect(DUES_MONTHLY_FEE).toBe(12000);
   });
 });
 ```
@@ -512,23 +513,40 @@ git commit -m "feat: implement maintainer control plane with review queue, expen
 - Test: `tests/pakasir-webhook.test.ts`
 
 **Interfaces:**
-- Consumes: Pakasir POST webhook callback with HMAC header
-- Produces: Idempotent transaction recording in `public.treasury_transactions`, automatic extension of `dues_valid_until`, `is_active = true` confirmation, and notification dispatch.
+- Consumes: Pakasir POST webhook callback body (`order_id`, `amount`, `status`, `project`), Pakasir transaction detail API (`https://app.pakasir.com/api/transactiondetail`)
+- Produces: Fail-closed server-to-server transaction verification, idempotent recording in `public.treasury_transactions`, automatic extension of `dues_valid_until`, `is_active = true` confirmation, and notification dispatch.
 
 - [ ] **Step 1: Write the failing test**
 
 ```typescript
 // tests/pakasir-webhook.test.ts
-import { describe, it, expect } from "vitest";
-import { verifyPakasirSignature } from "../src/lib/pakasir";
+import { describe, it, expect, vi } from "vitest";
+import { verifyAndProcessPakasirWebhook } from "../src/lib/pakasir";
 
-describe("Pakasir Webhook Signature Verification", () => {
-  it("validates correct HMAC signature and rejects invalid", () => {
-    const payload = JSON.stringify({ order_id: "order_123", amount: 3000 });
-    const secret = "test_secret_key";
-    const validSignature = "valid_hmac_sha256"; // generated via crypto
-    // verify helper
-    expect(verifyPakasirSignature(payload, "invalid_sig", secret)).toBe(false);
+describe("Pakasir Webhook & Server-to-Server Verification", () => {
+  it("rejects non-completed transaction status from Pakasir verification", async () => {
+    // mock detail returns pending
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ transaction: { status: "pending", amount: 3000, order_id: "test_1" } }),
+    });
+    const result = await verifyAndProcessPakasirWebhook(
+      { order_id: "test_1", amount: 3000, project: "test" },
+      { fetchFn: fetchMock, apiKey: "secret", project: "test" }
+    );
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts completed transaction and confirms amount match", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ transaction: { status: "completed", amount: 3000, order_id: "test_2" } }),
+    });
+    const result = await verifyAndProcessPakasirWebhook(
+      { order_id: "test_2", amount: 3000, project: "test" },
+      { fetchFn: fetchMock, apiKey: "secret", project: "test" }
+    );
+    expect(result.success).toBe(true);
   });
 });
 ```
