@@ -173,6 +173,16 @@ Official repository of credentials, hackathon wins, and professional certificate
 | `recipient_ids`| `uuid[]` | `ARRAY[]::uuid[]` | References `public.members(id)` |
 | `created_at` | `timestamptz` | `now()` | Timestamp added |
 
+### 3.7 `public.community_settings`
+Dynamic community-wide configuration stored in DB (eliminates hardcoding and redeploys).
+
+| Column | Type | Default | Description |
+|---|---|---|---|
+| `key` | `text` (PK) | - | Configuration key (e.g. `'dues_config'`) |
+| `value` | `jsonb` | - | JSON payload (e.g. `{"weekly_fee": 3000, "monthly_fee": 12000, "arrears_blacklist_days": 30}`) |
+| `description`| `text` | - | Context memo |
+| `updated_at` | `timestamptz` | `now()` | Last modification timestamp |
+
 ---
 
 ## 4. Page Specifications & User Journeys
