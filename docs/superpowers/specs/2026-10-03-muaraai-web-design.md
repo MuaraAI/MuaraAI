@@ -182,7 +182,7 @@ Built with Server Components for optimal SEO and instant load speeds:
    - Interactive Terminal / Live Code Component: Real-time cycling code snippet demonstrating agentic scraping, AES-256 vault generation, and pipeline tests.
    - Dual CTA: *"Explore Projects"* (smooth scroll) & *"Submit Proof-of-Work"*.
 3. **Live Metrics Bar**:
-   - `116+` Automated Tests Passing (Offline & CI).
+   - `126+` Automated Tests Passing (Offline & CI).
    - `6` University Services Aggregated.
    - `0%` AI-Slop (Zero uncurated generation allowed).
    - `100%` Open-Source & Independent.
@@ -190,10 +190,9 @@ Built with Server Components for optimal SEO and instant load speeds:
    - **Visi**: Menjadi muara ekosistem praktisi dan pengembang AI rekayasa terkemuka dari Kalimantan Barat yang menghasilkan karya berstandar global.
    - **Misi**: Menegakkan disiplin software engineering ketat (anti-slop, TDD), memproduksi minimal satu rilis produk atau submission lomba per semester, dan menyediakan shared infrastructure bagi anggota.
 5. **The Hall of Projects (Karya & Produk)**:
-   - Live software applications & production repositories:
-     * **UBSI API** (`v1.1.5`): Fast, secure REST aggregator with multi-tenant AES-256 credential vault.
-     * **AI Bot Ciel**: Autonomous student agent with memory retention and WhatsApp ingest.
-     * **Creative Hub**: Editorial-grade generative image and cinematic video productions.
+   - Dua proyek flagship resmi Muara AI yang aktif beroperasi:
+     * **UBSI API** (`MuaraAI/UBSI-API`): Unofficial REST API Aggregator untuk 6 layanan digital kampus UBSI (SIAKAD StudentV2, MyBest LMS, Elibrary, EJournal, Repository, News Portal). Dibangun dengan Python 3.12+, FastAPI, Redis Cache, dan 126 pengujian otomatis lulus. Live di `https://ubsi-api.muaraai.com`.
+     * **Muara AI Gateway (`ai.muaraai.com`)** (`MuaraAI/ai-web`): Member portal dan dashboard self-service untuk Muara V1 Flash AI Gateway. Dilengkapi autentikasi SSO Login with MuaraAI, model selector, dan manajemen kuota/token. Frontend Next.js 15 dengan backend Cloudflare Worker. Live di `https://ai.muaraai.com`.
 6. **The Accolades / Hall of Fame (Sertifikat & Prestasi)**:
    - Distinct from software projects: Exhibits verifiable certificates, hackathon rankings, and competition accolades.
    - Interactive certificate card grid (fetched live from `public.achievements`).
