@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { GITHUB_ORG_URL } from "@/lib/constants";
 import Icon from "@/components/ui/icon";
+import ContactTrigger from "./contact-trigger";
 
 export default function Footer() {
   return (
@@ -20,6 +21,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-medium">
+          <ContactTrigger label="Hubungi Kemitraan" />
           <Link href="/terms" className="hover:text-muara-ocean transition-colors">
             Terms of Service
           </Link>

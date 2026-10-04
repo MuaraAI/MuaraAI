@@ -96,6 +96,22 @@ export interface SentEmail {
   created_at: string;
 }
 
+export type InboxMessageStatus = "unread" | "read" | "replied";
+
+export interface InboxMessage {
+  id: string;
+  sender_name: string;
+  sender_email: string;
+  organization: string | null;
+  subject: string;
+  message: string;
+  status: InboxMessageStatus;
+  reply_body: string | null;
+  replied_at: string | null;
+  replied_by: string | null;
+  created_at: string;
+}
+
 export interface DuesConfig {
   weekly_fee: number;
   monthly_fee: number;
