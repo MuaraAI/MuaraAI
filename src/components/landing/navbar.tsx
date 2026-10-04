@@ -17,69 +17,74 @@ export default function Navbar({ user }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-white/85 backdrop-blur-md shadow-sm">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-3 sm:top-4 z-50 w-full px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <nav className="flex items-center justify-between rounded-full border border-stroke bg-white/90 backdrop-blur-md px-4 sm:px-6 py-2.5 shadow-diffusion transition-all">
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-muara-sky border border-muara-ocean/30 text-muara-ocean font-display font-bold text-lg group-hover:border-muara-ocean transition-colors shadow-sm">
-              M
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <span className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-surface-alt border border-stroke text-muara-ocean font-display font-bold text-base group-hover:border-muara-ocean transition-colors shadow-xs">
+              <Icon name="waves" className="w-4 h-4 text-muara-ocean" />
             </span>
-            <span className="font-display font-bold text-lg tracking-tight text-foreground group-hover:text-muara-ocean transition-colors">
+            <span className="font-display font-bold text-base tracking-tight text-foreground group-hover:text-muara-ocean transition-colors">
               Muara AI
             </span>
           </Link>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-          <Link href="/#projects" className="hover:text-muara-ocean transition-colors">
+        <div className="hidden md:flex items-center gap-7 text-xs font-mono font-medium text-secondary">
+          <Link href="/#projects" className="hover:text-foreground transition-colors">
             Projects
           </Link>
-          <Link href="/#accolades" className="hover:text-muara-ocean transition-colors">
+          <Link href="/#accolades" className="hover:text-foreground transition-colors">
             Accolades
           </Link>
-          <Link href="/#manifesto" className="hover:text-muara-ocean transition-colors">
+          <Link href="/#manifesto" className="hover:text-foreground transition-colors">
             Manifesto
           </Link>
-          <Link href="/members" className="hover:text-muara-ocean transition-colors">
+          <Link href="/members" className="hover:text-foreground transition-colors">
             Anggota
           </Link>
-          <Link href="/#syndicate" className="hover:text-muara-ocean transition-colors">
+          <Link href="/#syndicate" className="hover:text-foreground transition-colors">
             Maintainers
           </Link>
-          <Link href="/#treasury" className="hover:text-muara-ocean transition-colors">
+          <Link href="/#treasury" className="hover:text-foreground transition-colors">
             Treasury
           </Link>
-        </nav>
+        </div>
 
         {/* Right Actions */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-3">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-alt border border-stroke px-2.5 py-0.5 text-[11px] font-mono font-semibold text-status-success">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>v2-alpha</span>
+          </span>
+
           <Link
             href={GITHUB_ORG_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-slate-500 hover:text-foreground transition-colors p-1"
+            className="text-slate-400 hover:text-foreground transition-colors p-1"
             aria-label="GitHub Organization"
           >
-            <Icon name="terminal" className="w-5 h-5" />
+            <Icon name="code" className="w-4 h-4" />
           </Link>
 
           {user ? (
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 rounded-lg bg-surface hover:bg-surface-alt border border-border-ocean hover:border-muara-ocean px-4 py-2 text-xs font-semibold text-foreground transition-colors shadow-sm"
+              className="inline-flex items-center gap-1.5 rounded-full bg-surface-alt hover:bg-slate-100 border border-stroke px-3.5 py-1.5 text-xs font-mono font-semibold text-foreground transition-colors shadow-xs"
             >
-              <Icon name="dashboard" className="w-4 h-4 text-muara-ocean" />
-              Dashboard
+              <Icon name="dashboard" className="w-3.5 h-3.5 text-muara-ocean" />
+              <span>Dashboard</span>
             </Link>
           ) : (
             <Link
               href="/api/auth/login"
-              className="inline-flex items-center gap-2 rounded-lg bg-muara-ocean hover:bg-muara-ocean-dark text-white px-4 py-2 text-xs font-bold transition-colors shadow-sm"
+              className="inline-flex items-center gap-1.5 rounded-full bg-foreground hover:bg-secondary text-white px-4 py-1.5 text-xs font-sans font-bold transition-all shadow-xs"
             >
-              <Icon name="login" className="w-4 h-4 text-white" />
-              Login with GitHub
+              <Icon name="login" className="w-3.5 h-3.5 text-white" />
+              <span>Login</span>
             </Link>
           )}
         </div>
@@ -88,77 +93,77 @@ export default function Navbar({ user }: NavbarProps) {
         <div className="flex md:hidden items-center gap-2">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-surface text-slate-600 hover:text-foreground"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-stroke bg-white text-secondary hover:text-foreground"
             aria-label="Toggle Menu"
           >
-            <Icon name={mobileMenuOpen ? "close" : "menu"} className="w-5 h-5" />
+            <Icon name={mobileMenuOpen ? "close" : "menu"} className="w-4 h-4" />
           </button>
         </div>
-      </div>
+      </nav>
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-border bg-white/95 backdrop-blur-lg px-4 pt-2 pb-6 space-y-3">
+        <div className="md:hidden mt-2 rounded-2xl border border-stroke bg-white/95 backdrop-blur-lg p-5 shadow-diffusion space-y-3 font-mono text-xs">
           <Link
             href="/#projects"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
+            className="block py-1.5 text-secondary hover:text-foreground"
           >
             Projects
           </Link>
           <Link
             href="/#accolades"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
+            className="block py-1.5 text-secondary hover:text-foreground"
           >
             Accolades
           </Link>
           <Link
             href="/#manifesto"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
+            className="block py-1.5 text-secondary hover:text-foreground"
           >
             Manifesto
           </Link>
           <Link
             href="/members"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
+            className="block py-1.5 text-secondary hover:text-foreground"
           >
             Anggota
           </Link>
           <Link
             href="/#syndicate"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
+            className="block py-1.5 text-secondary hover:text-foreground"
           >
             Maintainers
           </Link>
           <Link
             href="/#treasury"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
+            className="block py-1.5 text-secondary hover:text-foreground"
           >
             Treasury
           </Link>
-          <div className="pt-2 border-t border-border">
+          <div className="pt-2 border-t border-stroke">
             {user ? (
               <Link
                 href="/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-surface border border-border-ocean py-2.5 text-xs font-semibold text-foreground shadow-sm"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-surface-alt border border-stroke py-2 text-xs font-semibold text-foreground shadow-xs font-sans"
               >
                 <Icon name="dashboard" className="w-4 h-4 text-muara-ocean" />
-                Dashboard
+                <span>Dashboard</span>
               </Link>
             ) : (
               <Link
                 href="/api/auth/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-muara-ocean py-2.5 text-xs font-bold text-white shadow-sm"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-foreground py-2 text-xs font-bold text-white shadow-xs font-sans"
               >
                 <Icon name="login" className="w-4 h-4 text-white" />
-                Login with GitHub
+                <span>Login with GitHub</span>
               </Link>
             )}
           </div>
