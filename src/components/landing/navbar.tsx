@@ -3,6 +3,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { GITHUB_ORG_URL } from "@/lib/constants";
+import Icon from "@/components/ui/icon";
 
 interface NavbarProps {
   user?: {
@@ -58,10 +59,10 @@ export default function Navbar({ user }: NavbarProps) {
             href={GITHUB_ORG_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-slate-500 hover:text-foreground transition-colors"
+            className="text-slate-500 hover:text-foreground transition-colors p-1"
             aria-label="GitHub Organization"
           >
-            <span className="material-symbols-rounded text-xl">terminal</span>
+            <Icon name="terminal" className="w-5 h-5" />
           </Link>
 
           {user ? (
@@ -69,7 +70,7 @@ export default function Navbar({ user }: NavbarProps) {
               href="/dashboard"
               className="inline-flex items-center gap-2 rounded-lg bg-surface hover:bg-surface-alt border border-border-ocean hover:border-muara-ocean px-4 py-2 text-xs font-semibold text-foreground transition-colors shadow-sm"
             >
-              <span className="material-symbols-rounded text-base text-muara-ocean">dashboard</span>
+              <Icon name="dashboard" className="w-4 h-4 text-muara-ocean" />
               Dashboard
             </Link>
           ) : (
@@ -77,7 +78,7 @@ export default function Navbar({ user }: NavbarProps) {
               href="/api/auth/login"
               className="inline-flex items-center gap-2 rounded-lg bg-muara-ocean hover:bg-muara-ocean-dark text-white px-4 py-2 text-xs font-bold transition-colors shadow-sm"
             >
-              <span className="material-symbols-rounded text-base">login</span>
+              <Icon name="login" className="w-4 h-4 text-white" />
               Login with GitHub
             </Link>
           )}
@@ -90,9 +91,7 @@ export default function Navbar({ user }: NavbarProps) {
             className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-surface text-slate-600 hover:text-foreground"
             aria-label="Toggle Menu"
           >
-            <span className="material-symbols-rounded">
-              {mobileMenuOpen ? "close" : "menu"}
-            </span>
+            <Icon name={mobileMenuOpen ? "close" : "menu"} className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -142,7 +141,7 @@ export default function Navbar({ user }: NavbarProps) {
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex w-full items-center justify-center gap-2 rounded-lg bg-surface border border-border-ocean py-2.5 text-xs font-semibold text-foreground shadow-sm"
               >
-                <span className="material-symbols-rounded text-base text-muara-ocean">dashboard</span>
+                <Icon name="dashboard" className="w-4 h-4 text-muara-ocean" />
                 Dashboard
               </Link>
             ) : (
@@ -151,7 +150,7 @@ export default function Navbar({ user }: NavbarProps) {
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex w-full items-center justify-center gap-2 rounded-lg bg-muara-ocean py-2.5 text-xs font-bold text-white shadow-sm"
               >
-                <span className="material-symbols-rounded text-base">login</span>
+                <Icon name="login" className="w-4 h-4 text-white" />
                 Login with GitHub
               </Link>
             )}

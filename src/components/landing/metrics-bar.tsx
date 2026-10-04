@@ -1,7 +1,8 @@
 import React from "react";
+import Icon, { IconName } from "@/components/ui/icon";
 
 export default function MetricsBar() {
-  const metrics = [
+  const metrics: { value: string; label: string; sub: string; icon: IconName }[] = [
     {
       value: "126+",
       label: "Automated Tests",
@@ -35,9 +36,7 @@ export default function MetricsBar() {
           {metrics.map((m, idx) => (
             <div key={idx} className="flex flex-col items-center sm:items-start p-2">
               <div className="flex items-center gap-2 mb-1">
-                <span className="material-symbols-rounded text-muara-ocean text-xl">
-                  {m.icon}
-                </span>
+                <Icon name={m.icon} className="w-6 h-6 text-muara-ocean" />
                 <span className="font-display font-bold text-2xl sm:text-3xl text-foreground tracking-tight">
                   {m.value}
                 </span>

@@ -1,4 +1,5 @@
 import React from "react";
+import Icon from "@/components/ui/icon";
 
 export default function VisionMission() {
   return (
@@ -17,11 +18,11 @@ export default function VisionMission() {
           {/* Visi */}
           <div className="rounded-xl border border-border-ocean bg-surface p-8 relative overflow-hidden group hover:border-muara-ocean transition-all shadow-ocean">
             <div className="absolute top-0 right-0 p-6 text-slate-100 pointer-events-none group-hover:text-sky-100/70 transition-colors">
-              <span className="material-symbols-rounded text-8xl">explore</span>
+              <Icon name="explore" className="w-24 h-24 text-slate-100" />
             </div>
             <div className="flex items-center gap-3 mb-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-muara-sky border border-muara-ocean/30 text-muara-ocean">
-                <span className="material-symbols-rounded text-xl">visibility</span>
+                <Icon name="visibility" className="w-5 h-5 text-muara-ocean" />
               </span>
               <h3 className="font-display text-xl font-bold text-foreground">Visi</h3>
             </div>
@@ -33,25 +34,25 @@ export default function VisionMission() {
           {/* Misi */}
           <div className="rounded-xl border border-border-ocean bg-surface p-8 relative overflow-hidden group hover:border-muara-ocean transition-all shadow-ocean">
             <div className="absolute top-0 right-0 p-6 text-slate-100 pointer-events-none group-hover:text-sky-100/70 transition-colors">
-              <span className="material-symbols-rounded text-8xl">flag</span>
+              <Icon name="rocket_launch" className="w-24 h-24 text-slate-100" />
             </div>
             <div className="flex items-center gap-3 mb-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-muara-sky border border-muara-ocean/30 text-muara-ocean">
-                <span className="material-symbols-rounded text-xl">rocket_launch</span>
+                <Icon name="rocket_launch" className="w-5 h-5 text-muara-ocean" />
               </span>
               <h3 className="font-display text-xl font-bold text-foreground">Misi</h3>
             </div>
             <ul className="space-y-3 text-sm text-slate-600">
               <li className="flex items-start gap-2">
-                <span className="material-symbols-rounded text-muara-ocean text-base shrink-0 mt-0.5">check_circle</span>
+                <Icon name="check_circle" className="w-4 h-4 text-muara-ocean shrink-0 mt-0.5" />
                 <span>Menghimpun mahasiswa dan praktisi yang menguasai domain AI pada tingkat produksi nyata.</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="material-symbols-rounded text-muara-ocean text-base shrink-0 mt-0.5">check_circle</span>
+                <Icon name="check_circle" className="w-4 h-4 text-muara-ocean shrink-0 mt-0.5" />
                 <span>Menegakkan disiplin software engineering: eliminasi AI-slop, TDD mandatori, dan keamanan kredensial.</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="material-symbols-rounded text-muara-ocean text-base shrink-0 mt-0.5">check_circle</span>
+                <Icon name="check_circle" className="w-4 h-4 text-muara-ocean shrink-0 mt-0.5" />
                 <span>Menyediakan shared cloud infrastructure (Supabase, Redis, compute) untuk akselerasi riset anggota.</span>
               </li>
             </ul>

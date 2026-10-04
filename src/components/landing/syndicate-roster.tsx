@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Member } from "@/types/database";
+import Icon from "@/components/ui/icon";
 
 export type RosterFilter =
   | "maintainer"
@@ -164,9 +165,10 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                             : "bg-surface-alt border border-border-ocean text-slate-600"
                         }`}
                       >
-                        <span className="material-symbols-rounded text-xs">
-                          {isTopThree ? "local_fire_department" : "commit"}
-                        </span>
+                        <Icon
+                          name={isTopThree ? "local_fire_department" : "commit"}
+                          className="w-3.5 h-3.5"
+                        />
                         {member.total_commits || 0}
                       </span>
                     </div>
@@ -214,7 +216,7 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                           className="hover:text-foreground"
                           aria-label="GitHub"
                         >
-                          <span className="material-symbols-rounded text-sm">terminal</span>
+                          <Icon name="terminal" className="w-4 h-4 text-slate-500" />
                         </Link>
                       )}
                       {member.portfolio_url && (
@@ -225,7 +227,7 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                           className="hover:text-muara-ocean"
                           aria-label="Portfolio"
                         >
-                          <span className="material-symbols-rounded text-sm">open_in_new</span>
+                          <Icon name="open_in_new" className="w-4 h-4 text-slate-500" />
                         </Link>
                       )}
                     </div>

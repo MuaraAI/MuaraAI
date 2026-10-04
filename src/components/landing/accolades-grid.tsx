@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Achievement } from "@/types/database";
+import Icon from "@/components/ui/icon";
 
 interface AccoladesGridProps {
   initialAchievements?: Achievement[];
@@ -30,8 +31,8 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
         </div>
 
         {initialAchievements.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border-ocean p-12 text-center text-slate-500 text-sm bg-surface-alt/40">
-            <span className="material-symbols-rounded text-3xl text-muara-ocean mb-2 block">workspace_premium</span>
+          <div className="rounded-xl border border-dashed border-border-ocean p-12 text-center text-slate-500 text-sm bg-surface-alt/40 flex flex-col items-center">
+            <Icon name="workspace_premium" className="w-10 h-10 text-muara-ocean mb-2" />
             Arsip prestasi dan sertifikat kompetisi sedang dalam tahap kurasi kurikulum semester 1.
           </div>
         ) : (
@@ -92,7 +93,7 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-xs font-bold text-muara-ocean hover:text-muara-ocean-dark hover:underline"
                     >
-                      <span className="material-symbols-rounded text-sm">verified</span>
+                      <Icon name="verified" className="w-4 h-4 text-muara-ocean" />
                       Verifikasi Kredensial
                     </Link>
                   </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Icon from "@/components/ui/icon";
 
 interface TreasuryPreviewProps {
   currentBalance?: number;
@@ -44,7 +45,7 @@ export default function TreasuryPreview({
                 Saldo Kas Bersih Riil
               </span>
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-100 border border-teal-300 text-teal-800">
-                <span className="material-symbols-rounded text-lg">account_balance_wallet</span>
+                <Icon name="account_balance_wallet" className="w-5 h-5 text-teal-800" />
               </span>
             </div>
             <div className="font-display font-bold text-3xl sm:text-4xl text-teal-950 tracking-tight mb-2">
@@ -62,7 +63,7 @@ export default function TreasuryPreview({
                 Akumulasi Pengeluaran Operasional
               </span>
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-100 border border-sky-300 text-muara-ocean">
-                <span className="material-symbols-rounded text-lg">receipt_long</span>
+                <Icon name="receipt_long" className="w-5 h-5 text-muara-ocean" />
               </span>
             </div>
             <div className="font-display font-bold text-3xl sm:text-4xl text-sky-950 tracking-tight mb-2">
@@ -76,7 +77,7 @@ export default function TreasuryPreview({
 
         <div className="rounded-xl border border-border-ocean bg-surface-alt p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
           <div className="flex items-center gap-3 text-slate-700 text-xs">
-            <span className="material-symbols-rounded text-muara-ocean text-xl">info</span>
+            <Icon name="info" className="w-5 h-5 text-muara-ocean shrink-0" />
             <span>
               Pembayaran kas QRIS otomatis (Rp 3.000/minggu & Rp 12.000/bulan) serta rincian log mutasi lengkap dapat diakses di dalam Dashboard Member.
             </span>
@@ -86,7 +87,7 @@ export default function TreasuryPreview({
             className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-white border border-border-ocean px-4 py-2 text-xs font-semibold text-foreground hover:border-muara-ocean transition-colors shadow-sm"
           >
             Buka Kas Member
-            <span className="material-symbols-rounded text-sm">arrow_forward</span>
+            <Icon name="arrow_forward" className="w-4 h-4 text-muara-ocean" />
           </Link>
         </div>
       </div>

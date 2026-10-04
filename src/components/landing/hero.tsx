@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import Icon from "@/components/ui/icon";
 
 const CODE_SNIPPETS = [
   `// 1. Multi-Tenant Vault Auth (AES-256-GCM)
 const vault = await decryptCampusVault(req.headers['x-api-key']);
-const session = await scrapperPool.acquire(vault.nim);
+const session = await scraperPool.acquire(vault.nim);
 return Response.json(await session.getGrades());`,
 
   `// 2. Autonomous Agent Execution Loop
@@ -62,14 +63,14 @@ export default function Hero() {
                 href="/#projects"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-muara-ocean hover:bg-muara-ocean-dark text-white px-6 py-3 text-sm font-bold transition-all shadow-ocean"
               >
-                <span className="material-symbols-rounded text-lg">explore</span>
+                <Icon name="explore" className="w-4 h-4 text-white" />
                 Jelajahi Proyek
               </Link>
               <Link
                 href="/#syndicate"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-surface hover:bg-surface-alt border border-border-ocean hover:border-slate-400 text-foreground px-6 py-3 text-sm font-semibold transition-colors shadow-sm"
               >
-                <span className="material-symbols-rounded text-lg text-muara-ocean">group</span>
+                <Icon name="group" className="w-4 h-4 text-muara-ocean" />
                 Lihat Anggota
               </Link>
             </div>

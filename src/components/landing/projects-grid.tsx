@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import Icon from "@/components/ui/icon";
 
 export default function ProjectsGrid() {
   const projects = [
@@ -86,7 +87,7 @@ export default function ProjectsGrid() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-muara-ocean hover:text-muara-ocean-dark transition-colors"
                 >
-                  <span className="material-symbols-rounded text-base text-muara-ocean">open_in_new</span>
+                  <Icon name="open_in_new" className="w-4 h-4 text-muara-ocean" />
                   Buka Web
                 </Link>
                 <Link
@@ -95,7 +96,7 @@ export default function ProjectsGrid() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-foreground transition-colors"
                 >
-                  <span className="material-symbols-rounded text-base">code</span>
+                  <Icon name="code" className="w-4 h-4" />
                   Repositori GitHub
                 </Link>
               </div>

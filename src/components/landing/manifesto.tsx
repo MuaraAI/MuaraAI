@@ -1,4 +1,5 @@
 import React from "react";
+import Icon from "@/components/ui/icon";
 
 export default function Manifesto() {
   const comparisons = [
@@ -39,11 +40,11 @@ export default function Manifesto() {
         <div className="rounded-xl border border-border-ocean bg-white overflow-hidden shadow-ocean">
           <div className="grid grid-cols-1 md:grid-cols-2 border-b border-border text-xs font-mono font-bold">
             <div className="p-4 bg-rose-50 text-rose-800 flex items-center gap-2 border-b md:border-b-0 md:border-r border-border">
-              <span className="material-symbols-rounded text-base text-rose-700">cancel</span>
+              <Icon name="cancel" className="w-4 h-4 text-rose-700" />
               PENGGUNA PASARAN (DITOLAK)
             </div>
             <div className="p-4 bg-sky-50 text-muara-ocean flex items-center gap-2">
-              <span className="material-symbols-rounded text-base text-muara-ocean">check_circle</span>
+              <Icon name="check_circle" className="w-4 h-4 text-muara-ocean" />
               PRAKTISI MUARA AI (STANDAR KAMI)
             </div>
           </div>
@@ -52,11 +53,11 @@ export default function Manifesto() {
             {comparisons.map((c, idx) => (
               <div key={idx} className="grid grid-cols-1 md:grid-cols-2 text-sm">
                 <div className="p-5 text-slate-600 bg-slate-50/50 md:border-r border-border flex items-start gap-3">
-                  <span className="material-symbols-rounded text-rose-600 text-sm mt-0.5 shrink-0">close</span>
+                  <Icon name="close" className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
                   <span>{c.pasaran}</span>
                 </div>
                 <div className="p-5 text-slate-800 bg-white flex items-start gap-3">
-                  <span className="material-symbols-rounded text-muara-ocean text-sm mt-0.5 shrink-0">check</span>
+                  <Icon name="check" className="w-4 h-4 text-muara-ocean shrink-0 mt-0.5" />
                   <span className="font-medium text-foreground">{c.muara}</span>
                 </div>
               </div>

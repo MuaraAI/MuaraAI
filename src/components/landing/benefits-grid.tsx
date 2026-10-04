@@ -1,19 +1,20 @@
 import React from "react";
+import Icon, { IconName } from "@/components/ui/icon";
 
 export default function BenefitsGrid() {
-  const benefits = [
+  const benefits: { icon: IconName; title: string; desc: string }[] = [
     {
       icon: "terminal",
       title: "GitHub Org Membership",
       desc: "Akses kolaboratif ke repositori resmi di github.com/MuaraAI dengan branch & review permissions.",
     },
     {
-      icon: "menu_book",
+      icon: "upload_file",
       title: "Muara Learn Knowledge Base",
       desc: "Akses materi riset eksklusif, prompt harnesses, system design decks, dan panduan rekayasa internal.",
     },
     {
-      icon: "cloud",
+      icon: "hub",
       title: "Shared Compute & API Keys",
       desc: "Subsidi kuota compute, akses AI API gateway, dan infrastruktur cloud bersama untuk riset mandiri.",
     },
@@ -52,7 +53,7 @@ export default function BenefitsGrid() {
             >
               <div>
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-muara-sky border border-muara-ocean/30 text-muara-ocean mb-4">
-                  <span className="material-symbols-rounded text-xl">{b.icon}</span>
+                  <Icon name={b.icon} className="w-5 h-5 text-muara-ocean" />
                 </span>
                 <h3 className="font-display text-base font-bold text-foreground mb-2">
                   {b.title}
