@@ -13,25 +13,25 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
   const [activeImage, setActiveImage] = useState<string | null>(null);
 
   return (
-    <section id="accolades" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-border/50 bg-surface/10">
+    <section id="accolades" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-border bg-white">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
-            <h2 className="text-xs font-mono font-semibold uppercase tracking-wider text-muara-cyan mb-2">
+            <h2 className="text-xs font-mono font-semibold uppercase tracking-wider text-muara-ocean mb-2">
               Sertifikat & Rekognisi
             </h2>
-            <p className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            <p className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               The Accolades (Prestasi Resmi)
             </p>
           </div>
-          <p className="text-sm text-slate-400 max-w-md">
+          <p className="text-sm text-slate-600 max-w-md">
             Arsip kredensial, kejuaraan hackathon, dan sertifikasi profesional anggota yang dapat diverifikasi secara publik.
           </p>
         </div>
 
         {initialAchievements.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border p-12 text-center text-slate-500 text-sm">
-            <span className="material-symbols-rounded text-3xl text-slate-600 mb-2 block">workspace_premium</span>
+          <div className="rounded-xl border border-dashed border-border-ocean p-12 text-center text-slate-500 text-sm bg-surface-alt/40">
+            <span className="material-symbols-rounded text-3xl text-muara-ocean mb-2 block">workspace_premium</span>
             Arsip prestasi dan sertifikat kompetisi sedang dalam tahap kurasi kurikulum semester 1.
           </div>
         ) : (
@@ -39,13 +39,13 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
             {initialAchievements.map((item) => (
               <div
                 key={item.id}
-                className="rounded-xl border border-border bg-surface overflow-hidden group hover:border-muara-cyan/40 transition-all shadow-md flex flex-col justify-between"
+                className="rounded-xl border border-border-ocean bg-white overflow-hidden group hover:border-muara-ocean transition-all shadow-ocean flex flex-col justify-between"
               >
                 <div>
                   {/* Certificate Image Preview */}
                   <div
                     onClick={() => setActiveImage(item.image_url)}
-                    className="relative h-48 w-full bg-background/80 overflow-hidden cursor-zoom-in"
+                    className="relative h-48 w-full bg-slate-100 overflow-hidden cursor-zoom-in"
                   >
                     <Image
                       src={item.image_url}
@@ -53,19 +53,19 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent opacity-60" />
-                    <span className="absolute bottom-2 right-2 rounded bg-background/90 px-2 py-0.5 text-[10px] font-mono text-slate-300 border border-border">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent opacity-60" />
+                    <span className="absolute bottom-2 right-2 rounded bg-white/90 px-2 py-0.5 text-[10px] font-mono text-slate-700 border border-border shadow-sm">
                       Klik untuk perbesar
                     </span>
                   </div>
 
                   <div className="p-5">
-                    <div className="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
-                      <span className="text-muara-cyan font-semibold">{item.issuer}</span>
+                    <div className="flex items-center justify-between text-xs font-mono text-slate-500 mb-2">
+                      <span className="text-muara-ocean font-bold">{item.issuer}</span>
                       <span>{item.issue_date}</span>
                     </div>
 
-                    <h3 className="font-display font-bold text-base text-white group-hover:text-muara-cyan transition-colors mb-3">
+                    <h3 className="font-display font-bold text-base text-foreground group-hover:text-muara-ocean transition-colors mb-3">
                       {item.title}
                     </h3>
 
@@ -74,7 +74,7 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
                         {item.recipient_names.map((name, nIdx) => (
                           <span
                             key={nIdx}
-                            className="rounded bg-surface-hover border border-border/80 px-2 py-0.5 text-[10px] font-mono text-slate-300"
+                            className="rounded bg-surface-alt border border-border-ocean px-2 py-0.5 text-[10px] font-mono text-slate-700"
                           >
                             {name}
                           </span>
@@ -90,7 +90,7 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
                       href={item.credential_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-muara-cyan hover:underline"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-muara-ocean hover:text-muara-ocean-dark hover:underline"
                     >
                       <span className="material-symbols-rounded text-sm">verified</span>
                       Verifikasi Kredensial

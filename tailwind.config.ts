@@ -9,25 +9,35 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#070B14",
-        foreground: "#F8FAFC",
+        background: "#F8FAFC",
+        foreground: "#0B253A",
         surface: {
-          DEFAULT: "#0B132B",
-          hover: "#111C38",
-          active: "#162347",
+          DEFAULT: "#FFFFFF",
+          alt: "#F0F7FA",
+          hover: "#F8FAFC",
+          active: "#EDF2F7",
         },
         border: {
-          DEFAULT: "#1E293B",
-          subtle: "#172338",
-          active: "#334155",
+          DEFAULT: "#E2E8F0",
+          ocean: "#D1E2EC",
+          subtle: "#F1F5F9",
+          active: "#CBD5E1",
         },
         muara: {
-          cyan: "#06B6D4",
-          "cyan-light": "#22D3EE",
-          "cyan-dark": "#0891B2",
-          navy: "#0A192F",
-          deep: "#050914",
+          ocean: "#0369A1",
+          "ocean-light": "#0284C7",
+          "ocean-dark": "#075985",
+          cyan: "#0284C7",
+          "cyan-light": "#38BDF8",
+          sky: "#E0F2FE",
+          mist: "#F0F7FA",
+          ink: "#0B253A",
+          slate: "#476175",
         },
+      },
+      boxShadow: {
+        ocean: "0 10px 30px -10px rgba(11, 37, 58, 0.06), 0 2px 6px -1px rgba(11, 37, 58, 0.04)",
+        "ocean-lg": "0 20px 40px -15px rgba(11, 37, 58, 0.08), 0 4px 12px -2px rgba(11, 37, 58, 0.04)",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],

@@ -30,16 +30,16 @@ export default function BenefitsGrid() {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 border-b border-border/50">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 border-b border-border bg-surface-alt/30">
       <div className="mx-auto max-w-7xl">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-xs font-mono font-semibold uppercase tracking-wider text-muara-cyan mb-2">
+          <h2 className="text-xs font-mono font-semibold uppercase tracking-wider text-muara-ocean mb-2">
             Mengapa Bergabung?
           </h2>
-          <p className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl mb-4">
+          <p className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-4">
             Keuntungan Menjadi Anggota
           </p>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-600">
             Muara AI dibangun sebagai sarana percepatan karir teknologi dan riset independen.
           </p>
         </div>
@@ -48,16 +48,16 @@ export default function BenefitsGrid() {
           {benefits.map((b, idx) => (
             <div
               key={idx}
-              className="rounded-xl border border-border bg-surface p-6 hover:border-muara-cyan/40 transition-colors flex flex-col justify-between"
+              className="rounded-xl border border-border-ocean bg-white p-6 hover:border-muara-ocean transition-all flex flex-col justify-between shadow-ocean"
             >
               <div>
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-muara-cyan/10 border border-muara-cyan/30 text-muara-cyan mb-4">
+                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-muara-sky border border-muara-ocean/30 text-muara-ocean mb-4">
                   <span className="material-symbols-rounded text-xl">{b.icon}</span>
                 </span>
-                <h3 className="font-display text-base font-bold text-white mb-2">
+                <h3 className="font-display text-base font-bold text-foreground mb-2">
                   {b.title}
                 </h3>
-                <p className="text-xs leading-relaxed text-slate-400">
+                <p className="text-xs leading-relaxed text-slate-600">
                   {b.desc}
                 </p>
               </div>

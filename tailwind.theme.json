@@ -1,0 +1,104 @@
+{
+  "theme": {
+    "extend": {
+      "colors": {
+        "primary": "#0b253a",
+        "secondary": "#476175",
+        "accent": "#0369a1",
+        "accent-hover": "#075985",
+        "surface": "#ffffff",
+        "surface-alt": "#f0f7fa",
+        "background": "#f8fafc",
+        "success": "#0f766e",
+        "warning": "#9a3412",
+        "danger": "#be123c"
+      },
+      "fontFamily": {
+        "h1": [
+          "Space Grotesk"
+        ],
+        "h2": [
+          "Space Grotesk"
+        ],
+        "h3": [
+          "Space Grotesk"
+        ],
+        "body-lg": [
+          "Inter"
+        ],
+        "body-md": [
+          "Inter"
+        ],
+        "caption": [
+          "Inter"
+        ],
+        "mono-label": [
+          "Space Grotesk"
+        ]
+      },
+      "fontSize": {
+        "h1": [
+          "3.25rem",
+          {
+            "letterSpacing": "-0.03em",
+            "fontWeight": "700"
+          }
+        ],
+        "h2": [
+          "2.25rem",
+          {
+            "letterSpacing": "-0.02em",
+            "fontWeight": "700"
+          }
+        ],
+        "h3": [
+          "1.5rem",
+          {
+            "letterSpacing": "-0.01em",
+            "fontWeight": "600"
+          }
+        ],
+        "body-lg": [
+          "1.125rem",
+          {
+            "fontWeight": "400"
+          }
+        ],
+        "body-md": [
+          "1rem",
+          {
+            "fontWeight": "400"
+          }
+        ],
+        "caption": [
+          "0.875rem",
+          {
+            "fontWeight": "500"
+          }
+        ],
+        "mono-label": [
+          "0.75rem",
+          {
+            "letterSpacing": "0.05em",
+            "fontWeight": "600"
+          }
+        ]
+      },
+      "borderRadius": {
+        "sm": "6px",
+        "md": "10px",
+        "lg": "18px",
+        "xl": "24px",
+        "full": "9999px"
+      },
+      "spacing": {
+        "xs": "4px",
+        "sm": "8px",
+        "md": "16px",
+        "lg": "24px",
+        "xl": "40px",
+        "xxl": "80px"
+      }
+    }
+  }
+}

@@ -12,14 +12,14 @@ export default function CodeOfConductPage() {
         Kembali ke Beranda
       </Link>
 
-      <h1 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
+      <h1 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-6">
         Code of Conduct & Etika Rekayasa
       </h1>
 
-      <div className="space-y-8 text-sm leading-relaxed text-slate-300">
-        <section className="rounded-xl border border-border bg-surface p-6">
-          <h2 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
-            <span className="material-symbols-rounded text-muara-cyan">verified</span>
+      <div className="space-y-8 text-sm leading-relaxed text-slate-600">
+        <section className="rounded-xl border border-border-ocean bg-white p-6 shadow-ocean">
+          <h2 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
+            <span className="material-symbols-rounded text-muara-ocean">verified</span>
             1. Anti-Slop (Zero Uncurated AI Artifacts)
           </h2>
           <p>
@@ -29,9 +29,9 @@ export default function CodeOfConductPage() {
           </p>
         </section>
 
-        <section className="rounded-xl border border-border bg-surface p-6">
-          <h2 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
-            <span className="material-symbols-rounded text-muara-cyan">school</span>
+        <section className="rounded-xl border border-border-ocean bg-white p-6 shadow-ocean">
+          <h2 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
+            <span className="material-symbols-rounded text-muara-ocean">school</span>
             2. Integritas Akademik & Anti-Joki
           </h2>
           <p>
@@ -41,9 +41,9 @@ export default function CodeOfConductPage() {
           </p>
         </section>
 
-        <section className="rounded-xl border border-border bg-surface p-6">
-          <h2 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
-            <span className="material-symbols-rounded text-muara-cyan">lock</span>
+        <section className="rounded-xl border border-border-ocean bg-white p-6 shadow-ocean">
+          <h2 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
+            <span className="material-symbols-rounded text-muara-ocean">lock</span>
             3. Zero Hardcoded Secrets & Keamanan Data
           </h2>
           <p>
@@ -53,9 +53,9 @@ export default function CodeOfConductPage() {
           </p>
         </section>
 
-        <section className="rounded-xl border border-border bg-surface p-6">
-          <h2 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
-            <span className="material-symbols-rounded text-muara-cyan">commit</span>
+        <section className="rounded-xl border border-border-ocean bg-white p-6 shadow-ocean">
+          <h2 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
+            <span className="material-symbols-rounded text-muara-ocean">commit</span>
             4. Disiplin Git & Testing Mandatori
           </h2>
           <p>

@@ -16,38 +16,38 @@ export default function Navbar({ user }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-white/85 backdrop-blur-md shadow-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand */}
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 group">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface border border-muara-cyan/30 text-muara-cyan font-display font-bold text-lg group-hover:border-muara-cyan transition-colors">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-muara-sky border border-muara-ocean/30 text-muara-ocean font-display font-bold text-lg group-hover:border-muara-ocean transition-colors shadow-sm">
               M
             </span>
-            <span className="font-display font-bold text-lg tracking-tight text-white group-hover:text-muara-cyan transition-colors">
+            <span className="font-display font-bold text-lg tracking-tight text-foreground group-hover:text-muara-ocean transition-colors">
               Muara AI
             </span>
           </Link>
-          <span className="hidden sm:inline-flex items-center rounded-full bg-surface border border-border px-2.5 py-0.5 text-xs font-mono text-muara-cyan">
+          <span className="hidden sm:inline-flex items-center rounded-full bg-surface-alt border border-border-ocean px-2.5 py-0.5 text-xs font-mono text-muara-ocean font-medium">
             v1.0 • Pontianak
           </span>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-          <Link href="/#projects" className="hover:text-muara-cyan transition-colors">
+        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+          <Link href="/#projects" className="hover:text-muara-ocean transition-colors">
             Projects
           </Link>
-          <Link href="/#accolades" className="hover:text-muara-cyan transition-colors">
+          <Link href="/#accolades" className="hover:text-muara-ocean transition-colors">
             Accolades
           </Link>
-          <Link href="/#manifesto" className="hover:text-muara-cyan transition-colors">
+          <Link href="/#manifesto" className="hover:text-muara-ocean transition-colors">
             Manifesto
           </Link>
-          <Link href="/#syndicate" className="hover:text-muara-cyan transition-colors">
+          <Link href="/#syndicate" className="hover:text-muara-ocean transition-colors">
             The Syndicate
           </Link>
-          <Link href="/#treasury" className="hover:text-muara-cyan transition-colors">
+          <Link href="/#treasury" className="hover:text-muara-ocean transition-colors">
             Treasury
           </Link>
         </nav>
@@ -58,7 +58,7 @@ export default function Navbar({ user }: NavbarProps) {
             href={GITHUB_ORG_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-slate-500 hover:text-foreground transition-colors"
             aria-label="GitHub Organization"
           >
             <span className="material-symbols-rounded text-xl">terminal</span>
@@ -67,15 +67,15 @@ export default function Navbar({ user }: NavbarProps) {
           {user ? (
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 rounded-lg bg-surface hover:bg-surface-hover border border-muara-cyan/30 hover:border-muara-cyan px-4 py-2 text-xs font-semibold text-white transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg bg-surface hover:bg-surface-alt border border-border-ocean hover:border-muara-ocean px-4 py-2 text-xs font-semibold text-foreground transition-colors shadow-sm"
             >
-              <span className="material-symbols-rounded text-base text-muara-cyan">dashboard</span>
+              <span className="material-symbols-rounded text-base text-muara-ocean">dashboard</span>
               Dashboard
             </Link>
           ) : (
             <Link
               href="/api/auth/login"
-              className="inline-flex items-center gap-2 rounded-lg bg-muara-cyan hover:bg-muara-cyan-light text-background px-4 py-2 text-xs font-bold transition-colors shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+              className="inline-flex items-center gap-2 rounded-lg bg-muara-ocean hover:bg-muara-ocean-dark text-white px-4 py-2 text-xs font-bold transition-colors shadow-sm"
             >
               <span className="material-symbols-rounded text-base">login</span>
               Login with GitHub
@@ -87,7 +87,7 @@ export default function Navbar({ user }: NavbarProps) {
         <div className="flex md:hidden items-center gap-2">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-surface text-slate-300 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-surface text-slate-600 hover:text-foreground"
             aria-label="Toggle Menu"
           >
             <span className="material-symbols-rounded">
@@ -99,57 +99,57 @@ export default function Navbar({ user }: NavbarProps) {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-border bg-surface/95 backdrop-blur-lg px-4 pt-2 pb-6 space-y-3">
+        <div className="md:hidden border-b border-border bg-white/95 backdrop-blur-lg px-4 pt-2 pb-6 space-y-3">
           <Link
             href="/#projects"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-slate-300 hover:text-muara-cyan"
+            className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
           >
             Projects
           </Link>
           <Link
             href="/#accolades"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-slate-300 hover:text-muara-cyan"
+            className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
           >
             Accolades
           </Link>
           <Link
             href="/#manifesto"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-slate-300 hover:text-muara-cyan"
+            className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
           >
             Manifesto
           </Link>
           <Link
             href="/#syndicate"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-slate-300 hover:text-muara-cyan"
+            className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
           >
             The Syndicate
           </Link>
           <Link
             href="/#treasury"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-slate-300 hover:text-muara-cyan"
+            className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
           >
             Treasury
           </Link>
-          <div className="pt-2 border-t border-border/50">
+          <div className="pt-2 border-t border-border">
             {user ? (
               <Link
                 href="/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-surface-hover border border-muara-cyan/30 py-2.5 text-xs font-semibold text-white"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-surface border border-border-ocean py-2.5 text-xs font-semibold text-foreground shadow-sm"
               >
-                <span className="material-symbols-rounded text-base text-muara-cyan">dashboard</span>
+                <span className="material-symbols-rounded text-base text-muara-ocean">dashboard</span>
                 Dashboard
               </Link>
             ) : (
               <Link
                 href="/api/auth/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-muara-cyan py-2.5 text-xs font-bold text-background"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-muara-ocean py-2.5 text-xs font-bold text-white shadow-sm"
               >
                 <span className="material-symbols-rounded text-base">login</span>
                 Login with GitHub

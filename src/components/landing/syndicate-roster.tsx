@@ -77,20 +77,20 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
   const filtered = filterMembers(initialMembers, filter);
 
   return (
-    <section id="syndicate" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-border/50">
+    <section id="syndicate" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-border bg-white">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div>
-            <h2 className="text-xs font-mono font-semibold uppercase tracking-wider text-muara-cyan mb-2">
+            <h2 className="text-xs font-mono font-semibold uppercase tracking-wider text-muara-ocean mb-2">
               Jaringan Pengembang & Kreator
             </h2>
-            <p className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            <p className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               The Syndicate (Member Roster)
             </p>
           </div>
 
           {/* Filter Tabs */}
-          <div className="flex flex-wrap gap-1.5 p-1 bg-surface rounded-lg border border-border">
+          <div className="flex flex-wrap gap-1.5 p-1 bg-surface-alt rounded-lg border border-border-ocean">
             {(
               [
                 { id: "maintainer", label: "Maintainer" },
@@ -107,8 +107,8 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                 onClick={() => setFilter(tab.id)}
                 className={`px-3 py-1.5 rounded-md text-xs font-mono transition-colors ${
                   filter === tab.id
-                    ? "bg-muara-cyan text-background font-bold shadow-sm"
-                    : "text-slate-400 hover:text-white"
+                    ? "bg-muara-ocean text-white font-bold shadow-sm"
+                    : "text-slate-600 hover:text-foreground hover:bg-white"
                 }`}
               >
                 {tab.label}
@@ -118,7 +118,7 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
         </div>
 
         {filtered.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border p-12 text-center text-slate-500 text-sm">
+          <div className="rounded-xl border border-dashed border-border-ocean p-12 text-center text-slate-500 text-sm bg-surface-alt/40">
             Belum ada anggota yang terdaftar pada kategori ini.
           </div>
         ) : (
@@ -128,7 +128,7 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
               return (
                 <div
                   key={member.id}
-                  className="rounded-xl border border-border bg-surface p-6 hover:border-muara-cyan/40 transition-all flex flex-col justify-between group shadow-md"
+                  className="rounded-xl border border-border-ocean bg-white p-6 hover:border-muara-ocean transition-all flex flex-col justify-between group shadow-ocean"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-3 mb-4">
@@ -139,18 +139,18 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                             alt={member.full_name}
                             width={48}
                             height={48}
-                            className="rounded-full border border-border group-hover:border-muara-cyan transition-colors"
+                            className="rounded-full border border-border-ocean group-hover:border-muara-ocean transition-colors"
                           />
                         ) : (
-                          <div className="h-12 w-12 rounded-full bg-surface-hover border border-border flex items-center justify-center font-display font-bold text-white">
+                          <div className="h-12 w-12 rounded-full bg-muara-sky border border-muara-ocean/30 flex items-center justify-center font-display font-bold text-muara-ocean">
                             {member.full_name.charAt(0)}
                           </div>
                         )}
                         <div>
-                          <h3 className="font-display font-bold text-base text-white group-hover:text-muara-cyan transition-colors">
+                          <h3 className="font-display font-bold text-base text-foreground group-hover:text-muara-ocean transition-colors">
                             {member.full_name}
                           </h3>
-                          <p className="text-xs font-mono text-slate-400">
+                          <p className="text-xs font-mono text-slate-500">
                             @{member.github_username}
                           </p>
                         </div>
@@ -160,8 +160,8 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                       <span
                         className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-mono font-semibold ${
                           isTopThree
-                            ? "bg-amber-500/10 border border-amber-500/30 text-amber-400"
-                            : "bg-background border border-border text-slate-400"
+                            ? "bg-amber-50 border border-amber-300 text-amber-800"
+                            : "bg-surface-alt border border-border-ocean text-slate-600"
                         }`}
                       >
                         <span className="material-symbols-rounded text-xs">
@@ -174,14 +174,14 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                     {/* Role & Titles */}
                     <div className="flex flex-wrap gap-1.5 mb-4">
                       {member.role_title && (
-                        <span className="rounded bg-muara-cyan/10 border border-muara-cyan/30 px-2 py-0.5 text-[11px] font-mono text-muara-cyan font-bold">
+                        <span className="rounded bg-muara-sky/60 border border-muara-ocean/30 px-2 py-0.5 text-[11px] font-mono text-muara-ocean font-bold">
                           {member.role_title}
                         </span>
                       )}
                       {member.titles?.map((title, tIdx) => (
                         <span
                           key={tIdx}
-                          className="rounded bg-surface-hover border border-border px-2 py-0.5 text-[11px] font-mono text-slate-300"
+                          className="rounded bg-surface-alt border border-border-ocean px-2 py-0.5 text-[11px] font-mono text-slate-700"
                         >
                           {title}
                         </span>
@@ -189,20 +189,20 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                     </div>
 
                     {member.bio && (
-                      <p className="text-xs text-slate-400 line-clamp-2 mb-4 leading-relaxed">
+                      <p className="text-xs text-slate-600 line-clamp-2 mb-4 leading-relaxed">
                         {member.bio}
                       </p>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-3 pt-3 border-t border-border/50 text-xs font-mono text-slate-400">
-                    <span className="uppercase text-[10px] text-slate-500 tracking-wider">
+                  <div className="flex items-center gap-3 pt-3 border-t border-border text-xs font-mono text-slate-500">
+                    <span className="uppercase text-[10px] text-muara-ocean font-bold tracking-wider">
                       {member.division}
                     </span>
                     {member.track && (
                       <>
-                        <span className="text-slate-600">•</span>
-                        <span className="text-slate-300">{member.track}</span>
+                        <span className="text-slate-300">•</span>
+                        <span className="text-slate-600">{member.track}</span>
                       </>
                     )}
                     <div className="ml-auto flex items-center gap-2">
@@ -211,7 +211,7 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                           href={member.github_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="hover:text-white"
+                          className="hover:text-foreground"
                           aria-label="GitHub"
                         >
                           <span className="material-symbols-rounded text-sm">terminal</span>
@@ -222,7 +222,7 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                           href={member.portfolio_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="hover:text-white"
+                          className="hover:text-muara-ocean"
                           aria-label="Portfolio"
                         >
                           <span className="material-symbols-rounded text-sm">open_in_new</span>
