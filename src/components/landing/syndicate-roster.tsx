@@ -80,50 +80,38 @@ interface CoreMaintainerConfig {
   title: string;
   roleBadge: "Founder" | "Co-Founder";
   division: "builder" | "creative";
-  track: string;
-  bio: string;
-  avatarUrl: string;
-  githubUrl: string;
+  roles: string[];
 }
 
 const CORE_MAINTAINERS: CoreMaintainerConfig[] = [
   {
     githubUsername: "Curzyori",
     fullName: "Yuken Velino",
-    title: "Founder & Lead Architect",
+    title: "Founder",
     roleBadge: "Founder",
     division: "builder",
-    track: "AI Gateway & Systems Architecture",
-    bio: "Inisiator Muara AI. Fokus pada arsitektur AI gateway mandiri, reverse-engineering API kampus, dan otomasi developer agent.",
-    avatarUrl: "https://avatars.githubusercontent.com/u/87063462?v=4",
-    githubUrl: "https://github.com/Curzyori",
+    roles: ["Maintainer", "Builder"],
   },
   {
     githubUsername: "Seeyaa77",
     fullName: "Seeyaa",
-    title: "Co-Founder & Creative Lead",
+    title: "Co-Founder",
     roleBadge: "Co-Founder",
     division: "creative",
-    track: "Visual Identity & UI Direction",
-    bio: "Pengarah estetika dan identitas visual komunitas. Mengawal standar desain anti-slop, branding produk ekosistem, dan tipografi modern.",
-    avatarUrl: "https://avatars.githubusercontent.com/u/104278440?v=4",
-    githubUrl: "https://github.com/Seeyaa77",
+    roles: ["Maintainer", "Creative"],
   },
   {
     githubUsername: "MyKineID",
     fullName: "Raffli (Verzio)",
-    title: "Co-Founder & Core Builder",
+    title: "Co-Founder",
     roleBadge: "Co-Founder",
     division: "builder",
-    track: "FastAPI & Distributed Scrapling",
-    bio: "Arsitek backend engine UBSI API. Mengembangkan scraper multi-tenant, caching Redis terdistribusi, dan automasi data akademik.",
-    avatarUrl: "https://avatars.githubusercontent.com/u/121867160?v=4",
-    githubUrl: "https://github.com/MyKineID",
+    roles: ["Maintainer", "Builder"],
   },
 ];
 
 export default function SyndicateRoster({ initialMembers = [] }: SyndicateRosterProps) {
-  // Merge live DB data if member has registered
+  // Merge live DB data if member has registered in public.members
   const maintainers = CORE_MAINTAINERS.map((core) => {
     const liveMatch = initialMembers.find(
       (m) => m.github_username?.toLowerCase() === core.githubUsername.toLowerCase()
@@ -132,21 +120,19 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
       id: liveMatch?.id || core.githubUsername,
       fullName: liveMatch?.full_name || core.fullName,
       githubUsername: core.githubUsername,
-      title: core.title,
-      roleBadge: core.roleBadge,
-      division: core.division,
-      track: liveMatch?.track || core.track,
-      bio: liveMatch?.bio || core.bio,
-      avatarUrl: liveMatch?.avatar_url || core.avatarUrl,
-      githubUrl: liveMatch?.github_url || core.githubUrl,
+      title: liveMatch?.role_title || core.title,
+      roleBadge: liveMatch?.sub_hierarchy === "founder" ? ("Founder" as const) : core.roleBadge,
+      division: liveMatch?.division || core.division,
+      roles: liveMatch?.roles && liveMatch.roles.length > 0 ? liveMatch.roles : core.roles,
+      avatarUrl: `https://github.com/${core.githubUsername}.png`,
+      githubUrl: `https://github.com/${core.githubUsername}`,
       linkedinUrl: liveMatch?.linkedin_url,
       portfolioUrl: liveMatch?.portfolio_url,
-      totalCommits: liveMatch?.total_commits || 0,
     };
   });
 
   return (
-    <section id="syndicate" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-border bg-white">
+    <section id="syndicate" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-stroke bg-white">
       <div className="mx-auto max-w-7xl">
         {/* Header Section */}
         <div className="text-center max-w-3xl mx-auto mb-14">
@@ -156,45 +142,45 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
           <p className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Core Syndicate • Maintainers
           </p>
-          <p className="text-sm text-slate-500 mt-3 leading-relaxed">
+          <p className="text-sm text-secondary mt-3 leading-relaxed font-sans">
             Inisiator dan pengarah rekayasa teknologi independen Muara AI yang mengawal standar kode, riset AI mandiri, dan transparansi komunitas.
           </p>
         </div>
 
-        {/* 3 Maintainer Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* 3 Maintainer Cards — Minimalist & Anti-Slop */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {maintainers.map((m, idx) => (
             <FadeIn key={m.id} delay={idx * 0.1}>
-              <SpotlightCard className="rounded-2xl border border-border bg-white p-7 hover:border-muara-ocean transition-all flex flex-col justify-between group shadow-sm h-full">
+              <SpotlightCard className="rounded-[18px] border border-stroke bg-white p-6 hover:border-muara-ocean transition-all flex flex-col justify-between group shadow-diffusion hover:shadow-lift h-full">
                 <div>
-                  {/* Card Header: Avatar & Name */}
-                  <div className="flex items-center gap-4 mb-5">
-                    <div className="relative">
+                  {/* Card Header: Live Avatar & Name */}
+                  <div className="flex items-center gap-3.5 mb-5">
+                    <div className="relative shrink-0">
                       <Image
                         src={m.avatarUrl}
                         alt={m.fullName}
-                        width={56}
-                        height={56}
+                        width={52}
+                        height={52}
                         className="rounded-full border-2 border-muara-ocean/30 group-hover:border-muara-ocean transition-colors object-cover"
                         unoptimized
                       />
-                      <span className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 ring-2 ring-white">
+                      <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-500 ring-2 ring-white">
                         <span className="h-1.5 w-1.5 rounded-full bg-white" />
                       </span>
                     </div>
 
-                    <div>
-                      <h3 className="font-display font-bold text-lg text-foreground group-hover:text-muara-ocean transition-colors">
+                    <div className="min-w-0">
+                      <h3 className="font-display font-bold text-base text-foreground group-hover:text-muara-ocean transition-colors truncate">
                         {m.fullName}
                       </h3>
-                      <p className="text-xs font-mono text-slate-500">
+                      <p className="text-xs font-mono text-secondary truncate">
                         @{m.githubUsername}
                       </p>
                     </div>
                   </div>
 
-                  {/* Badges: Role & Division */}
-                  <div className="flex flex-wrap items-center gap-2 mb-4">
+                  {/* Badges: Title, Role & Division */}
+                  <div className="flex flex-wrap items-center gap-1.5 mb-4">
                     <span
                       className={`rounded px-2.5 py-0.5 text-[11px] font-mono font-bold shadow-xs ${
                         m.roleBadge === "Founder"
@@ -204,7 +190,7 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                     >
                       {m.roleBadge}
                     </span>
-                    <span className="rounded bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[11px] font-mono text-slate-700 font-medium">
+                    <span className="rounded bg-surface-alt border border-stroke px-2.5 py-0.5 text-[11px] font-mono text-slate-700 font-medium">
                       Maintainer
                     </span>
                     <span
@@ -217,25 +203,11 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                       {m.division}
                     </span>
                   </div>
-
-                  {/* Title & Track */}
-                  <div className="text-xs font-mono font-bold text-foreground mb-1">
-                    {m.title}
-                  </div>
-                  <div className="text-[11px] font-mono text-slate-500 mb-3.5 flex items-center gap-1.5">
-                    <Icon name="terminal" className="w-3.5 h-3.5 text-muara-ocean shrink-0" />
-                    <span className="truncate">{m.track}</span>
-                  </div>
-
-                  {/* Bio */}
-                  <p className="text-xs text-slate-600 leading-relaxed font-sans mb-5">
-                    {m.bio}
-                  </p>
                 </div>
 
-                {/* Footer Actions */}
-                <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                  <div className="flex items-center gap-3">
+                {/* Footer: Direct GitHub Link */}
+                <div className="pt-4 border-t border-stroke flex items-center justify-between">
+                  <div className="flex items-center gap-2">
                     <Link
                       href={m.githubUrl}
                       target="_blank"
@@ -274,17 +246,17 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
         </div>
 
         {/* Navigation Banner to Full Member Directory */}
-        <div className="mt-14 rounded-2xl border border-border bg-slate-50 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
+        <div className="mt-12 rounded-[20px] border border-stroke bg-surface-alt p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
           <div className="flex items-center gap-4 text-center sm:text-left">
-            <div className="h-12 w-12 rounded-xl bg-muara-sky border border-muara-ocean/30 flex items-center justify-center text-muara-ocean shrink-0 mx-auto sm:mx-0">
+            <div className="h-12 w-12 rounded-xl bg-white border border-stroke flex items-center justify-center text-muara-ocean shrink-0 mx-auto sm:mx-0 shadow-xs">
               <Icon name="groups" className="w-6 h-6" />
             </div>
             <div>
               <h4 className="font-display font-bold text-base text-foreground">
                 Direktori Anggota & Roster Lengkap
               </h4>
-              <p className="text-xs text-slate-500 mt-1 max-w-xl">
-                Jelajahi seluruh profil kontributor, lead proyek, divisi Builder & Creative, filter spesialisasi track, serta pantau komit aktif komunitas.
+              <p className="text-xs text-secondary mt-1 max-w-xl font-sans">
+                Jelajahi seluruh profil mahasiswa pengembang, lead proyek, divisi Builder & Creative, filter spesialisasi track, serta pantau komit aktif komunitas.
               </p>
             </div>
           </div>

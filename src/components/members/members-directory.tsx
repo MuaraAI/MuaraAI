@@ -112,19 +112,14 @@ export default function MembersDirectory({ initialMembers }: MembersDirectoryPro
                   <div>
                     <div className="flex items-start justify-between gap-3 mb-4">
                       <div className="flex items-center gap-3">
-                        {member.avatar_url ? (
-                          <Image
-                            src={member.avatar_url}
-                            alt={member.full_name}
-                            width={48}
-                            height={48}
-                            className="rounded-full border border-border group-hover:border-muara-ocean transition-colors"
-                          />
-                        ) : (
-                          <div className="h-12 w-12 rounded-full bg-sky-50 border border-muara-ocean/30 flex items-center justify-center font-display font-bold text-muara-ocean">
-                            {member.full_name.charAt(0)}
-                          </div>
-                        )}
+                        <Image
+                          src={member.avatar_url || `https://github.com/${member.github_username}.png`}
+                          alt={member.full_name}
+                          width={48}
+                          height={48}
+                          className="rounded-full border border-stroke group-hover:border-muara-ocean transition-colors object-cover"
+                          unoptimized
+                        />
                         <div>
                           <h3 className="font-display font-bold text-base text-foreground group-hover:text-muara-ocean transition-colors">
                             {member.full_name}
