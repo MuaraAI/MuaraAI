@@ -83,6 +83,13 @@ export default async function PortalLayout({
               Profil & PoW
             </Link>
             <Link
+              href="/dashboard/vault"
+              className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-surface-hover hover:text-white transition-colors"
+            >
+              <Icon name="lock" className="w-4 h-4 text-muara-cyan" />
+              Vault & API Keys
+            </Link>
+            <Link
               href="/dashboard/treasury"
               className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-surface-hover hover:text-white transition-colors"
             >

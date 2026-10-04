@@ -68,6 +68,7 @@ Engineering and creative communities in universities often suffer from passive s
 - **US-7:** As an approved member, I want to choose between paying Rp 3,000 (1 week) or Rp 12,000 (1 month) and generate a dynamic QRIS image instantly, so that I can pay via mobile banking or e-wallet without sending paper receipts.
 - **US-8:** As an approved member with overdue kas, I want the system to calculate my accumulated arrears (3k, 6k, 9k, or 12k) automatically, so that I can settle all overdue weeks in a single QRIS scan.
 - **US-9:** As an approved member, I want to read research guides and decks on Muara Learn and click resource links, having my read status recorded automatically with a server timestamp.
+- **US-16:** As an approved member, I want to access `/dashboard/vault` to generate and manage API keys for both `Muara AI Gateway` (`muara_ai_...`) and `UBSI API` (`muara_ubsi_...`) in a secure view-once modal, storing only SHA-256 hashes on the server.
 
 ### Maintainer Operations
 - **US-10:** As a maintainer, I want to receive instant notifications via Resend email, Discord webhook, and Telegram bot whenever a new PoW is submitted or dues are paid.

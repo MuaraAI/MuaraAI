@@ -32,6 +32,7 @@ muaraai.com/
 │
 ├── (portal)             # Area terproteksi anggota & pengurus
 │   ├── /dashboard       # Profil anggota & status keanggotaan
+│   ├── /dashboard/vault # Vault & API Key generator (Muara AI & UBSI API)
 │   ├── /dashboard/treasury # Bayar kas via QRIS Pakasir & riwayat mutasi
 │   ├── /dashboard/learn # Feed materi riset Muara Learn
 │   │
