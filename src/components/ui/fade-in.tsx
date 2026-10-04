@@ -16,22 +16,13 @@ export default function FadeIn({
   direction = "up",
   className = "",
 }: FadeInProps) {
-  const getOffset = () => {
-    switch (direction) {
-      case "up":
-        return { y: 24, x: 0 };
-      case "down":
-        return { y: -24, x: 0 };
-      case "left":
-        return { x: 24, y: 0 };
-      case "right":
-        return { x: -24, y: 0 };
-      default:
-        return { x: 0, y: 0 };
-    }
+  const offsets: Record<string, { x?: number; y?: number }> = {
+    up: { y: 24, x: 0 },
+    down: { y: -24, x: 0 },
+    left: { x: 24, y: 0 },
+    right: { x: -24, y: 0 },
   };
-
-  const offset = getOffset();
+  const offset = offsets[direction] ?? { x: 0, y: 0 };
 
   return (
     <motion.div

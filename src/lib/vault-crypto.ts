@@ -4,16 +4,8 @@ import crypto from "node:crypto";
  * Parse a 32-byte encryption key from either a 64-char hex string or 32-byte string.
  */
 function parseKey(keyInput: string): Buffer {
-  if (keyInput.length === 64) {
-    try {
-      const buf = Buffer.from(keyInput, "hex");
-      if (buf.length === 32) return buf;
-    } catch {
-      // Fall through
-    }
-  }
-  const utf8Buf = Buffer.from(keyInput, "utf-8");
-  if (utf8Buf.length === 32) return utf8Buf;
+  const buf = Buffer.from(keyInput, keyInput.length === 64 ? "hex" : "utf-8");
+  if (buf.length === 32) return buf;
   throw new Error("VAULT_ENCRYPTION_KEY must be exactly 32 bytes (or 64-character hex)");
 }
 
