@@ -1,46 +1,65 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Icon from "@/components/ui/icon";
 
-const CODE_SNIPPETS = [
-  `// 1. Multi-Tenant Vault Auth (AES-256-GCM)
-const vault = await decryptCampusVault(req.headers['x-api-key']);
-const session = await scraperPool.acquire(vault.nim);
-return Response.json(await session.getGrades());`,
+type TabType = "curl" | "typescript" | "response";
 
-  `// 2. Autonomous Agent Execution Loop
-const agent = new HermesAgent({ profile: "curzy-code" });
-await agent.run({
-  task: "Run regression test offline",
-  tools: [read_file, patch, terminal]
-});`,
+const CODE_CONTENTS: Record<TabType, string> = {
+  curl: `curl -X GET \\
+  "https://api.muaraai.com/v1/ubsi-api/v1/elearning/courses" \\
+  -H "X-API-Key: muara_ubsi_7f8a9b2c..." \\
+  -H "Accept: application/json"`,
 
-  `// 3. Strict Anti-Slop Delivery Gate
-assert(tests.passing === 126, "Offline suite 100% required");
-assert(secrets.detected === 0, "Zero hardcoded credentials");
-shipToProduction({ target: "muaraai.com" });`
-];
+  typescript: `import { MuaraClient } from '@muara/sdk';
+
+const client = new MuaraClient({
+  apiKey: process.env.MUARA_API_KEY
+});
+
+// Otomasi multi-tenant scraper kampus
+const res = await client.courses.list();
+console.log(res.data.courses);`,
+
+  response: `{
+  "status": "success",
+  "data": {
+    "student_nim": "15260767",
+    "campus": "UBSI Pontianak",
+    "kelas": "15.1C.30",
+    "active_courses": 6,
+    "vault_status": "aes_256_gcm_verified"
+  },
+  "latency_ms": 14.2
+}`,
+};
 
 export default function Hero() {
-  const [snippetIndex, setSnippetIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState<TabType>("curl");
+  const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSnippetIndex((prev) => (prev + 1) % CODE_SNIPPETS.length);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, []);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(CODE_CONTENTS[activeTab]);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <section className="relative overflow-hidden pt-20 pb-16 md:pt-28 md:pb-24 border-b border-border">
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] bg-sky-200/40 blur-[130px] rounded-full pointer-events-none -z-10" />
+    <section className="relative overflow-hidden pt-12 pb-16 md:pt-20 md:pb-24 border-b border-stroke bg-background">
+      {/* Ambient hydro diffusion gradient */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-br from-sky-200/40 via-cyan-100/25 to-transparent blur-[140px] rounded-full pointer-events-none -z-10" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          {/* Left Hero Text */}
+          {/* Left Hero Content */}
           <div className="flex-1 text-center lg:text-left space-y-6">
+            {/* Design Badge */}
+            <div className="inline-flex items-center gap-2 rounded-full bg-surface-alt border border-stroke px-3.5 py-1 text-xs font-mono font-medium text-muara-ocean shadow-xs">
+              <Icon name="waves" className="w-3.5 h-3.5 text-muara-ocean" />
+              <span>Fluid Currents Light v2 — UBSI Syndicate</span>
+            </div>
+
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.1]">
               Where local craft <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-muara-ocean via-sky-600 to-teal-700">
@@ -48,52 +67,110 @@ export default function Hero() {
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
-              Komunitas riset dan praktisi AI rekayasa independen mahasiswa UBSI Pontianak. 
-              Bukan kelas teori atau ruang wacana santai — kami adalah studio produksi perangkat lunak, sistem agen otonom, dan media generatif kelas dunia berbasis <em>proof-of-work</em>.
+            <p className="text-base sm:text-lg text-secondary max-w-2xl leading-relaxed font-sans">
+              Komunitas riset dan praktisi AI rekayasa independen eksklusif mahasiswa UBSI. 
+              Bukan kelas teori santai — kami adalah studio produksi perangkat lunak, sistem agen otonom, dan media generatif kelas dunia berbasis <em>proof-of-work</em> nyata.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <Link
                 href="/#projects"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-muara-ocean hover:bg-muara-ocean-dark text-white px-6 py-3 text-sm font-bold transition-all shadow-ocean"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-secondary text-white px-6 py-3 text-sm font-bold transition-all shadow-diffusion"
               >
-                <Icon name="explore" className="w-4 h-4 text-white" />
-                Jelajahi Proyek
+                <span>Jelajahi Proyek</span>
+                <Icon name="arrow_forward" className="w-4 h-4 text-white" />
               </Link>
               <Link
-                href="/#syndicate"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-surface hover:bg-surface-alt border border-border-ocean hover:border-slate-400 text-foreground px-6 py-3 text-sm font-semibold transition-colors shadow-sm"
+                href="/members"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-[10px] bg-white hover:bg-surface-alt border border-stroke text-foreground px-6 py-3 text-sm font-semibold transition-colors shadow-xs"
               >
                 <Icon name="group" className="w-4 h-4 text-muara-ocean" />
-                Lihat Anggota
+                <span>Direktori Anggota</span>
               </Link>
+            </div>
+
+            {/* Quality Status Chips */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-4 text-xs font-mono">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-alt border border-stroke px-3 py-1 text-emerald-800 font-medium">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>API 99.9% Uptime</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-alt border border-stroke px-3 py-1 text-amber-900 font-medium">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                <span>15.5:1 Text Contrast</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-alt border border-stroke px-3 py-1 text-secondary font-medium">
+                <Icon name="verified" className="w-3.5 h-3.5 text-muara-ocean" />
+                <span>Zero Font CDN</span>
+              </span>
             </div>
           </div>
 
-          {/* Right Terminal Loop Mockup */}
+          {/* Right Interactive Terminal Card */}
           <div className="flex-1 w-full max-w-lg lg:max-w-none">
-            <div className="rounded-xl border border-border-ocean bg-white shadow-ocean-lg overflow-hidden font-mono text-xs">
-              <div className="flex items-center justify-between border-b border-border bg-slate-50 px-4 py-2.5">
-                <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-red-400" />
-                  <div className="h-3 w-3 rounded-full bg-amber-400" />
-                  <div className="h-3 w-3 rounded-full bg-emerald-400" />
-                  <span className="ml-2 text-slate-500 text-[11px]">muara-agent-runtime</span>
+            <div className="rounded-[18px] border border-stroke bg-white shadow-lift overflow-hidden font-mono text-xs transition-all">
+              {/* Header with Interactive Tabs */}
+              <div className="flex items-center justify-between border-b border-stroke bg-surface-alt px-4 py-2.5">
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("curl")}
+                    className={`px-3 py-1 rounded-md text-xs font-mono font-medium transition-colors ${
+                      activeTab === "curl"
+                        ? "bg-white text-foreground shadow-xs font-bold border border-stroke"
+                        : "text-secondary hover:text-foreground"
+                    }`}
+                  >
+                    curl
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("typescript")}
+                    className={`px-3 py-1 rounded-md text-xs font-mono font-medium transition-colors ${
+                      activeTab === "typescript"
+                        ? "bg-white text-foreground shadow-xs font-bold border border-stroke"
+                        : "text-secondary hover:text-foreground"
+                    }`}
+                  >
+                    TypeScript
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("response")}
+                    className={`px-3 py-1 rounded-md text-xs font-mono font-medium transition-colors ${
+                      activeTab === "response"
+                        ? "bg-white text-foreground shadow-xs font-bold border border-stroke"
+                        : "text-secondary hover:text-foreground"
+                    }`}
+                  >
+                    JSON Response
+                  </button>
                 </div>
-                <span className="text-[10px] text-muara-ocean font-bold">100% OFFLINE PASS</span>
+
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-stroke bg-white hover:bg-slate-50 text-slate-600 text-[11px] font-mono transition-colors shadow-xs"
+                >
+                  <Icon name={copied ? "check" : "content_copy"} className="w-3.5 h-3.5 text-muara-ocean" />
+                  <span>{copied ? "Copied!" : "Copy"}</span>
+                </button>
               </div>
-              <div className="p-5 overflow-x-auto min-h-[170px] flex items-center bg-slate-50/40">
-                <pre className="text-slate-800 leading-relaxed transition-all duration-300">
-                  <code>{CODE_SNIPPETS[snippetIndex]}</code>
+
+              {/* Code Snippet Body */}
+              <div className="p-5 overflow-x-auto min-h-[200px] flex items-center bg-white">
+                <pre className="text-foreground leading-relaxed transition-all duration-200 w-full font-mono text-xs">
+                  <code>{CODE_CONTENTS[activeTab]}</code>
                 </pre>
               </div>
-              <div className="border-t border-border bg-slate-50 px-4 py-2 flex items-center justify-between text-[11px] text-slate-500">
-                <span>Cycle: {snippetIndex + 1} of {CODE_SNIPPETS.length}</span>
-                <span className="flex items-center gap-1.5 text-teal-700 font-semibold">
-                  <span className="h-1.5 w-1.5 rounded-full bg-teal-600" />
-                  Kernel Ready
-                </span>
+
+              {/* Terminal Footer */}
+              <div className="border-t border-stroke bg-surface-alt px-4 py-2 flex items-center justify-between text-[11px] text-secondary">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  <span>AES-256-GCM Vault Active</span>
+                </div>
+                <span className="font-semibold text-muara-ocean">Latency: ~14ms</span>
               </div>
             </div>
           </div>
