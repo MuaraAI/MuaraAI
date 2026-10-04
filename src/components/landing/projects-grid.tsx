@@ -31,7 +31,7 @@ export default function ProjectsGrid() {
   ];
 
   return (
-    <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-border bg-surface-alt/30">
+    <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-stroke bg-surface-alt/40">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
@@ -42,7 +42,7 @@ export default function ProjectsGrid() {
               The Hall of Projects
             </p>
           </div>
-          <p className="text-sm text-slate-600 max-w-md">
+          <p className="text-sm text-secondary max-w-md font-sans">
             Setiap proyek dibangun dengan standar rekayasa ketat, zero secret leaks, dan pengujian otomatis 100% offline.
           </p>
         </div>
@@ -51,7 +51,7 @@ export default function ProjectsGrid() {
           {projects.map((p, idx) => (
             <FadeIn key={idx} delay={idx * 0.15}>
               <SpotlightCard
-                className="rounded-xl border border-border-ocean bg-white hover:border-muara-ocean transition-all p-8 flex flex-col justify-between group shadow-ocean h-full"
+                className="rounded-[18px] border border-stroke bg-white hover:border-muara-ocean transition-all p-8 flex flex-col justify-between group shadow-diffusion hover:shadow-lift h-full"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-4">
@@ -59,14 +59,14 @@ export default function ProjectsGrid() {
                       <span className="h-1.5 w-1.5 rounded-full bg-teal-600" />
                       {p.badge}
                     </span>
-                    <span className="text-xs font-mono text-slate-500">{p.version}</span>
+                    <span className="text-xs font-mono text-secondary">{p.version}</span>
                   </div>
 
                   <h3 className="font-display text-2xl font-bold text-foreground group-hover:text-muara-ocean transition-colors mb-3">
                     {p.title}
                   </h3>
 
-                  <p className="text-sm text-slate-600 leading-relaxed mb-6">
+                  <p className="text-sm text-secondary leading-relaxed mb-6 font-sans">
                     {p.description}
                   </p>
 
@@ -74,7 +74,7 @@ export default function ProjectsGrid() {
                     {p.tags.map((tag, tIdx) => (
                       <span
                         key={tIdx}
-                        className="rounded bg-surface-alt border border-border-ocean px-2.5 py-1 text-xs font-mono text-slate-600"
+                        className="rounded-[6px] bg-surface-alt border border-stroke px-2.5 py-1 text-xs font-mono text-slate-700"
                       >
                         {tag}
                       </span>
@@ -82,24 +82,24 @@ export default function ProjectsGrid() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 pt-4 border-t border-border">
+                <div className="flex items-center gap-4 pt-4 border-t border-stroke">
                   <Link
                     href={p.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-muara-ocean hover:text-muara-ocean-dark transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-muara-ocean hover:text-muara-ocean-dark transition-colors font-mono"
                   >
                     <Icon name="open_in_new" className="w-4 h-4 text-muara-ocean" />
-                    Buka Web
+                    <span>Buka Web</span>
                   </Link>
                   <Link
                     href={p.repoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-foreground transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-secondary hover:text-foreground transition-colors font-mono"
                   >
                     <Icon name="code" className="w-4 h-4" />
-                    Repositori GitHub
+                    <span>Repositori GitHub</span>
                   </Link>
                 </div>
               </SpotlightCard>

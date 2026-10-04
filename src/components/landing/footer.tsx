@@ -6,17 +6,17 @@ import ContactTrigger from "./contact-trigger";
 
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-border bg-white text-slate-600 py-12 px-4 sm:px-6 lg:px-8">
+    <footer className="w-full border-t border-stroke bg-white text-secondary py-12 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex flex-col items-center md:items-start gap-2">
-          <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded bg-muara-sky border border-muara-ocean/30 text-muara-ocean font-display font-bold text-sm">
-              M
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-surface-alt border border-stroke text-muara-ocean font-display font-bold text-sm shadow-xs">
+              <Icon name="waves" className="w-4 h-4 text-muara-ocean" />
             </span>
             <span className="font-display font-bold text-foreground text-base">Muara AI</span>
           </div>
-          <p className="text-xs text-slate-500 max-w-sm text-center md:text-left">
-            Where local craft flows global. Komunitas praktisi & riset AI rekayasa independen UBSI Pontianak.
+          <p className="text-xs text-secondary max-w-sm text-center md:text-left font-sans">
+            Where local craft flows global. Komunitas praktisi & riset AI rekayasa independen eksklusif mahasiswa UBSI.
           </p>
         </div>
 

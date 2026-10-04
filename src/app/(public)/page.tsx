@@ -9,6 +9,7 @@ import SyndicateRoster from "@/components/landing/syndicate-roster";
 import BenefitsGrid from "@/components/landing/benefits-grid";
 import TreasuryPreview from "@/components/landing/treasury-preview";
 import JoinFlow from "@/components/landing/join-flow";
+import WaveDivider from "@/components/ui/wave-divider";
 import { createClient } from "@/lib/supabase/server";
 import { Member, Achievement } from "@/types/database";
 
@@ -59,12 +60,16 @@ export default async function LandingPage() {
     <div className="flex flex-col">
       <Hero />
       <MetricsBar />
+      <WaveDivider />
       <VisionMission />
       <ProjectsGrid />
+      <WaveDivider inverted />
       <AccoladesGrid initialAchievements={achievements} />
       <Manifesto />
+      <WaveDivider />
       <SyndicateRoster initialMembers={members} />
       <BenefitsGrid />
+      <WaveDivider inverted />
       <TreasuryPreview currentBalance={currentBalance} totalExpenses={totalExpenses} />
       <JoinFlow />
     </div>

@@ -30,19 +30,19 @@ export default function MetricsBar() {
   ];
 
   return (
-    <section className="border-b border-border bg-surface-alt/60 py-8 px-4 sm:px-6 lg:px-8">
+    <section className="border-b border-stroke bg-surface-alt py-10 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           {metrics.map((m, idx) => (
             <div key={idx} className="flex flex-col items-center sm:items-start p-2">
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-2 mb-1.5">
                 <Icon name={m.icon} className="w-6 h-6 text-muara-ocean" />
                 <span className="font-display font-bold text-2xl sm:text-3xl text-foreground tracking-tight">
                   {m.value}
                 </span>
               </div>
-              <div className="text-sm font-semibold text-slate-800">{m.label}</div>
-              <div className="text-xs text-slate-500 mt-0.5">{m.sub}</div>
+              <div className="text-sm font-semibold text-foreground">{m.label}</div>
+              <div className="text-xs text-secondary mt-0.5">{m.sub}</div>
             </div>
           ))}
         </div>
