@@ -29,9 +29,6 @@ export default function Navbar({ user }: NavbarProps) {
               Muara AI
             </span>
           </Link>
-          <span className="hidden sm:inline-flex items-center rounded-full bg-surface-alt border border-border-ocean px-2.5 py-0.5 text-xs font-mono text-muara-ocean font-medium">
-            v1.0 • Pontianak
-          </span>
         </div>
 
         {/* Desktop Navigation */}

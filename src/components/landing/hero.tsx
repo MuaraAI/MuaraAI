@@ -41,11 +41,6 @@ export default function Hero() {
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           {/* Left Hero Text */}
           <div className="flex-1 text-center lg:text-left space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-muara-ocean/20 bg-muara-sky/60 px-3.5 py-1 text-xs font-mono text-muara-ocean font-semibold">
-              <span className="h-1.5 w-1.5 rounded-full bg-muara-ocean animate-pulse" />
-              AI ENGINEERING & CREATIVE SYNDICATE • PONTIANAK
-            </div>
-
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.1]">
               Where local craft <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-muara-ocean via-sky-600 to-teal-700">
