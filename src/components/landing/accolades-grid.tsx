@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Achievement } from "@/types/database";
 import Icon from "@/components/ui/icon";
+import FadeIn from "@/components/ui/fade-in";
 
 interface AccoladesGridProps {
   initialAchievements?: Achievement[];
@@ -37,68 +38,69 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {initialAchievements.map((item) => (
-              <div
-                key={item.id}
-                className="rounded-xl border border-border-ocean bg-white overflow-hidden group hover:border-muara-ocean transition-all shadow-ocean flex flex-col justify-between"
-              >
-                <div>
-                  {/* Certificate Image Preview */}
-                  <div
-                    onClick={() => setActiveImage(item.image_url)}
-                    className="relative h-48 w-full bg-slate-100 overflow-hidden cursor-zoom-in"
-                  >
-                    <Image
-                      src={item.image_url}
-                      alt={item.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent opacity-60" />
-                    <span className="absolute bottom-2 right-2 rounded bg-white/90 px-2 py-0.5 text-[10px] font-mono text-slate-700 border border-border shadow-sm">
-                      Klik untuk perbesar
-                    </span>
-                  </div>
-
-                  <div className="p-5">
-                    <div className="flex items-center justify-between text-xs font-mono text-slate-500 mb-2">
-                      <span className="text-muara-ocean font-bold">{item.issuer}</span>
-                      <span>{item.issue_date}</span>
+            {initialAchievements.map((item, idx) => (
+              <FadeIn key={item.id} delay={idx * 0.1}>
+                <div
+                  className="rounded-xl border border-border-ocean bg-white overflow-hidden group hover:border-muara-ocean transition-all shadow-ocean flex flex-col justify-between h-full"
+                >
+                  <div>
+                    {/* Certificate Image Preview */}
+                    <div
+                      onClick={() => setActiveImage(item.image_url)}
+                      className="relative h-48 w-full bg-slate-100 overflow-hidden cursor-zoom-in"
+                    >
+                      <Image
+                        src={item.image_url}
+                        alt={item.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent opacity-60" />
+                      <span className="absolute bottom-2 right-2 rounded bg-white/90 px-2 py-0.5 text-[10px] font-mono text-slate-700 border border-border shadow-sm">
+                        Klik untuk perbesar
+                      </span>
                     </div>
 
-                    <h3 className="font-display font-bold text-base text-foreground group-hover:text-muara-ocean transition-colors mb-3">
-                      {item.title}
-                    </h3>
-
-                    {item.recipient_names?.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        {item.recipient_names.map((name, nIdx) => (
-                          <span
-                            key={nIdx}
-                            className="rounded bg-surface-alt border border-border-ocean px-2 py-0.5 text-[10px] font-mono text-slate-700"
-                          >
-                            {name}
-                          </span>
-                        ))}
+                    <div className="p-5">
+                      <div className="flex items-center justify-between text-xs font-mono text-slate-500 mb-2">
+                        <span className="text-muara-ocean font-bold">{item.issuer}</span>
+                        <span>{item.issue_date}</span>
                       </div>
-                    )}
-                  </div>
-                </div>
 
-                {item.credential_url && (
-                  <div className="px-5 pb-5 pt-0">
-                    <Link
-                      href={item.credential_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-muara-ocean hover:text-muara-ocean-dark hover:underline"
-                    >
-                      <Icon name="verified" className="w-4 h-4 text-muara-ocean" />
-                      Verifikasi Kredensial
-                    </Link>
+                      <h3 className="font-display font-bold text-base text-foreground group-hover:text-muara-ocean transition-colors mb-3">
+                        {item.title}
+                      </h3>
+
+                      {item.recipient_names?.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-3">
+                          {item.recipient_names.map((name, nIdx) => (
+                            <span
+                              key={nIdx}
+                              className="rounded bg-surface-alt border border-border-ocean px-2 py-0.5 text-[10px] font-mono text-slate-700"
+                            >
+                              {name}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
-              </div>
+
+                  {item.credential_url && (
+                    <div className="px-5 pb-5 pt-0">
+                      <Link
+                        href={item.credential_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-muara-ocean hover:text-muara-ocean-dark hover:underline"
+                      >
+                        <Icon name="verified" className="w-4 h-4 text-muara-ocean" />
+                        Verifikasi Kredensial
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </FadeIn>
             ))}
           </div>
         )}

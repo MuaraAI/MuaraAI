@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/icon";
+import FadeIn from "@/components/ui/fade-in";
 
 interface TreasuryPreviewProps {
   currentBalance?: number;
@@ -39,40 +40,44 @@ export default function TreasuryPreview({
         {/* 2 Clean Indicator Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* Card 1: Total Kas Saat Ini */}
-          <div className="rounded-xl border border-teal-200 bg-teal-50/40 p-8 relative overflow-hidden group hover:border-teal-500 transition-all shadow-ocean">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-teal-800">
-                Saldo Kas Bersih Riil
-              </span>
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-100 border border-teal-300 text-teal-800">
-                <Icon name="account_balance_wallet" className="w-5 h-5 text-teal-800" />
-              </span>
+          <FadeIn delay={0.1}>
+            <div className="rounded-xl border border-teal-200 bg-teal-50/40 p-8 relative overflow-hidden group hover:border-teal-500 transition-all shadow-ocean h-full">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-mono font-semibold uppercase tracking-wider text-teal-800">
+                  Saldo Kas Bersih Riil
+                </span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-100 border border-teal-300 text-teal-800">
+                  <Icon name="account_balance_wallet" className="w-5 h-5 text-teal-800" />
+                </span>
+              </div>
+              <div className="font-display font-bold text-3xl sm:text-4xl text-teal-950 tracking-tight mb-2">
+                {formatRupiah(currentBalance)}
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Total dana kas aktif yang siap dialokasikan untuk pembiayaan riset bersama dan perpanjangan sewa server.
+              </p>
             </div>
-            <div className="font-display font-bold text-3xl sm:text-4xl text-teal-950 tracking-tight mb-2">
-              {formatRupiah(currentBalance)}
-            </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Total dana kas aktif yang siap dialokasikan untuk pembiayaan riset bersama dan perpanjangan sewa server.
-            </p>
-          </div>
+          </FadeIn>
 
           {/* Card 2: Total Pengeluaran Kas */}
-          <div className="rounded-xl border border-sky-200 bg-sky-50/40 p-8 relative overflow-hidden group hover:border-muara-ocean transition-all shadow-ocean">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-muara-ocean">
-                Akumulasi Pengeluaran Operasional
-              </span>
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-100 border border-sky-300 text-muara-ocean">
-                <Icon name="receipt_long" className="w-5 h-5 text-muara-ocean" />
-              </span>
+          <FadeIn delay={0.2}>
+            <div className="rounded-xl border border-sky-200 bg-sky-50/40 p-8 relative overflow-hidden group hover:border-muara-ocean transition-all shadow-ocean h-full">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-mono font-semibold uppercase tracking-wider text-muara-ocean">
+                  Akumulasi Pengeluaran Operasional
+                </span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-100 border border-sky-300 text-muara-ocean">
+                  <Icon name="receipt_long" className="w-5 h-5 text-muara-ocean" />
+                </span>
+              </div>
+              <div className="font-display font-bold text-3xl sm:text-4xl text-sky-950 tracking-tight mb-2">
+                {formatRupiah(totalExpenses)}
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Biaya operasional riil yang telah dibayarkan (sewa VPS Tencent, domain muaraai.com, dan pendaftaran lomba).
+              </p>
             </div>
-            <div className="font-display font-bold text-3xl sm:text-4xl text-sky-950 tracking-tight mb-2">
-              {formatRupiah(totalExpenses)}
-            </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Biaya operasional riil yang telah dibayarkan (sewa VPS Tencent, domain muaraai.com, dan pendaftaran lomba).
-            </p>
-          </div>
+          </FadeIn>
         </div>
 
         <div className="rounded-xl border border-border-ocean bg-surface-alt p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">

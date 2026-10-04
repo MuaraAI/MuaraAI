@@ -1,8 +1,10 @@
 import React from "react";
 import Link from "next/link";
+import Icon, { IconName } from "@/components/ui/icon";
+import FadeIn from "@/components/ui/fade-in";
 
 export default function JoinFlow() {
-  const steps = [
+  const steps: { num: string; title: string; desc: string; icon: IconName }[] = [
     {
       num: "01",
       title: "Login with GitHub",
@@ -40,27 +42,28 @@ export default function JoinFlow() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
           {steps.map((s, idx) => (
-            <div
-              key={idx}
-              className="rounded-xl border border-border-ocean bg-white p-8 relative flex flex-col justify-between group hover:border-muara-ocean transition-all shadow-ocean"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-6">
-                  <span className="font-display font-bold text-3xl text-slate-300 group-hover:text-muara-ocean transition-colors">
-                    {s.num}
-                  </span>
-                  <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-muara-sky border border-muara-ocean/30 text-muara-ocean">
-                    <span className="material-symbols-rounded text-xl">{s.icon}</span>
-                  </span>
+            <FadeIn key={idx} delay={idx * 0.15}>
+              <div
+                className="rounded-xl border border-border-ocean bg-white p-8 relative flex flex-col justify-between group hover:border-muara-ocean transition-all shadow-ocean h-full"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="font-display font-bold text-3xl text-slate-300 group-hover:text-muara-ocean transition-colors">
+                      {s.num}
+                    </span>
+                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-muara-sky border border-muara-ocean/30 text-muara-ocean">
+                      <Icon name={s.icon} className="w-5 h-5 text-muara-ocean" />
+                    </span>
+                  </div>
+                  <h3 className="font-display text-lg font-bold text-foreground mb-2">
+                    {s.title}
+                  </h3>
+                  <p className="text-xs leading-relaxed text-slate-600">
+                    {s.desc}
+                  </p>
                 </div>
-                <h3 className="font-display text-lg font-bold text-foreground mb-2">
-                  {s.title}
-                </h3>
-                <p className="text-xs leading-relaxed text-slate-600">
-                  {s.desc}
-                </p>
               </div>
-            </div>
+            </FadeIn>
           ))}
         </div>
 

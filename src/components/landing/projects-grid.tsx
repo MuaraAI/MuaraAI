@@ -1,6 +1,8 @@
 import Link from "next/link";
 import React from "react";
 import Icon from "@/components/ui/icon";
+import FadeIn from "@/components/ui/fade-in";
+import SpotlightCard from "@/components/ui/spotlight-card";
 
 export default function ProjectsGrid() {
   const projects = [
@@ -47,60 +49,61 @@ export default function ProjectsGrid() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((p, idx) => (
-            <div
-              key={idx}
-              className="rounded-xl border border-border-ocean bg-white hover:border-muara-ocean transition-all p-8 flex flex-col justify-between group shadow-ocean"
-            >
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-4">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-50 border border-teal-200 px-2.5 py-0.5 text-xs font-mono font-semibold text-teal-800">
-                    <span className="h-1.5 w-1.5 rounded-full bg-teal-600" />
-                    {p.badge}
-                  </span>
-                  <span className="text-xs font-mono text-slate-500">{p.version}</span>
-                </div>
-
-                <h3 className="font-display text-2xl font-bold text-foreground group-hover:text-muara-ocean transition-colors mb-3">
-                  {p.title}
-                </h3>
-
-                <p className="text-sm text-slate-600 leading-relaxed mb-6">
-                  {p.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {p.tags.map((tag, tIdx) => (
-                    <span
-                      key={tIdx}
-                      className="rounded bg-surface-alt border border-border-ocean px-2.5 py-1 text-xs font-mono text-slate-600"
-                    >
-                      {tag}
+            <FadeIn key={idx} delay={idx * 0.15}>
+              <SpotlightCard
+                className="rounded-xl border border-border-ocean bg-white hover:border-muara-ocean transition-all p-8 flex flex-col justify-between group shadow-ocean h-full"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-4">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-50 border border-teal-200 px-2.5 py-0.5 text-xs font-mono font-semibold text-teal-800">
+                      <span className="h-1.5 w-1.5 rounded-full bg-teal-600" />
+                      {p.badge}
                     </span>
-                  ))}
-                </div>
-              </div>
+                    <span className="text-xs font-mono text-slate-500">{p.version}</span>
+                  </div>
 
-              <div className="flex items-center gap-4 pt-4 border-t border-border">
-                <Link
-                  href={p.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-muara-ocean hover:text-muara-ocean-dark transition-colors"
-                >
-                  <Icon name="open_in_new" className="w-4 h-4 text-muara-ocean" />
-                  Buka Web
-                </Link>
-                <Link
-                  href={p.repoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-foreground transition-colors"
-                >
-                  <Icon name="code" className="w-4 h-4" />
-                  Repositori GitHub
-                </Link>
-              </div>
-            </div>
+                  <h3 className="font-display text-2xl font-bold text-foreground group-hover:text-muara-ocean transition-colors mb-3">
+                    {p.title}
+                  </h3>
+
+                  <p className="text-sm text-slate-600 leading-relaxed mb-6">
+                    {p.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {p.tags.map((tag, tIdx) => (
+                      <span
+                        key={tIdx}
+                        className="rounded bg-surface-alt border border-border-ocean px-2.5 py-1 text-xs font-mono text-slate-600"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 pt-4 border-t border-border">
+                  <Link
+                    href={p.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-muara-ocean hover:text-muara-ocean-dark transition-colors"
+                  >
+                    <Icon name="open_in_new" className="w-4 h-4 text-muara-ocean" />
+                    Buka Web
+                  </Link>
+                  <Link
+                    href={p.repoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-foreground transition-colors"
+                  >
+                    <Icon name="code" className="w-4 h-4" />
+                    Repositori GitHub
+                  </Link>
+                </div>
+              </SpotlightCard>
+            </FadeIn>
           ))}
         </div>
       </div>

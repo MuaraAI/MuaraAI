@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Member } from "@/types/database";
 import Icon from "@/components/ui/icon";
+import FadeIn from "@/components/ui/fade-in";
+import SpotlightCard from "@/components/ui/spotlight-card";
 
 export type RosterFilter =
   | "maintainer"
@@ -127,112 +129,113 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
             {filtered.map((member, idx) => {
               const isTopThree = filter === "top-commits" && idx < 3 && (member.total_commits || 0) > 0;
               return (
-                <div
-                  key={member.id}
-                  className="rounded-xl border border-border-ocean bg-white p-6 hover:border-muara-ocean transition-all flex flex-col justify-between group shadow-ocean"
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-3 mb-4">
-                      <div className="flex items-center gap-3">
-                        {member.avatar_url ? (
-                          <Image
-                            src={member.avatar_url}
-                            alt={member.full_name}
-                            width={48}
-                            height={48}
-                            className="rounded-full border border-border-ocean group-hover:border-muara-ocean transition-colors"
-                          />
-                        ) : (
-                          <div className="h-12 w-12 rounded-full bg-muara-sky border border-muara-ocean/30 flex items-center justify-center font-display font-bold text-muara-ocean">
-                            {member.full_name.charAt(0)}
+                <FadeIn key={member.id} delay={idx * 0.08}>
+                  <SpotlightCard
+                    className="rounded-xl border border-border-ocean bg-white p-6 hover:border-muara-ocean transition-all flex flex-col justify-between group shadow-ocean h-full"
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-3 mb-4">
+                        <div className="flex items-center gap-3">
+                          {member.avatar_url ? (
+                            <Image
+                              src={member.avatar_url}
+                              alt={member.full_name}
+                              width={48}
+                              height={48}
+                              className="rounded-full border border-border-ocean group-hover:border-muara-ocean transition-colors"
+                            />
+                          ) : (
+                            <div className="h-12 w-12 rounded-full bg-muara-sky border border-muara-ocean/30 flex items-center justify-center font-display font-bold text-muara-ocean">
+                              {member.full_name.charAt(0)}
+                            </div>
+                          )}
+                          <div>
+                            <h3 className="font-display font-bold text-base text-foreground group-hover:text-muara-ocean transition-colors">
+                              {member.full_name}
+                            </h3>
+                            <p className="text-xs font-mono text-slate-500">
+                              @{member.github_username}
+                            </p>
                           </div>
-                        )}
-                        <div>
-                          <h3 className="font-display font-bold text-base text-foreground group-hover:text-muara-ocean transition-colors">
-                            {member.full_name}
-                          </h3>
-                          <p className="text-xs font-mono text-slate-500">
-                            @{member.github_username}
-                          </p>
                         </div>
+
+                        {/* Commit Pill */}
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-mono font-semibold ${
+                            isTopThree
+                              ? "bg-amber-50 border border-amber-300 text-amber-800"
+                              : "bg-surface-alt border border-border-ocean text-slate-600"
+                          }`}
+                        >
+                          <Icon
+                            name={isTopThree ? "local_fire_department" : "commit"}
+                            className="w-3.5 h-3.5"
+                          />
+                          {member.total_commits || 0}
+                        </span>
                       </div>
 
-                      {/* Commit Pill */}
-                      <span
-                        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-mono font-semibold ${
-                          isTopThree
-                            ? "bg-amber-50 border border-amber-300 text-amber-800"
-                            : "bg-surface-alt border border-border-ocean text-slate-600"
-                        }`}
-                      >
-                        <Icon
-                          name={isTopThree ? "local_fire_department" : "commit"}
-                          className="w-3.5 h-3.5"
-                        />
-                        {member.total_commits || 0}
+                      {/* Role & Titles */}
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        {member.role_title && (
+                          <span className="rounded bg-muara-sky/60 border border-muara-ocean/30 px-2 py-0.5 text-[11px] font-mono text-muara-ocean font-bold">
+                            {member.role_title}
+                          </span>
+                        )}
+                        {member.titles?.map((title, tIdx) => (
+                          <span
+                            key={tIdx}
+                            className="rounded bg-surface-alt border border-border-ocean px-2 py-0.5 text-[11px] font-mono text-slate-700"
+                          >
+                            {title}
+                          </span>
+                        ))}
+                      </div>
+
+                      {member.bio && (
+                        <p className="text-xs text-slate-600 line-clamp-2 mb-4 leading-relaxed">
+                          {member.bio}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-3 pt-3 border-t border-border text-xs font-mono text-slate-500">
+                      <span className="uppercase text-[10px] text-muara-ocean font-bold tracking-wider">
+                        {member.division}
                       </span>
-                    </div>
-
-                    {/* Role & Titles */}
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {member.role_title && (
-                        <span className="rounded bg-muara-sky/60 border border-muara-ocean/30 px-2 py-0.5 text-[11px] font-mono text-muara-ocean font-bold">
-                          {member.role_title}
-                        </span>
+                      {member.track && (
+                        <>
+                          <span className="text-slate-300">•</span>
+                          <span className="text-slate-600">{member.track}</span>
+                        </>
                       )}
-                      {member.titles?.map((title, tIdx) => (
-                        <span
-                          key={tIdx}
-                          className="rounded bg-surface-alt border border-border-ocean px-2 py-0.5 text-[11px] font-mono text-slate-700"
-                        >
-                          {title}
-                        </span>
-                      ))}
+                      <div className="ml-auto flex items-center gap-2">
+                        {member.github_url && (
+                          <Link
+                            href={member.github_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-foreground"
+                            aria-label="GitHub"
+                          >
+                            <Icon name="terminal" className="w-4 h-4 text-slate-500" />
+                          </Link>
+                        )}
+                        {member.portfolio_url && (
+                          <Link
+                            href={member.portfolio_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-muara-ocean"
+                            aria-label="Portfolio"
+                          >
+                            <Icon name="open_in_new" className="w-4 h-4 text-slate-500" />
+                          </Link>
+                        )}
+                      </div>
                     </div>
-
-                    {member.bio && (
-                      <p className="text-xs text-slate-600 line-clamp-2 mb-4 leading-relaxed">
-                        {member.bio}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-3 pt-3 border-t border-border text-xs font-mono text-slate-500">
-                    <span className="uppercase text-[10px] text-muara-ocean font-bold tracking-wider">
-                      {member.division}
-                    </span>
-                    {member.track && (
-                      <>
-                        <span className="text-slate-300">•</span>
-                        <span className="text-slate-600">{member.track}</span>
-                      </>
-                    )}
-                    <div className="ml-auto flex items-center gap-2">
-                      {member.github_url && (
-                        <Link
-                          href={member.github_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-foreground"
-                          aria-label="GitHub"
-                        >
-                          <Icon name="terminal" className="w-4 h-4 text-slate-500" />
-                        </Link>
-                      )}
-                      {member.portfolio_url && (
-                        <Link
-                          href={member.portfolio_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-muara-ocean"
-                          aria-label="Portfolio"
-                        >
-                          <Icon name="open_in_new" className="w-4 h-4 text-slate-500" />
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                  </SpotlightCard>
+                </FadeIn>
               );
             })}
           </div>

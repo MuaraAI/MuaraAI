@@ -1,5 +1,7 @@
 import React from "react";
 import Icon, { IconName } from "@/components/ui/icon";
+import FadeIn from "@/components/ui/fade-in";
+import SpotlightCard from "@/components/ui/spotlight-card";
 
 export default function BenefitsGrid() {
   const benefits: { icon: IconName; title: string; desc: string }[] = [
@@ -47,22 +49,23 @@ export default function BenefitsGrid() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {benefits.map((b, idx) => (
-            <div
-              key={idx}
-              className="rounded-xl border border-border-ocean bg-white p-6 hover:border-muara-ocean transition-all flex flex-col justify-between shadow-ocean"
-            >
-              <div>
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-muara-sky border border-muara-ocean/30 text-muara-ocean mb-4">
-                  <Icon name={b.icon} className="w-5 h-5 text-muara-ocean" />
-                </span>
-                <h3 className="font-display text-base font-bold text-foreground mb-2">
-                  {b.title}
-                </h3>
-                <p className="text-xs leading-relaxed text-slate-600">
-                  {b.desc}
-                </p>
-              </div>
-            </div>
+            <FadeIn key={idx} delay={idx * 0.1}>
+              <SpotlightCard
+                className="rounded-xl border border-border-ocean bg-white p-6 hover:border-muara-ocean transition-all flex flex-col justify-between shadow-ocean h-full"
+              >
+                <div>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-muara-sky border border-muara-ocean/30 text-muara-ocean mb-4">
+                    <Icon name={b.icon} className="w-5 h-5 text-muara-ocean" />
+                  </span>
+                  <h3 className="font-display text-base font-bold text-foreground mb-2">
+                    {b.title}
+                  </h3>
+                  <p className="text-xs leading-relaxed text-slate-600">
+                    {b.desc}
+                  </p>
+                </div>
+              </SpotlightCard>
+            </FadeIn>
           ))}
         </div>
       </div>
