@@ -42,8 +42,11 @@ export default function Navbar({ user }: NavbarProps) {
           <Link href="/#manifesto" className="hover:text-muara-ocean transition-colors">
             Manifesto
           </Link>
+          <Link href="/members" className="hover:text-muara-ocean transition-colors">
+            Anggota
+          </Link>
           <Link href="/#syndicate" className="hover:text-muara-ocean transition-colors">
-            The Syndicate
+            Maintainers
           </Link>
           <Link href="/#treasury" className="hover:text-muara-ocean transition-colors">
             Treasury
@@ -118,11 +121,18 @@ export default function Navbar({ user }: NavbarProps) {
             Manifesto
           </Link>
           <Link
+            href="/members"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
+          >
+            Anggota
+          </Link>
+          <Link
             href="/#syndicate"
             onClick={() => setMobileMenuOpen(false)}
             className="block py-2 text-sm font-medium text-slate-600 hover:text-muara-ocean"
           >
-            The Syndicate
+            Maintainers
           </Link>
           <Link
             href="/#treasury"
