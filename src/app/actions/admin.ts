@@ -61,8 +61,9 @@ export async function approveApplicant(memberId: string) {
         {
           method: "PUT",
           headers: {
-            Authorization: `token ${ghToken}`,
+            Authorization: `Bearer ${ghToken}`,
             Accept: "application/vnd.github.v3+json",
+            "User-Agent": "MuaraAI-Web-Portal",
           },
           body: JSON.stringify({ role: "member" }),
         }

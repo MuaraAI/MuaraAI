@@ -17,15 +17,15 @@ export const revalidate = 60; // ISR 60 seconds
 export default async function LandingPage() {
   const supabase = await createClient();
 
-  // 1. Fetch approved active members
+  // 1. Fetch approved active members (explicit public profile fields only, zero PII)
   const { data: membersData } = await supabase
     .from("members")
-    .select("*")
+    .select("id, full_name, avatar_url, github_username, hierarchy, sub_hierarchy, roles, titles, division, track, total_commits, website_url, github_url, linkedin_url, portfolio_url")
     .eq("registration_status", "approved")
     .eq("is_active", true)
     .order("total_commits", { ascending: false });
 
-  const members: Member[] = membersData || [];
+  const members = (membersData || []) as unknown as Member[];
 
   // 2. Fetch achievements
   const { data: achievementsData } = await supabase

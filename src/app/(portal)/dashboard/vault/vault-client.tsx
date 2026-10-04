@@ -68,7 +68,7 @@ export default function VaultClient({
         setCopied(false);
         // Refresh local list state
         const newKeyItem: KeyItem = {
-          id: Math.random().toString(),
+          id: res.keyId || Math.random().toString(),
           name: keyName,
           key_prefix: keyPrefix,
           is_active: true,

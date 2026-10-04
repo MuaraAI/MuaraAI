@@ -120,13 +120,17 @@ export async function saveApiKey(input: SaveKeyInput) {
     .update({ is_active: false })
     .eq("user_id", user.id);
 
-  const { error } = await supabase.from(tableName).insert(insertPayload);
+  const { data: inserted, error } = await supabase
+    .from(tableName)
+    .insert(insertPayload)
+    .select("id")
+    .single();
 
   if (error) {
     return { success: false, error: error.message };
   }
 
-  return { success: true };
+  return { success: true, keyId: inserted?.id };
 }
 
 export async function revokeApiKey(project: VaultProject, keyId: string) {

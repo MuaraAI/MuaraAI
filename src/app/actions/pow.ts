@@ -12,26 +12,38 @@ export async function submitProofOfWork(data: PoWInput) {
 
   const supabase = await createClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
 
-  if (!session?.user) {
+  if (authError || !user) {
     return { success: false, error: "Sesi tidak ditemukan. Silakan login kembali dengan GitHub." };
   }
 
+  // Prevent existing approved members from being downgraded
+  const { data: existing } = await supabase
+    .from("members")
+    .select("registration_status, hierarchy")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (existing?.registration_status === "approved") {
+    return { success: false, error: "Akun Anda sudah berstatus anggota resmi aktif." };
+  }
+
   const githubUsername =
-    session.user.user_metadata?.user_name ||
-    session.user.user_metadata?.preferred_username ||
-    session.user.email?.split("@")[0] ||
+    user.user_metadata?.user_name ||
+    user.user_metadata?.preferred_username ||
+    user.email?.split("@")[0] ||
     "user";
 
-  const avatarUrl = session.user.user_metadata?.avatar_url || null;
+  const avatarUrl = user.user_metadata?.avatar_url || null;
 
   // Insert or update pending profile in public.members
   const { error: dbError } = await supabase.from("members").upsert(
     {
-      id: session.user.id,
-      email: session.user.email || null,
+      id: user.id,
+      email: user.email || null,
       full_name: data.fullName.trim(),
       avatar_url: avatarUrl,
       nim: data.nim?.trim() || null,

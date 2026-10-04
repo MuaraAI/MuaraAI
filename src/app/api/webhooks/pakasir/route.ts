@@ -27,7 +27,13 @@ export async function POST(req: NextRequest) {
 
     // Use service role client for background webhook DB mutations
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://awlwvcmrknkdxnwolcoy.supabase.co";
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!serviceKey) {
+      console.error("[CRITICAL] SUPABASE_SERVICE_ROLE_KEY is not configured for Pakasir webhook.");
+      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    }
+
     const supabase = createClient(supabaseUrl, serviceKey);
 
     // 2. Idempotency Check: check if payment_ref already processed
