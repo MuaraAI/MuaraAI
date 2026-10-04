@@ -297,7 +297,7 @@ git commit -m "feat: add hero, live metrics, two flagship projects, manifesto, a
 
 **Interfaces:**
 - Consumes: `Member[]`, `Achievement[]`, `treasury_transactions` aggregate
-- Produces: Roster with category tab filter (`All`, `Top Commits`, `Core Team`, `Builder`, `Creative`), certificate lightbox modal, 2-metric open treasury card, and 3-step PoW join section.
+- Produces: Roster with category tab filter (`Maintainer`, `Lead of Project`, `Head of Creative/Builder`, `Creative`, `Builder`, `Top Commits`, `All`), certificate lightbox modal, 2-metric open treasury card, and 3-step PoW join section.
 
 - [ ] **Step 1: Write the failing test**
 

@@ -5,17 +5,64 @@ import Image from "next/image";
 import Link from "next/link";
 import { Member } from "@/types/database";
 
-export type RosterFilter = "all" | "top-commits" | "core" | "builder" | "creative";
+export type RosterFilter =
+  | "maintainer"
+  | "lead"
+  | "head"
+  | "creative"
+  | "builder"
+  | "top-commits"
+  | "all";
 
 export function filterMembers(members: Member[], filter: RosterFilter): Member[] {
   if (filter === "top-commits") {
     return [...members].sort((a, b) => (b.total_commits || 0) - (a.total_commits || 0));
   }
-  if (filter === "core") {
-    return members.filter((m) => m.hierarchy === "maintainer" || m.roles?.includes("maintainer"));
+  if (filter === "maintainer") {
+    return members.filter(
+      (m) =>
+        m.hierarchy === "maintainer" ||
+        m.roles?.includes("maintainer") ||
+        m.sub_hierarchy === "founder" ||
+        m.sub_hierarchy === "co-founder" ||
+        (m.titles || []).some((t) => /founder|maintainer/i.test(t))
+    );
   }
-  if (filter === "builder" || filter === "creative") {
-    return members.filter((m) => m.division === filter);
+  if (filter === "lead") {
+    return members.filter(
+      (m) =>
+        m.hierarchy === "lead" ||
+        m.roles?.some((r) => r.startsWith("lead")) ||
+        m.sub_hierarchy?.startsWith("lead") ||
+        (m.titles || []).some((t) => /lead/i.test(t))
+    );
+  }
+  if (filter === "head") {
+    return members.filter(
+      (m) =>
+        m.hierarchy === "head" ||
+        m.roles?.some((r) => r.startsWith("head")) ||
+        m.sub_hierarchy?.startsWith("head") ||
+        (m.titles || []).some((t) => /head/i.test(t))
+    );
+  }
+  if (filter === "creative") {
+    return members.filter(
+      (m) =>
+        m.division === "creative" ||
+        m.roles?.includes("creative") ||
+        m.roles?.includes("member-creative") ||
+        m.sub_hierarchy === "member-creative"
+    );
+  }
+  if (filter === "builder") {
+    return members.filter(
+      (m) =>
+        m.division === "builder" ||
+        m.roles?.includes("builder") ||
+        m.roles?.includes("member-builder") ||
+        m.sub_hierarchy === "member-builder"
+    );
   }
   return members;
 }
@@ -46,11 +93,13 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
           <div className="flex flex-wrap gap-1.5 p-1 bg-surface rounded-lg border border-border">
             {(
               [
-                { id: "all", label: "All" },
-                { id: "top-commits", label: "Top Commits" },
-                { id: "core", label: "Core Team" },
-                { id: "builder", label: "Builder" },
+                { id: "maintainer", label: "Maintainer" },
+                { id: "lead", label: "Lead of Project" },
+                { id: "head", label: "Head of Creative/Builder" },
                 { id: "creative", label: "Creative" },
+                { id: "builder", label: "Builder" },
+                { id: "top-commits", label: "Top Commits" },
+                { id: "all", label: "All" },
               ] as const
             ).map((tab) => (
               <button

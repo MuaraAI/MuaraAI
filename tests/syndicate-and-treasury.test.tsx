@@ -22,8 +22,23 @@ describe("Syndicate Roster Filtering", () => {
     expect(creative[0].full_name).toBe("Greeezzz");
   });
 
-  it("filters correctly by core team", () => {
-    const core = filterMembers(mockMembers as Member[], "core");
-    expect(core.length).toBe(2);
+  it("filters correctly by maintainer", () => {
+    const maintainers = filterMembers(mockMembers as Member[], "maintainer");
+    expect(maintainers.length).toBe(2);
+  });
+
+  it("filters correctly by lead and head roles", () => {
+    const testMembers: Partial<Member>[] = [
+      { id: "1", full_name: "Lead Dev", hierarchy: "lead", division: "builder" },
+      { id: "2", full_name: "Head Builder", hierarchy: "head", division: "builder" },
+      { id: "3", full_name: "Member", hierarchy: "member", division: "creative" },
+    ];
+    const leads = filterMembers(testMembers as Member[], "lead");
+    expect(leads.length).toBe(1);
+    expect(leads[0].full_name).toBe("Lead Dev");
+
+    const heads = filterMembers(testMembers as Member[], "head");
+    expect(heads.length).toBe(1);
+    expect(heads[0].full_name).toBe("Head Builder");
   });
 });

@@ -228,11 +228,13 @@ Built with Server Components for optimal SEO and instant load speeds:
      - **Members**: Builder (Code/Cloud/Agents) & Creative (Visual/Video/Copy).
    - Live query from `public.members` where `registration_status = 'approved'`.
    - Client-side category tab filter:
+     - `Maintainer`: Filter by maintainer role / founder.
+     - `Lead of Project`: Filter by project lead role.
+     - `Head of Creative/Builder`: Filter by division head.
+     - `Creative`: Filter by creative division.
+     - `Builder`: Filter by builder division.
+     - `Top Commits`: Leaderboard sorted descending by `total_commits`.
      - `All`: Shows all verified members.
-     - `Top Commits`: Leaderboard sorted descending by `total_commits` with `Top Committer` spotlight badge.
-     - `Core Team`: Filter by `hierarchy = 'maintainer'`.
-     - `Builder`: Filter by `division = 'builder'`.
-     - `Creative`: Filter by `division = 'creative'`.
    - Card displays: GitHub avatar, real name, primary `role_title`, badge list (`titles`), commit metric pill (e.g. `142 Commits`), track, and GitHub/Portfolio links.
 9. **Member Benefits (Keuntungan Bergabung)**:
    - Grid kartu benefit resmi:

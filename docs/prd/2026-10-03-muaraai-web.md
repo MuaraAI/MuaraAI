@@ -58,7 +58,7 @@ Engineering and creative communities in universities often suffer from passive s
 
 ### Public & Onboarding
 - **US-1:** As a visitor, I want to explore Muara AI's live flagship projects (`UBSI API` and `Muara AI Gateway`) and anti-slop manifesto, so that I understand the syndicate's quality baseline.
-- **US-2:** As a visitor, I want to filter the syndicate roster by `All`, `Top Commits`, `Core Team`, `Builder`, and `Creative`, so that I can see active members and their verified contributions.
+- **US-2:** As a visitor, I want to filter the syndicate roster by `Maintainer`, `Lead of Project`, `Head of Creative/Builder`, `Creative`, `Builder`, `Top Commits`, and `All`, so that I can see active members by role hierarchy and verified contributions.
 - **US-3:** As a visitor, I want to inspect official certificates and competition accolades in a high-resolution lightbox, so that I can verify community achievements independently of software repos.
 - **US-4:** As a prospective member, I want to log in using GitHub OAuth and submit my Proof-of-Work (portfolio link, division, track, toolchain narrative), so that my application can be reviewed without passwords or email confirmations.
 - **US-5:** As a visitor, I want to view a 2-metric summary of community finances (Total Kas Saat Ini & Total Pengeluaran Kas), so that I have visibility into operational transparency.
@@ -87,7 +87,7 @@ Engineering and creative communities in universities often suffer from passive s
 - **FR-3 [P0]:** Display metrics ticker showing `126+ Automated Tests Passing`, `6 University Services Aggregated`, `0% AI-Slop`, and `100% Independent`.
 - **FR-4 [P0]:** Render The Hall of Projects showing strictly `UBSI API` (`ubsi-api.muaraai.com`) and `Muara AI Gateway` (`ai.muaraai.com`).
 - **FR-5 [P0]:** Render The Accolades grid showing certificates from `public.achievements` with modal zoom.
-- **FR-6 [P0]:** Render The Syndicate roster from `public.members` with client-side tabs (`All`, `Top Commits`, `Core Team`, `Builder`, `Creative`), displaying titles, avatars, and commit pills.
+- **FR-6 [P0]:** Render The Syndicate roster from `public.members` with client-side tabs (`Maintainer`, `Lead of Project`, `Head of Creative/Builder`, `Creative`, `Builder`, `Top Commits`, `All`), displaying titles, avatars, and commit pills.
 - **FR-7 [P0]:** Render Open Treasury preview with 2 cards: Total Kas Saat Ini (`SUM(income) - SUM(expense)`) and Total Pengeluaran Kas (`SUM(expense)`).
 - **FR-8 [P1]:** Render static compliance pages: `/terms`, `/privacy`, and `/code-of-conduct`.
 

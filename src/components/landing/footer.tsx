@@ -41,7 +41,6 @@ export default function Footer() {
 
         <div className="text-xs text-slate-500 text-center md:text-right">
           <p>MIT License • Zero Slop • 100% Independent</p>
-          <p className="mt-1 font-mono text-[10px]">Tencent VPS • Cloudflare • Supabase</p>
         </div>
       </div>
     </footer>
