@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { generateRawKey, sha256Hex, keyPrefixOf } from "../src/lib/keys";
+import { encryptVaultCredential, decryptVaultCredential } from "../src/lib/vault-crypto";
 
 describe("Vault & API Key Generator", () => {
   it("generates raw keys with correct prefixes and length", () => {
@@ -23,5 +24,19 @@ describe("Vault & API Key Generator", () => {
     const raw = "muara_ai_1234567890abcdef";
     const prefix = keyPrefixOf(raw);
     expect(prefix).toBe("muara_ai_12345");
+  });
+
+  it("encrypts and decrypts campus credentials matching Python AES-256-GCM format", () => {
+    const secretKey = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"; // 64 hex
+    const plainText = "RahasiaKampus123!@#";
+
+    const encrypted = encryptVaultCredential(plainText, secretKey);
+    expect(encrypted.includes(".")).toBe(true);
+    const [ivB64, ctB64] = encrypted.split(".");
+    expect(ivB64.length).toBeGreaterThan(10);
+    expect(ctB64.length).toBeGreaterThan(16);
+
+    const decrypted = decryptVaultCredential(encrypted, secretKey);
+    expect(decrypted).toBe(plainText);
   });
 });

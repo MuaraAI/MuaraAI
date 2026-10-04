@@ -30,6 +30,8 @@ export default function VaultClient({
 
   const [keyName, setKeyName] = useState("Default Key");
   const [nim, setNim] = useState("");
+  const [studentv2Pass, setStudentv2Pass] = useState("");
+  const [elearningPass, setElearningPass] = useState("");
   const [loading, setLoading] = useState(false);
   const [revokingId, setRevokingId] = useState<string | null>(null);
 
@@ -55,6 +57,8 @@ export default function VaultClient({
         keyPrefix,
         keyHash,
         nim: activeTab === "ubsi" ? nim : undefined,
+        studentv2Pass: activeTab === "ubsi" ? studentv2Pass : undefined,
+        elearningPass: activeTab === "ubsi" ? elearningPass : undefined,
       });
 
       setLoading(false);
@@ -200,7 +204,7 @@ export default function VaultClient({
         </p>
 
         <form onSubmit={handleGenerate} className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono">
-          <div className="sm:col-span-2">
+          <div className={activeTab === "ubsi" ? "sm:col-span-3" : "sm:col-span-2"}>
             <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
               Label Kunci (Nama Perangkat / Lingkungan)
             </label>
@@ -215,18 +219,56 @@ export default function VaultClient({
           </div>
 
           {activeTab === "ubsi" && (
-            <div>
-              <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
-                NIM Mahasiswa
-              </label>
-              <input
-                type="text"
-                value={nim}
-                onChange={(e) => setNim(e.target.value)}
-                placeholder="15260767"
-                className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none"
-              />
-            </div>
+            <>
+              <div>
+                <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
+                  NIM Mahasiswa
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={nim}
+                  onChange={(e) => setNim(e.target.value)}
+                  placeholder="15260767"
+                  className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
+                  Password SIAKAD (StudentV2)
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={studentv2Pass}
+                  onChange={(e) => setStudentv2Pass(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
+                  Password MyBest (Elearning)
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={elearningPass}
+                  onChange={(e) => setElearningPass(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none"
+                />
+              </div>
+
+              <div className="sm:col-span-3 text-[11px] font-sans text-slate-500 bg-sky-50 border border-sky-200/60 p-3 rounded-lg flex items-start gap-2">
+                <Icon name="lock" className="w-4 h-4 text-muara-ocean shrink-0 mt-0.5" />
+                <span>
+                  Kredensial kampus Anda diverifikasi langsung ke server UBSI, dienkripsi menggunakan standar militer <strong>AES-256-GCM</strong> sebelum disimpan ke vault, dan hanya dapat didekripsi oleh scraper terisolasi di VPS.
+                </span>
+              </div>
+            </>
           )}
 
           <div className="sm:col-span-3 pt-2">
