@@ -25,6 +25,9 @@ export default function MembersDirectory({ initialMembers }: MembersDirectoryPro
         (m) =>
           m.full_name.toLowerCase().includes(q) ||
           m.github_username.toLowerCase().includes(q) ||
+          (m.campus && m.campus.toLowerCase().includes(q)) ||
+          (m.prodi && m.prodi.toLowerCase().includes(q)) ||
+          (m.kelas && m.kelas.toLowerCase().includes(q)) ||
           (m.track && m.track.toLowerCase().includes(q)) ||
           (m.division && m.division.toLowerCase().includes(q)) ||
           (m.role_title && m.role_title.toLowerCase().includes(q))
@@ -175,10 +178,23 @@ export default function MembersDirectory({ initialMembers }: MembersDirectoryPro
                     </div>
 
                     {member.bio && (
-                      <p className="text-xs text-slate-600 line-clamp-2 mb-4 leading-relaxed">
+                      <p className="text-xs text-slate-600 line-clamp-2 mb-3 leading-relaxed">
                         {member.bio}
                       </p>
                     )}
+
+                    {/* Campus & Kelas Badge */}
+                    <div className="flex flex-wrap items-center gap-1.5 mb-3 text-[11px] font-mono">
+                      <span className="inline-flex items-center gap-1 rounded bg-slate-50 border border-slate-200 px-2 py-0.5 text-slate-700">
+                        <Icon name="school" className="w-3 h-3 text-muara-ocean" />
+                        <span>{member.campus || "UBSI Pontianak"}</span>
+                      </span>
+                      {member.kelas && (
+                        <span className="rounded bg-slate-50 border border-slate-200 px-1.5 py-0.5 text-slate-600 font-bold uppercase">
+                          {member.kelas}
+                        </span>
+                      )}
+                    </div>
 
                     {member.track && (
                       <div className="text-[11px] font-mono text-slate-500 mb-4 flex items-center gap-1.5">

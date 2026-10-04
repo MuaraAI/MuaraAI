@@ -46,8 +46,11 @@ export async function submitProofOfWork(data: PoWInput) {
       email: user.email || null,
       full_name: data.fullName.trim(),
       avatar_url: avatarUrl,
-      nim: data.nim?.trim() || null,
-      phone_wa: data.phoneWa?.trim() || null,
+      nim: data.nim.trim(),
+      campus: data.campus.trim(),
+      prodi: data.prodi.trim(),
+      kelas: data.kelas.trim().toUpperCase(),
+      phone_wa: data.phoneWa.trim(),
       bio: data.toolchainNarrative.trim(),
       hierarchy: "member",
       sub_hierarchy: `member-${data.division}`,
@@ -69,8 +72,8 @@ export async function submitProofOfWork(data: PoWInput) {
 
   // Multi-channel alert to maintainers
   await notifyMaintainers(
-    "Pendaftar Proof of Work Baru",
-    `Nama: ${data.fullName}\nGitHub: @${githubUsername}\nDivisi: ${data.division} (${data.track})\nPortofolio: ${data.portfolioUrl}\n\nWorkflow: ${data.toolchainNarrative}\n\nReview di: https://muaraai.com/admin/review`
+    "Pendaftar Mahasiswa UBSI Baru",
+    `Nama: ${data.fullName}\nNIM: ${data.nim} (${data.campus} - ${data.prodi} ${data.kelas.trim().toUpperCase()})\nGitHub: @${githubUsername}\nDivisi: ${data.division} (${data.track})\nPortofolio: ${data.portfolioUrl}\n\nReview di: https://muaraai.com/admin/review`
   );
 
   return { success: true };

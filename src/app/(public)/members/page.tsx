@@ -14,7 +14,7 @@ export default async function MembersPage() {
   const { data: membersData } = await supabase
     .from("members")
     .select(
-      "id, full_name, avatar_url, github_username, hierarchy, sub_hierarchy, roles, titles, division, track, total_commits, website_url, github_url, linkedin_url, portfolio_url, bio, role_title"
+      "id, full_name, avatar_url, github_username, hierarchy, sub_hierarchy, roles, titles, division, track, campus, prodi, kelas, total_commits, website_url, github_url, linkedin_url, portfolio_url, bio, role_title"
     )
     .eq("registration_status", "approved")
     .eq("is_active", true)

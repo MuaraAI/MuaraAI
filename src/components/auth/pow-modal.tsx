@@ -3,12 +3,16 @@
 import React, { useState } from "react";
 import { submitProofOfWork } from "@/app/actions/pow";
 import { PoWInput } from "@/lib/validation";
+import { UBSI_CAMPUSES, UBSI_PRODI_LIST } from "@/lib/constants";
 import Icon from "@/components/ui/icon";
 
 export default function PoWForm() {
   const [formData, setFormData] = useState<PoWInput>({
     fullName: "",
     nim: "",
+    campus: "UBSI Pontianak",
+    prodi: "Informatika (S1)",
+    kelas: "",
     phoneWa: "",
     division: "builder",
     track: "Web & Apps Systems",
@@ -37,16 +41,17 @@ export default function PoWForm() {
 
   if (success) {
     return (
-      <div className="rounded-xl border border-teal-200 bg-teal-50/70 p-8 text-center max-w-lg mx-auto shadow-ocean-lg">
-        <Icon name="check_circle" className="w-12 h-12 text-teal-700 mb-4 mx-auto" />
-        <h2 className="font-display text-2xl font-bold text-teal-950 mb-2">Proof of Work Terkirim!</h2>
-        <p className="text-sm text-slate-600 leading-relaxed mb-6">
-          Pengurus inti (Core Team) telah menerima berkas karya Anda. Review dilakukan secara manual dalam 1x24 jam. 
-          Undangan resmi bergabung ke GitHub Org akan dikirimkan otomatis ke akun GitHub Anda setelah disetujui.
+      <div className="rounded-2xl border border-border bg-white p-8 text-center max-w-lg mx-auto shadow-sm">
+        <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-200">
+          <Icon name="check_circle" className="w-7 h-7" />
+        </div>
+        <h2 className="font-display text-2xl font-bold text-foreground mb-2">Proof of Work Terkirim!</h2>
+        <p className="text-xs text-slate-600 leading-relaxed mb-6">
+          Berkas karya dan identitas mahasiswa UBSI Anda telah diterima. Core Team maintainer akan memverifikasi karya Anda secara manual dalam 1x24 jam. Undangan bergabung ke GitHub Organization <strong>MuaraAI</strong> akan dikirimkan otomatis setelah disetujui.
         </p>
         <a
           href="/"
-          className="inline-flex items-center gap-2 rounded-lg bg-white border border-border-ocean px-6 py-2.5 text-xs font-semibold text-foreground hover:border-muara-ocean transition-colors shadow-sm"
+          className="inline-flex items-center gap-2 rounded-lg bg-muara-ocean text-white px-6 py-2.5 text-xs font-semibold hover:bg-muara-ocean-dark transition-colors shadow-sm"
         >
           Kembali ke Beranda
         </a>
@@ -55,13 +60,17 @@ export default function PoWForm() {
   }
 
   return (
-    <div className="rounded-xl border border-border-ocean bg-white p-8 max-w-xl mx-auto shadow-ocean-lg">
+    <div className="rounded-2xl border border-border bg-white p-8 max-w-2xl mx-auto shadow-sm">
       <div className="mb-6">
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-50 border border-sky-200 text-muara-ocean text-[11px] font-mono font-bold uppercase mb-2">
+          <Icon name="school" className="w-3.5 h-3.5" />
+          <span>Eksklusif Mahasiswa UBSI</span>
+        </div>
         <h2 className="font-display text-2xl font-bold text-foreground mb-1">
           Form Pendaftaran Proof of Work
         </h2>
         <p className="text-xs text-slate-500">
-          Muara AI hanya memproses pendaftar yang menyertakan bukti karya nyata dan menguasai toolchain rekayasa.
+          Komunitas riset dan rekayasa AI independen khusus mahasiswa Universitas Bina Sarana Informatika (UBSI).
         </p>
       </div>
 
@@ -73,42 +82,30 @@ export default function PoWForm() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4 text-xs font-mono">
-        <div>
-          <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-            Nama Lengkap <span className="text-rose-600">*</span>
-          </label>
-          <input
-            type="text"
-            required
-            value={formData.fullName}
-            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-            placeholder="misal: Yuken Velino"
-            className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
-          />
-        </div>
-
+        {/* Row 1: Nama & WhatsApp */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-              NIM Mahasiswa (Opsional)
+              Nama Lengkap <span className="text-rose-600">*</span>
             </label>
             <input
               type="text"
-              value={formData.nim || ""}
-              onChange={(e) => setFormData({ ...formData, nim: e.target.value })}
-              placeholder="misal: 15260767"
+              required
+              value={formData.fullName}
+              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+              placeholder="misal: Yuken Velino"
               className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
             />
           </div>
 
           <div>
             <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-              WhatsApp / Kontak <span className="text-rose-600">*</span>
+              WhatsApp / Kontak Aktif <span className="text-rose-600">*</span>
             </label>
             <input
               type="text"
               required
-              value={formData.phoneWa || ""}
+              value={formData.phoneWa}
               onChange={(e) => setFormData({ ...formData, phoneWa: e.target.value })}
               placeholder="08xxxxxxxxxx"
               className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
@@ -116,6 +113,76 @@ export default function PoWForm() {
           </div>
         </div>
 
+        {/* Row 2: NIM & Kode Kelas */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
+              NIM Mahasiswa UBSI (8 Digit) <span className="text-rose-600">*</span>
+            </label>
+            <input
+              type="text"
+              required
+              maxLength={8}
+              value={formData.nim}
+              onChange={(e) => setFormData({ ...formData, nim: e.target.value.replace(/\D/g, "") })}
+              placeholder="misal: 15260767"
+              className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
+              Kode Kelas (SIAKAD) <span className="text-rose-600">*</span>
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.kelas}
+              onChange={(e) => setFormData({ ...formData, kelas: e.target.value.toUpperCase() })}
+              placeholder="misal: 15.1C.30"
+              className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none uppercase"
+            />
+          </div>
+        </div>
+
+        {/* Row 3: Kampus UBSI & Prodi */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
+              Kampus Asal UBSI <span className="text-rose-600">*</span>
+            </label>
+            <select
+              value={formData.campus}
+              onChange={(e) => setFormData({ ...formData, campus: e.target.value })}
+              className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none"
+            >
+              {UBSI_CAMPUSES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
+              Program Studi (Prodi) <span className="text-rose-600">*</span>
+            </label>
+            <select
+              value={formData.prodi}
+              onChange={(e) => setFormData({ ...formData, prodi: e.target.value })}
+              className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none"
+            >
+              {UBSI_PRODI_LIST.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Row 4: Divisi & Track */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
@@ -132,8 +199,8 @@ export default function PoWForm() {
               }
               className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none"
             >
-              <option value="builder">Kluster Builder</option>
-              <option value="creative">Kluster Creative</option>
+              <option value="builder">Kluster Builder (Software, Backend, AI Systems)</option>
+              <option value="creative">Kluster Creative (UI/UX, Brand Identity, Media)</option>
             </select>
           </div>
 
@@ -146,26 +213,28 @@ export default function PoWForm() {
               required
               value={formData.track}
               onChange={(e) => setFormData({ ...formData, track: e.target.value })}
-              placeholder="misal: AI Agent, Backend, Video Motion"
+              placeholder="misal: AI Agent, Backend FastAPI, UI Engineering"
               className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
             />
           </div>
         </div>
 
+        {/* Row 5: Portfolio URL */}
         <div>
           <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-            Tautan Repositori / Portofolio Karya <span className="text-rose-600">*</span>
+            Tautan Repositori GitHub / Portofolio Karya Nyata <span className="text-rose-600">*</span>
           </label>
           <input
             type="url"
             required
             value={formData.portfolioUrl}
             onChange={(e) => setFormData({ ...formData, portfolioUrl: e.target.value })}
-            placeholder="https://github.com/username/project atau link live demo"
+            placeholder="https://github.com/username/project atau tautan live demo"
             className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
           />
         </div>
 
+        {/* Row 6: Toolchain narrative */}
         <div>
           <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
             Toolchain & Workflow yang Dikuasai <span className="text-rose-600">*</span>
@@ -175,7 +244,7 @@ export default function PoWForm() {
             rows={3}
             value={formData.toolchainNarrative}
             onChange={(e) => setFormData({ ...formData, toolchainNarrative: e.target.value })}
-            placeholder="Jelaskan toolchain nyata Anda (misal: Next.js 15, FastAPI, Cursor, Claude Code, TDD, Midjourney/ComfyUI)..."
+            placeholder="Jelaskan workflow kerja nyata Anda (misal: Next.js 15, FastAPI, Cursor/Claude Code, Python Scrapling, TDD, Figma, ComfyUI)..."
             className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
           />
         </div>
@@ -183,9 +252,10 @@ export default function PoWForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-muara-ocean hover:bg-muara-ocean-dark py-3 font-sans font-bold text-white text-sm transition-all disabled:opacity-50 shadow-ocean mt-2"
+          className="w-full rounded-lg bg-muara-ocean hover:bg-muara-ocean-dark py-3 font-sans font-bold text-white text-sm transition-all disabled:opacity-50 shadow-sm mt-2 flex items-center justify-center gap-2"
         >
-          {loading ? "Mengirimkan Berkas..." : "Submit Proof of Work"}
+          <Icon name="verified" className="w-4 h-4" />
+          <span>{loading ? "Memvalidasi & Mengirim..." : "Kirim Proof of Work Mahasiswa UBSI"}</span>
         </button>
       </form>
     </div>

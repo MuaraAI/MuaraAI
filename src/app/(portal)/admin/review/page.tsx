@@ -17,11 +17,11 @@ export default async function AdminReviewPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-white mb-1">
-          Review Antrean Pendaftar
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
+          Review Antrean Pendaftar Mahasiswa UBSI
         </h1>
-        <p className="text-xs text-slate-400">
-          Tinjau berkas Proof of Work calon anggota. Klik Approve untuk menyetujui sekaligus mengundang ke GitHub Org MuaraAI secara otomatis.
+        <p className="text-xs text-slate-500">
+          Tinjau berkas Proof of Work dan identitas kampus calon anggota. Klik Approve untuk menyetujui sekaligus mengundang ke GitHub Org MuaraAI secara otomatis.
         </p>
       </div>
 

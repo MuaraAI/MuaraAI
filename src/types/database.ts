@@ -10,6 +10,7 @@ export interface Member {
   phone_wa: string | null;
   bio: string | null;
   nim: string | null;
+  campus: string;
   prodi: string | null;
   kelas: string | null;
   semester: number | null;
