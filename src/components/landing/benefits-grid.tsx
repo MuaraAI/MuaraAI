@@ -15,7 +15,7 @@ export default function BenefitsGrid() {
     {
       icon: "cloud",
       title: "Shared Compute & API Keys",
-      desc: "Subsidi kuota compute, akses 9Router API gateway, dan infrastruktur cloud bersama untuk riset mandiri.",
+      desc: "Subsidi kuota compute, akses AI API gateway, dan infrastruktur cloud bersama untuk riset mandiri.",
     },
     {
       icon: "trophy",
