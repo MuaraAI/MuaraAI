@@ -17,6 +17,11 @@ export default function PoWForm() {
     division: "builder",
     track: "Web & Apps Systems",
     portfolioUrl: "",
+    websiteUrl: "",
+    linkedinUrl: "",
+    instagramUrl: "",
+    xUrl: "",
+    threadsUrl: "",
     toolchainNarrative: "",
   });
 
@@ -247,6 +252,68 @@ export default function PoWForm() {
             placeholder="Jelaskan workflow kerja nyata Anda (misal: Next.js 15, FastAPI, Cursor/Claude Code, Python Scrapling, TDD, Figma, ComfyUI)..."
             className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
           />
+        </div>
+
+        {/* Row 7: Tautan Web & Media Sosial Mahasiswa */}
+        <div className="pt-3 border-t border-border">
+          <div className="font-sans font-bold text-xs text-foreground mb-3 flex items-center gap-1.5">
+            <Icon name="link" className="w-4 h-4 text-muara-ocean" />
+            <span>Tautan Web & Media Sosial Mahasiswa (Opsional)</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
+                Website Pribadi / Blog
+              </label>
+              <input
+                type="url"
+                value={formData.websiteUrl || ""}
+                onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
+                placeholder="https://yoursite.dev"
+                className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
+                LinkedIn Profile
+              </label>
+              <input
+                type="url"
+                value={formData.linkedinUrl || ""}
+                onChange={(e) => setFormData({ ...formData, linkedinUrl: e.target.value })}
+                placeholder="https://linkedin.com/in/username"
+                className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
+                Instagram (@ atau URL)
+              </label>
+              <input
+                type="text"
+                value={formData.instagramUrl || ""}
+                onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })}
+                placeholder="@username atau URL profil"
+                className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
+                X / Twitter (@ atau URL)
+              </label>
+              <input
+                type="text"
+                value={formData.xUrl || ""}
+                onChange={(e) => setFormData({ ...formData, xUrl: e.target.value })}
+                placeholder="@username atau URL profil"
+                className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
+              />
+            </div>
+          </div>
         </div>
 
         <button

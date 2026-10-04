@@ -8,6 +8,11 @@ export interface PoWInput {
   division: "builder" | "creative";
   track: string;
   portfolioUrl: string;
+  websiteUrl?: string;
+  linkedinUrl?: string;
+  instagramUrl?: string;
+  xUrl?: string;
+  threadsUrl?: string;
   toolchainNarrative: string;
 }
 
@@ -32,7 +37,13 @@ export function validatePoWSubmission(data: PoWInput): { isValid: boolean; error
     return { isValid: false, error: "Nomor WhatsApp aktif wajib diisi." };
   }
   if (!data.portfolioUrl || !data.portfolioUrl.startsWith("http")) {
-    return { isValid: false, error: "Tautan portofolio/repositori harus berupa URL valid." };
+    return { isValid: false, error: "Tautan portofolio/repositori karya wajib berupa URL valid (awali https://)." };
+  }
+  if (data.websiteUrl && data.websiteUrl.trim() && !data.websiteUrl.startsWith("http")) {
+    return { isValid: false, error: "Tautan Website pribadi harus diawali dengan http:// atau https://" };
+  }
+  if (data.linkedinUrl && data.linkedinUrl.trim() && !data.linkedinUrl.startsWith("http")) {
+    return { isValid: false, error: "Tautan LinkedIn harus diawali dengan https://" };
   }
   if (!data.toolchainNarrative || data.toolchainNarrative.trim().length < 15) {
     return { isValid: false, error: "Penjelasan workflow/toolchain minimal 15 karakter." };
