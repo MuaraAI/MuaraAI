@@ -16,10 +16,10 @@ export default async function AdminMembersPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-white mb-1">
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
           Audit Anggota & Manajemen Blacklist
         </h1>
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-secondary font-sans">
           Pantau status keaktifan anggota, masa aktif iuran kas, dan kendalikan status blacklist jika menunggak lebih dari 30 hari.
         </p>
       </div>

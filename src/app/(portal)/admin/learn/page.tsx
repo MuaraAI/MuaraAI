@@ -23,10 +23,10 @@ export default async function AdminLearnPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-white mb-1">
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
           Manajemen Muara Learn & Audit Pembaca
         </h1>
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-secondary font-sans">
           Terbitkan materi rekayasa baru dan pantau siapa saja anggota yang telah mengakses dan membaca materi tersebut.
         </p>
       </div>

@@ -36,7 +36,7 @@ export default function LearnFeedClient({ initialMaterials }: LearnFeedClientPro
         return (
           <div
             key={m.id}
-            className="rounded-xl border border-border bg-surface p-6 flex flex-col justify-between hover:border-muara-cyan/40 transition-colors shadow-md"
+            className="rounded-[18px] border border-stroke bg-white p-6 flex flex-col justify-between hover:border-muara-ocean transition-all shadow-diffusion"
           >
             <div>
               {m.cover_url && (
@@ -54,20 +54,20 @@ export default function LearnFeedClient({ initialMaterials }: LearnFeedClientPro
                 </span>
               </div>
 
-              <h3 className="font-display text-lg font-bold text-white mb-2">{m.title}</h3>
-              <p className="text-xs text-slate-300 leading-relaxed mb-6 whitespace-pre-wrap">
+              <h3 className="font-display text-lg font-bold text-foreground mb-2">{m.title}</h3>
+              <p className="text-xs text-secondary leading-relaxed mb-6 whitespace-pre-wrap font-sans">
                 {m.description}
               </p>
             </div>
 
-            <div className="pt-4 border-t border-border flex items-center justify-between">
+            <div className="pt-4 border-t border-stroke flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => handleOpenMaterial(m)}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-surface-hover hover:bg-muara-cyan hover:text-background border border-border px-3.5 py-2 text-xs font-mono font-semibold text-slate-200 transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-[8px] bg-surface-alt hover:bg-muara-ocean hover:text-white border border-stroke px-3.5 py-2 text-xs font-mono font-semibold text-foreground transition-colors shadow-xs"
               >
-                <Icon name="open_in_new" className="w-4 h-4" />
-                Buka Materi
+                <Icon name="open_in_new" className="w-4 h-4 text-muara-ocean" />
+                <span>Buka Materi</span>
               </button>
 
               {isOpened && (

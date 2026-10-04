@@ -17,10 +17,10 @@ export default async function MemberLearnPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-white mb-1">
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
           Muara Learn (Knowledge Base)
         </h1>
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-secondary font-sans">
           Materi riset internal, prompt harnesses, system design decks, dan panduan rekayasa yang dikurasi oleh Maintainer.
         </p>
       </div>
