@@ -41,4 +41,20 @@ describe("Syndicate Roster Filtering", () => {
     expect(heads.length).toBe(1);
     expect(heads[0].full_name).toBe("Head Builder");
   });
+
+  it("deduplicates role_title and titles when they overlap", () => {
+    const member: Partial<Member> = {
+      role_title: "Founder",
+      titles: ["Founder", "Maintainer", "Head of Builder"],
+    };
+    const uniqueTitles = Array.from(
+      new Set(
+        [member.role_title, ...(member.titles || [])].filter((t): t is string =>
+          Boolean(t && t.trim())
+        )
+      )
+    );
+    expect(uniqueTitles).toEqual(["Founder", "Maintainer", "Head of Builder"]);
+    expect(uniqueTitles.filter((t) => t === "Founder").length).toBe(1);
+  });
 });

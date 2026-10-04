@@ -146,31 +146,48 @@ export default function MembersDirectory({ initialMembers }: MembersDirectoryPro
                       </span>
                     </div>
 
-                    {/* Role & Titles */}
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {member.role_title && (
-                        <span className="rounded bg-sky-50 border border-sky-200 px-2 py-0.5 text-[11px] font-mono text-muara-ocean font-bold">
-                          {member.role_title}
-                        </span>
-                      )}
-                      {member.titles?.map((title, tIdx) => (
-                        <span
-                          key={tIdx}
-                          className="rounded bg-slate-100 border border-slate-200 px-2 py-0.5 text-[11px] font-mono text-slate-700"
-                        >
-                          {title}
-                        </span>
-                      ))}
-                      <span
-                        className={`rounded px-2 py-0.5 text-[10px] font-mono uppercase font-bold ${
-                          member.division === "builder"
-                            ? "bg-emerald-50 border border-emerald-200 text-emerald-700"
-                            : "bg-purple-50 border border-purple-200 text-purple-700"
-                        }`}
-                      >
-                        {member.division}
-                      </span>
-                    </div>
+                    {/* Role & Titles (Deduplicated) */}
+                    {(() => {
+                      const uniqueTitles = Array.from(
+                        new Set(
+                          [member.role_title, ...(member.titles || [])].filter(
+                            (t): t is string => Boolean(t && t.trim())
+                          )
+                        )
+                      );
+
+                      return (
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {uniqueTitles.map((title, tIdx) => {
+                            const isFounder = /founder/i.test(title);
+                            const isMaintainer = /maintainer/i.test(title);
+                            return (
+                              <span
+                                key={tIdx}
+                                className={`rounded px-2 py-0.5 text-[11px] font-mono ${
+                                  isFounder
+                                    ? "bg-amber-100 text-amber-900 border border-amber-300 font-bold"
+                                    : isMaintainer
+                                    ? "bg-sky-50 text-sky-900 border border-sky-200 font-semibold"
+                                    : "bg-surface-alt border border-stroke text-slate-700 font-medium"
+                                }`}
+                              >
+                                {title}
+                              </span>
+                            );
+                          })}
+                          <span
+                            className={`rounded px-2 py-0.5 text-[10px] font-mono uppercase font-bold ${
+                              member.division === "builder"
+                                ? "bg-emerald-50 border border-emerald-200 text-emerald-700"
+                                : "bg-purple-50 border border-purple-200 text-purple-700"
+                            }`}
+                          >
+                            {member.division}
+                          </span>
+                        </div>
+                      );
+                    })()}
 
                     {member.bio && (
                       <p className="text-xs text-slate-600 line-clamp-2 mb-3 leading-relaxed">

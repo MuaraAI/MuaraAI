@@ -47,7 +47,13 @@ export default async function DashboardProfilePage() {
             <div className="font-display text-xl font-bold text-foreground mt-0.5">{member.full_name}</div>
           </div>
           <div className="flex flex-wrap gap-1.5">
-            {member.titles?.map((title, idx) => (
+            {Array.from(
+              new Set(
+                [member.role_title, ...(member.titles || [])].filter((t): t is string =>
+                  Boolean(t && t.trim())
+                )
+              )
+            ).map((title, idx) => (
               <span
                 key={idx}
                 className="rounded-md bg-surface-alt border border-stroke px-2.5 py-1 text-xs font-mono text-muara-ocean font-semibold"
