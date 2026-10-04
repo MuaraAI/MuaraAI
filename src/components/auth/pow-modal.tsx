@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { submitProofOfWork } from "@/app/actions/pow";
 import { PoWInput } from "@/lib/validation";
+import Icon from "@/components/ui/icon";
 
 export default function PoWForm() {
   const [formData, setFormData] = useState<PoWInput>({
@@ -37,7 +38,7 @@ export default function PoWForm() {
   if (success) {
     return (
       <div className="rounded-xl border border-teal-200 bg-teal-50/70 p-8 text-center max-w-lg mx-auto shadow-ocean-lg">
-        <span className="material-symbols-rounded text-5xl text-teal-700 mb-4 block">check_circle</span>
+        <Icon name="check_circle" className="w-12 h-12 text-teal-700 mb-4 mx-auto" />
         <h2 className="font-display text-2xl font-bold text-teal-950 mb-2">Proof of Work Terkirim!</h2>
         <p className="text-sm text-slate-600 leading-relaxed mb-6">
           Pengurus inti (Core Team) telah menerima berkas karya Anda. Review dilakukan secara manual dalam 1x24 jam. 
@@ -66,7 +67,7 @@ export default function PoWForm() {
 
       {error && (
         <div className="mb-6 rounded-lg border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-800 flex items-center gap-2">
-          <span className="material-symbols-rounded text-base text-rose-700">error</span>
+          <Icon name="error" className="w-4 h-4 text-rose-700 shrink-0" />
           <span>{error}</span>
         </div>
       )}

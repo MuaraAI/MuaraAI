@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { logExpense } from "@/app/actions/admin";
+import Icon from "@/components/ui/icon";
 
 export default function AdminTreasuryPage() {
   const [formData, setFormData] = useState({
@@ -42,7 +43,7 @@ export default function AdminTreasuryPage() {
 
       {success && (
         <div className="rounded-lg border border-emerald-500/40 bg-emerald-950/20 p-4 text-xs text-emerald-300 flex items-center gap-2">
-          <span className="material-symbols-rounded text-base text-emerald-400">check_circle</span>
+          <Icon name="check_circle" className="w-5 h-5 text-emerald-400" />
           Pengeluaran kas berhasil dicatat dan masuk ke ledger publik!
         </div>
       )}

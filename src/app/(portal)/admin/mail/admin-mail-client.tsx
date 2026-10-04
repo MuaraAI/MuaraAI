@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { SentEmail } from "@/types/database";
 import { sendBroadcastEmail } from "@/app/actions/admin";
+import Icon from "@/components/ui/icon";
 
 interface AdminMailClientProps {
   initialSentEmails: SentEmail[];
@@ -39,7 +40,7 @@ export default function AdminMailClient({ initialSentEmails }: AdminMailClientPr
       {/* Mail Composer Form */}
       <div className="rounded-xl border border-border bg-surface p-6 sm:p-8 space-y-4">
         <h2 className="font-display text-lg font-bold text-white mb-2 flex items-center gap-2">
-          <span className="material-symbols-rounded text-amber-400">send</span>
+          <Icon name="send" className="w-5 h-5 text-amber-400" />
           Tulis Pesan Broadcast
         </h2>
 
@@ -118,7 +119,7 @@ export default function AdminMailClient({ initialSentEmails }: AdminMailClientPr
       <div className="rounded-xl border border-border bg-surface p-6 sm:p-8 flex flex-col justify-between">
         <div>
           <h2 className="font-display text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <span className="material-symbols-rounded text-amber-400">history</span>
+            <Icon name="history" className="w-5 h-5 text-amber-400" />
             Riwayat Email Terkirim (Outbox)
           </h2>
 

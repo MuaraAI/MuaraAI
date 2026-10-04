@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { LearningMaterial } from "@/types/database";
 import { recordMaterialRead } from "@/app/actions/learn";
+import Icon from "@/components/ui/icon";
 
 interface LearnFeedClientProps {
   initialMaterials: LearningMaterial[];
@@ -65,13 +66,13 @@ export default function LearnFeedClient({ initialMaterials }: LearnFeedClientPro
                 onClick={() => handleOpenMaterial(m)}
                 className="inline-flex items-center gap-1.5 rounded-lg bg-surface-hover hover:bg-muara-cyan hover:text-background border border-border px-3.5 py-2 text-xs font-mono font-semibold text-slate-200 transition-colors"
               >
-                <span className="material-symbols-rounded text-sm">open_in_new</span>
+                <Icon name="open_in_new" className="w-4 h-4" />
                 Buka Materi
               </button>
 
               {isOpened && (
                 <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
-                  <span className="material-symbols-rounded text-xs">check</span>
+                  <Icon name="check" className="w-3.5 h-3.5 text-emerald-400" />
                   Sudah Dibuka
                 </span>
               )}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { GITHUB_ORG_URL } from "@/lib/constants";
+import Icon from "@/components/ui/icon";
 
 export default function Footer() {
   return (
@@ -32,9 +33,9 @@ export default function Footer() {
             href={GITHUB_ORG_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-muara-ocean transition-colors flex items-center gap-1"
+            className="hover:text-muara-ocean transition-colors flex items-center gap-1.5"
           >
-            <span className="material-symbols-rounded text-sm">code</span>
+            <Icon name="code" className="w-4 h-4" />
             GitHub Org
           </Link>
         </div>

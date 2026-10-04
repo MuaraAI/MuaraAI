@@ -2,6 +2,7 @@ import React from "react";
 import { createClient } from "@/lib/supabase/server";
 import { Member } from "@/types/database";
 import Link from "next/link";
+import Icon from "@/components/ui/icon";
 
 export default async function DashboardProfilePage() {
   const supabase = await createClient();
@@ -30,7 +31,7 @@ export default async function DashboardProfilePage() {
 
       {member.registration_status === "pending" && (
         <div className="rounded-xl border border-amber-500/40 bg-amber-950/20 p-5 text-xs text-amber-200 flex items-start gap-3">
-          <span className="material-symbols-rounded text-lg text-amber-400 shrink-0">pending</span>
+          <Icon name="pending" className="w-5 h-5 text-amber-400 shrink-0" />
           <div>
             <div className="font-bold text-sm text-white mb-0.5">Status Pendaftaran: Menunggu Review</div>
             Berkas Proof of Work Anda sedang ditinjau oleh Core Team. Anda akan menerima undangan resmi ke GitHub Org setelah diverifikasi.

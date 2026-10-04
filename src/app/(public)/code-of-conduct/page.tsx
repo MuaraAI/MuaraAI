@@ -1,14 +1,15 @@
 import React from "react";
 import Link from "next/link";
+import Icon from "@/components/ui/icon";
 
 export default function CodeOfConductPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 text-xs font-mono text-muara-cyan hover:underline mb-8"
+        className="inline-flex items-center gap-1.5 text-xs font-mono text-muara-ocean hover:underline mb-8"
       >
-        <span className="material-symbols-rounded text-sm">arrow_back</span>
+        <Icon name="arrow_back" className="w-4 h-4 text-muara-ocean" />
         Kembali ke Beranda
       </Link>
 
@@ -19,7 +20,7 @@ export default function CodeOfConductPage() {
       <div className="space-y-8 text-sm leading-relaxed text-slate-600">
         <section className="rounded-xl border border-border-ocean bg-white p-6 shadow-ocean">
           <h2 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
-            <span className="material-symbols-rounded text-muara-ocean">verified</span>
+            <Icon name="verified" className="w-5 h-5 text-muara-ocean" />
             1. Anti-Slop (Zero Uncurated AI Artifacts)
           </h2>
           <p>
@@ -31,7 +32,7 @@ export default function CodeOfConductPage() {
 
         <section className="rounded-xl border border-border-ocean bg-white p-6 shadow-ocean">
           <h2 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
-            <span className="material-symbols-rounded text-muara-ocean">school</span>
+            <Icon name="school" className="w-5 h-5 text-muara-ocean" />
             2. Integritas Akademik & Anti-Joki
           </h2>
           <p>
@@ -43,7 +44,7 @@ export default function CodeOfConductPage() {
 
         <section className="rounded-xl border border-border-ocean bg-white p-6 shadow-ocean">
           <h2 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
-            <span className="material-symbols-rounded text-muara-ocean">lock</span>
+            <Icon name="lock" className="w-5 h-5 text-muara-ocean" />
             3. Zero Hardcoded Secrets & Keamanan Data
           </h2>
           <p>
@@ -55,7 +56,7 @@ export default function CodeOfConductPage() {
 
         <section className="rounded-xl border border-border-ocean bg-white p-6 shadow-ocean">
           <h2 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
-            <span className="material-symbols-rounded text-muara-ocean">commit</span>
+            <Icon name="commit" className="w-5 h-5 text-muara-ocean" />
             4. Disiplin Git & Testing Mandatori
           </h2>
           <p>

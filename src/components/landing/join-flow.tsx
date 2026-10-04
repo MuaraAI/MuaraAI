@@ -72,7 +72,7 @@ export default function JoinFlow() {
             href="/api/auth/login"
             className="inline-flex items-center gap-2 rounded-lg bg-muara-ocean hover:bg-muara-ocean-dark text-white px-8 py-3.5 text-sm font-bold transition-all shadow-ocean"
           >
-            <span className="material-symbols-rounded text-lg">arrow_forward</span>
+            <Icon name="arrow_forward" className="w-4 h-4 text-white" />
             Mulai Kirim Proof of Work Sekarang
           </Link>
         </div>

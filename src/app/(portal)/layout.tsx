@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Member } from "@/types/database";
+import Icon from "@/components/ui/icon";
 
 export default async function PortalLayout({
   children,
@@ -78,21 +79,21 @@ export default async function PortalLayout({
               href="/dashboard"
               className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-surface-hover hover:text-white transition-colors"
             >
-              <span className="material-symbols-rounded text-base text-muara-cyan">badge</span>
+              <Icon name="badge" className="w-4 h-4 text-muara-cyan" />
               Profil & PoW
             </Link>
             <Link
               href="/dashboard/treasury"
               className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-surface-hover hover:text-white transition-colors"
             >
-              <span className="material-symbols-rounded text-base text-muara-cyan">account_balance_wallet</span>
+              <Icon name="account_balance_wallet" className="w-4 h-4 text-muara-cyan" />
               Kas Komunitas (QRIS)
             </Link>
             <Link
               href="/dashboard/learn"
               className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-surface-hover hover:text-white transition-colors"
             >
-              <span className="material-symbols-rounded text-base text-muara-cyan">menu_book</span>
+              <Icon name="upload_file" className="w-4 h-4 text-muara-cyan" />
               Muara Learn
             </Link>
 
@@ -106,42 +107,42 @@ export default async function PortalLayout({
                   href="/admin/review"
                   className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-surface-hover hover:text-white transition-colors"
                 >
-                  <span className="material-symbols-rounded text-base text-amber-400">how_to_reg</span>
+                  <Icon name="how_to_reg" className="w-4 h-4 text-amber-400" />
                   Review Antrean
                 </Link>
                 <Link
                   href="/admin/treasury"
                   className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-surface-hover hover:text-white transition-colors"
                 >
-                  <span className="material-symbols-rounded text-base text-amber-400">receipt_long</span>
+                  <Icon name="receipt_long" className="w-4 h-4 text-amber-400" />
                   Pencatatan Kas
                 </Link>
                 <Link
                   href="/admin/learn"
                   className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-surface-hover hover:text-white transition-colors"
                 >
-                  <span className="material-symbols-rounded text-base text-amber-400">upload_file</span>
+                  <Icon name="upload_file" className="w-4 h-4 text-amber-400" />
                   Kelola Materi
                 </Link>
                 <Link
                   href="/admin/mail"
                   className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-surface-hover hover:text-white transition-colors"
                 >
-                  <span className="material-symbols-rounded text-base text-amber-400">mail</span>
+                  <Icon name="mail" className="w-4 h-4 text-amber-400" />
                   Resend Console
                 </Link>
                 <Link
                   href="/admin/achievements"
                   className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-surface-hover hover:text-white transition-colors"
                 >
-                  <span className="material-symbols-rounded text-base text-amber-400">workspace_premium</span>
+                  <Icon name="workspace_premium" className="w-4 h-4 text-amber-400" />
                   Kelola Sertifikat
                 </Link>
                 <Link
                   href="/admin/members"
                   className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-surface-hover hover:text-white transition-colors"
                 >
-                  <span className="material-symbols-rounded text-base text-amber-400">rule</span>
+                  <Icon name="rule" className="w-4 h-4 text-amber-400" />
                   Audit Anggota
                 </Link>
               </>
@@ -155,7 +156,7 @@ export default async function PortalLayout({
             href="/"
             className="flex items-center gap-2 text-xs text-slate-400 hover:text-white transition-colors"
           >
-            <span className="material-symbols-rounded text-sm">arrow_back</span>
+            <Icon name="arrow_back" className="w-4 h-4" />
             Kembali ke Beranda
           </Link>
         </div>

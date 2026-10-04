@@ -1,14 +1,15 @@
 import React from "react";
 import Link from "next/link";
+import Icon from "@/components/ui/icon";
 
 export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 text-xs font-mono text-muara-cyan hover:underline mb-8"
+        className="inline-flex items-center gap-1.5 text-xs font-mono text-muara-ocean hover:underline mb-8"
       >
-        <span className="material-symbols-rounded text-sm">arrow_back</span>
+        <Icon name="arrow_back" className="w-4 h-4 text-muara-ocean" />
         Kembali ke Beranda
       </Link>
 

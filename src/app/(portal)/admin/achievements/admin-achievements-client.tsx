@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Achievement } from "@/types/database";
 import { addAchievement } from "@/app/actions/admin";
+import Icon from "@/components/ui/icon";
 
 interface AdminAchievementsClientProps {
   initialAchievements: Achievement[];
@@ -56,7 +57,7 @@ export default function AdminAchievementsClient({
       {/* Upload Form */}
       <div className="rounded-xl border border-border bg-surface p-6 sm:p-8 space-y-4">
         <h2 className="font-display text-lg font-bold text-white mb-2 flex items-center gap-2">
-          <span className="material-symbols-rounded text-amber-400">workspace_premium</span>
+          <Icon name="workspace_premium" className="w-5 h-5 text-amber-400" />
           Tambah Prestasi Baru
         </h2>
 
@@ -156,7 +157,7 @@ export default function AdminAchievementsClient({
       <div className="rounded-xl border border-border bg-surface p-6 sm:p-8 flex flex-col justify-between">
         <div>
           <h2 className="font-display text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <span className="material-symbols-rounded text-amber-400">list</span>
+            <Icon name="list" className="w-5 h-5 text-amber-400" />
             Daftar Sertifikat Terdaftar ({list.length})
           </h2>
 

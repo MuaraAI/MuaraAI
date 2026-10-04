@@ -2,6 +2,7 @@ import React from "react";
 import { createClient } from "@/lib/supabase/server";
 import { Member, TreasuryTransaction } from "@/types/database";
 import { calculateMemberBill } from "@/lib/dues";
+import Icon from "@/components/ui/icon";
 
 export default async function MemberTreasuryPage() {
   const supabase = await createClient();
@@ -58,12 +59,12 @@ export default async function MemberTreasuryPage() {
             </div>
             {bill.weeks > 0 ? (
               <div className="mt-1 text-xs text-amber-400 font-mono flex items-center gap-1.5">
-                <span className="material-symbols-rounded text-sm">warning</span>
+                <Icon name="warning" className="w-4 h-4 text-amber-400" />
                 Menunggak {bill.weeks} minggu (Total: {formatRupiah(bill.amount)})
               </div>
             ) : (
               <div className="mt-1 text-xs text-emerald-400 font-mono flex items-center gap-1.5">
-                <span className="material-symbols-rounded text-sm">check_circle</span>
+                <Icon name="check_circle" className="w-4 h-4 text-emerald-400" />
                 Masa aktif iuran kas masih berlaku
               </div>
             )}
@@ -113,7 +114,7 @@ export default async function MemberTreasuryPage() {
       {/* Ledger History Table */}
       <div className="rounded-xl border border-border bg-surface p-6 sm:p-8">
         <h2 className="font-display text-lg font-bold text-white mb-4 flex items-center gap-2">
-          <span className="material-symbols-rounded text-muara-cyan">receipt_long</span>
+          <Icon name="receipt_long" className="w-5 h-5 text-muara-cyan" />
           Riwayat Mutasi Kas Komunitas
         </h2>
 
