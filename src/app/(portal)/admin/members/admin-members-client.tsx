@@ -15,6 +15,8 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
   const [processingId, setProcessingId] = useState<string | null>(null);
 
   const handleToggleActive = async (member: Member) => {
+    if (member.membership_status === "exited" || member.reapply_blocked) return;
+
     const nextState = !member.is_active;
     const confirmMsg = nextState
       ? `Aktifkan kembali akses member @${member.github_username}?`
@@ -43,18 +45,18 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
     : members;
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-6 sm:p-8 space-y-6">
+    <div className="rounded-[18px] border border-stroke bg-white p-6 sm:p-8 space-y-6 shadow-diffusion">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="font-display font-bold text-base text-white">
+        <div className="font-display font-bold text-base text-foreground">
           Daftar Seluruh Anggota ({displayed.length})
         </div>
 
-        <label className="flex items-center gap-2 text-xs font-mono text-slate-300 cursor-pointer">
+        <label className="flex items-center gap-2 text-xs font-mono text-secondary cursor-pointer">
           <input
             type="checkbox"
             checked={filterArrearsOnly}
             onChange={(e) => setFilterArrearsOnly(e.target.checked)}
-            className="rounded border-border text-muara-cyan focus:ring-0"
+            className="rounded border-stroke text-muara-ocean focus:ring-0"
           />
           Hanya tampilkan yang memiliki tunggakan / batas blacklist
         </label>
@@ -63,66 +65,79 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs font-mono">
           <thead>
-            <tr className="border-b border-border text-slate-500 uppercase">
+            <tr className="border-b border-stroke text-secondary uppercase">
               <th className="py-2.5 px-3">Member</th>
-              <th className="py-2.5 px-3">Divisi & Track</th>
+              <th className="py-2.5 px-3">Lifecycle</th>
+              <th className="py-2.5 px-3">Intake</th>
               <th className="py-2.5 px-3">Masa Aktif Kas</th>
               <th className="py-2.5 px-3">Tunggakan</th>
               <th className="py-2.5 px-3 text-center">Status Akses</th>
               <th className="py-2.5 px-3 text-right">Aksi</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border/60 text-slate-300">
+          <tbody className="divide-y divide-stroke text-slate-700">
             {displayed.map((m) => {
               const bill = calculateMemberBill(m.dues_valid_until);
+              const exited = m.membership_status === "exited" || m.reapply_blocked;
               return (
-                <tr key={m.id} className="hover:bg-background/40">
+                <tr key={m.id} className="hover:bg-surface-alt/60">
                   <td className="py-3 px-3">
-                    <div className="font-bold text-white">{m.full_name}</div>
-                    <div className="text-[10px] text-slate-400">@{m.github_username}</div>
+                    <div className="font-bold text-foreground">{m.full_name}</div>
+                    <div className="text-[10px] text-secondary">@{m.github_username}</div>
                   </td>
-                  <td className="py-3 px-3 capitalize">
-                    {m.division} ({m.track || "General"})
+                  <td className="py-3 px-3">
+                    <span className={`inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase ${
+                      exited ? "bg-slate-100 text-slate-700 border border-stroke" : "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                    }`}>
+                      {m.membership_status === "exited" ? "Exited" : m.membership_status === "banned" ? "Banned" : "Active"}
+                    </span>
+                    {exited && (
+                      <div className="mt-1 text-[10px] text-rose-700 font-semibold">Tidak dapat daftar ulang</div>
+                    )}
+                    {m.exited_at && (
+                      <div className="mt-1 text-[10px] text-secondary">Keluar: {new Date(m.exited_at).toLocaleDateString("id-ID")}</div>
+                    )}
                   </td>
-                  <td className="py-3 px-3 text-slate-300">
+                  <td className="py-3 px-3 text-[10px] text-secondary">
+                    {m.intake_policy_version || "Grandfathered"}
+                  </td>
+                  <td className="py-3 px-3 text-secondary">
                     {m.dues_valid_until || "Belum Bayar"}
                   </td>
                   <td className="py-3 px-3">
                     {bill.weeks > 0 ? (
-                      <span className="text-amber-400 font-bold">
+                      <span className="text-amber-700 font-bold">
                         {bill.weeks} minggu (Rp {bill.amount.toLocaleString("id-ID")})
                       </span>
                     ) : (
-                      <span className="text-emerald-400">Lunas</span>
+                      <span className="text-emerald-700">Lunas</span>
                     )}
                   </td>
                   <td className="py-3 px-3 text-center">
-                    <span
-                      className={`inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase ${
-                        m.is_active
-                          ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-                          : "bg-red-500/10 text-red-400 border border-red-500/30"
-                      }`}
-                    >
+                    <span className={`inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase ${
+                      m.is_active
+                        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                        : "bg-rose-50 text-rose-800 border border-rose-200"
+                    }`}>
                       {m.is_active ? "Aktif" : "Blacklisted"}
                     </span>
                   </td>
                   <td className="py-3 px-3 text-right">
-                    <button
-                      disabled={processingId === m.id}
-                      onClick={() => handleToggleActive(m)}
-                      className={`rounded px-3 py-1 text-[11px] font-bold transition-colors disabled:opacity-50 ${
-                        m.is_active
-                          ? "border border-red-500/40 text-red-400 hover:bg-red-500/10"
-                          : "border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10"
-                      }`}
-                    >
-                      {processingId === m.id
-                        ? "..."
-                        : m.is_active
-                        ? "Blacklist"
-                        : "Buka Blokir"}
-                    </button>
+                    {exited ? (
+                      <span className="text-[10px] text-secondary">Lifecycle terkunci</span>
+                    ) : (
+                      <button
+                        disabled={processingId === m.id}
+                        onClick={() => handleToggleActive(m)}
+                        className={`rounded-[6px] px-3 py-1 text-[11px] font-bold transition-colors disabled:opacity-50 ${
+                          m.is_active
+                            ? "border border-rose-300 text-rose-700 hover:bg-rose-50"
+                            : "border border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                        }`}
+                      >
+                        {processingId === m.id ? "..." : m.is_active ? "Blacklist" : "Buka Blokir"}
+                      </button>
+                    )}
                   </td>
                 </tr>
               );
