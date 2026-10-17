@@ -22,6 +22,9 @@ pnpm-debug.log*
 *.tsbuildinfo
 graphify-out/
 
+# Local session helper
+h.md
+
 # OS
 .DS_Store
 Thumbs.db
