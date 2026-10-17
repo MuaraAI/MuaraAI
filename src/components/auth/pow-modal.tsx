@@ -6,325 +6,145 @@ import { PoWInput } from "@/lib/validation";
 import { UBSI_CAMPUSES, UBSI_PRODI_LIST } from "@/lib/constants";
 import Icon from "@/components/ui/icon";
 
-export default function PoWForm() {
-  const [formData, setFormData] = useState<PoWInput>({
-    fullName: "",
-    nim: "",
-    campus: "UBSI Pontianak",
-    prodi: "Informatika (S1)",
-    kelas: "",
-    phoneWa: "",
-    division: "builder",
-    track: "Web & Apps Systems",
-    portfolioUrl: "",
-    websiteUrl: "",
-    linkedinUrl: "",
-    instagramUrl: "",
-    xUrl: "",
-    threadsUrl: "",
-    toolchainNarrative: "",
-  });
+type Step = 0 | 1 | 2 | 3;
 
+const steps = ["Identitas UBSI", "Proof of Work", "Profil publik", "Review"];
+
+export default function PoWForm() {
+  const [step, setStep] = useState<Step>(0);
+  const [formData, setFormData] = useState<PoWInput>({
+    fullName: "", nim: "", campus: "UBSI Pontianak", prodi: "Informatika (S1)", kelas: "", phoneWa: "",
+    division: "builder", track: "Web & Apps Systems", portfolioUrl: "", websiteUrl: "", linkedinUrl: "",
+    instagramUrl: "", xUrl: "", threadsUrl: "", toolchainNarrative: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const update = <K extends keyof PoWInput>(key: K, value: PoWInput[K]) => {
+    setFormData((current) => ({ ...current, [key]: value }));
+  };
+
+  const next = () => setStep((current) => Math.min(3, current + 1) as Step);
+  const previous = () => setStep((current) => Math.max(0, current - 1) as Step);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
     const res = await submitProofOfWork(formData);
     setLoading(false);
-
-    if (res.success) {
-      setSuccess(true);
-    } else {
-      setError(res.error || "Gagal mengirimkan Proof of Work.");
-    }
+    if (res.success) setSuccess(true);
+    else setError(res.error || "Gagal mengirimkan Proof of Work.");
   };
 
   if (success) {
     return (
       <div className="rounded-2xl border border-border bg-white p-8 text-center max-w-lg mx-auto shadow-sm">
-        <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-200">
-          <Icon name="check_circle" className="w-7 h-7" />
-        </div>
+        <Icon name="check_circle" className="w-12 h-12 text-emerald-600 mx-auto mb-4" />
         <h2 className="font-display text-2xl font-bold text-foreground mb-2">Proof of Work Terkirim!</h2>
-        <p className="text-xs text-slate-600 leading-relaxed mb-6">
-          Berkas karya dan identitas mahasiswa UBSI Anda telah diterima. Core Team maintainer akan memverifikasi karya Anda secara manual dalam 1x24 jam. Undangan bergabung ke GitHub Organization <strong>MuaraAI</strong> akan dikirimkan otomatis setelah disetujui.
-        </p>
-        <a
-          href="/"
-          className="inline-flex items-center gap-2 rounded-lg bg-muara-ocean text-white px-6 py-2.5 text-xs font-semibold hover:bg-muara-ocean-dark transition-colors shadow-sm"
-        >
-          Kembali ke Beranda
-        </a>
+        <p className="text-sm text-secondary leading-relaxed mb-6">Data kamu sudah diterima dan akan ditinjau oleh Core Team MuaraAI.</p>
+        <a href="/" className="inline-flex min-h-11 items-center rounded-md bg-muara-ocean text-white px-6 py-2.5 text-sm font-semibold hover:bg-muara-ocean-dark">Kembali ke Beranda</a>
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-white p-8 max-w-2xl mx-auto shadow-sm">
-      <div className="mb-6">
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-50 border border-sky-200 text-muara-ocean text-[11px] font-mono font-bold uppercase mb-2">
-          <Icon name="school" className="w-3.5 h-3.5" />
-          <span>Eksklusif Mahasiswa UBSI</span>
-        </div>
-        <h2 className="font-display text-2xl font-bold text-foreground mb-1">
-          Form Pendaftaran Proof of Work
-        </h2>
-        <p className="text-xs text-slate-500">
-          Komunitas riset dan rekayasa AI independen khusus mahasiswa Universitas Bina Sarana Informatika (UBSI).
-        </p>
+    <div className="rounded-2xl border border-border bg-white p-6 sm:p-8 max-w-2xl mx-auto shadow-sm">
+      <div className="mb-8">
+        <div className="text-xs font-mono uppercase tracking-[0.14em] text-muara-ocean">Pendaftaran UBSI 2026</div>
+        <h2 className="mt-2 font-display text-2xl font-bold text-foreground">Buat profil komunitasmu</h2>
+        <p className="mt-2 text-sm text-secondary">Selesaikan empat langkah singkat. Draft kamu tetap tersimpan saat berpindah langkah.</p>
       </div>
 
-      {error && (
-        <div className="mb-6 rounded-lg border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-800 flex items-center gap-2">
-          <Icon name="error" className="w-4 h-4 text-rose-700 shrink-0" />
-          <span>{error}</span>
-        </div>
-      )}
+      <ol aria-label="Progress pendaftaran" className="mb-8 grid grid-cols-4 gap-2">
+        {steps.map((label, index) => (
+          <li key={label} className={`border-t-2 pt-2 text-[11px] font-medium ${index <= step ? "border-muara-ocean text-foreground" : "border-stroke text-secondary"}`}>
+            <span className="block">{index + 1}. {label}</span>
+          </li>
+        ))}
+      </ol>
 
-      <form onSubmit={handleSubmit} className="space-y-4 text-xs font-mono">
-        {/* Row 1: Nama & WhatsApp */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-              Nama Lengkap <span className="text-rose-600">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.fullName}
-              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-              placeholder="misal: Yuken Velino"
-              className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
-            />
-          </div>
+      {error && <div role="alert" className="mb-6 rounded-lg border border-rose-200 bg-rose-50 p-3.5 text-sm text-rose-800">{error}</div>}
 
-          <div>
-            <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-              WhatsApp / Kontak Aktif <span className="text-rose-600">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.phoneWa}
-              onChange={(e) => setFormData({ ...formData, phoneWa: e.target.value })}
-              placeholder="08xxxxxxxxxx"
-              className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
-            />
-          </div>
-        </div>
-
-        {/* Row 2: NIM & Kode Kelas */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-              NIM Mahasiswa UBSI (8 Digit) <span className="text-rose-600">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              maxLength={8}
-              value={formData.nim}
-              onChange={(e) => setFormData({ ...formData, nim: e.target.value.replace(/\D/g, "") })}
-              placeholder="misal: 15260767"
-              className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-              Kode Kelas (SIAKAD) <span className="text-rose-600">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.kelas}
-              onChange={(e) => setFormData({ ...formData, kelas: e.target.value.toUpperCase() })}
-              placeholder="misal: 15.1C.30"
-              className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none uppercase"
-            />
-          </div>
-        </div>
-
-        {/* Row 3: Kampus UBSI & Prodi */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-              Kampus Asal UBSI <span className="text-rose-600">*</span>
-            </label>
-            <select
-              value={formData.campus}
-              onChange={(e) => setFormData({ ...formData, campus: e.target.value })}
-              className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none"
-            >
-              {UBSI_CAMPUSES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-              Program Studi (Prodi) <span className="text-rose-600">*</span>
-            </label>
-            <select
-              value={formData.prodi}
-              onChange={(e) => setFormData({ ...formData, prodi: e.target.value })}
-              className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none"
-            >
-              {UBSI_PRODI_LIST.map((p) => (
-                <option key={p} value={p}>
-                  {p}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Row 4: Divisi & Track */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-              Divisi Pilihan <span className="text-rose-600">*</span>
-            </label>
-            <select
-              value={formData.division}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  division: e.target.value as "builder" | "creative",
-                  track: e.target.value === "builder" ? "Web & Apps Systems" : "Image & Visual Brand",
-                })
-              }
-              className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none"
-            >
-              <option value="builder">Kluster Builder (Software, Backend, AI Systems)</option>
-              <option value="creative">Kluster Creative (UI/UX, Brand Identity, Media)</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-              Track Spesialisasi <span className="text-rose-600">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.track}
-              onChange={(e) => setFormData({ ...formData, track: e.target.value })}
-              placeholder="misal: AI Agent, Backend FastAPI, UI Engineering"
-              className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
-            />
-          </div>
-        </div>
-
-        {/* Row 5: Portfolio URL */}
-        <div>
-          <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-            Tautan Repositori GitHub / Portofolio Karya Nyata <span className="text-rose-600">*</span>
-          </label>
-          <input
-            type="url"
-            required
-            value={formData.portfolioUrl}
-            onChange={(e) => setFormData({ ...formData, portfolioUrl: e.target.value })}
-            placeholder="https://github.com/username/project atau tautan live demo"
-            className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
-          />
-        </div>
-
-        {/* Row 6: Toolchain narrative */}
-        <div>
-          <label className="block text-slate-700 mb-1.5 font-sans font-medium text-xs">
-            Toolchain & Workflow yang Dikuasai <span className="text-rose-600">*</span>
-          </label>
-          <textarea
-            required
-            rows={3}
-            value={formData.toolchainNarrative}
-            onChange={(e) => setFormData({ ...formData, toolchainNarrative: e.target.value })}
-            placeholder="Jelaskan workflow kerja nyata Anda (misal: Next.js 15, FastAPI, Cursor/Claude Code, Python Scrapling, TDD, Figma, ComfyUI)..."
-            className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
-          />
-        </div>
-
-        {/* Row 7: Tautan Web & Media Sosial Mahasiswa */}
-        <div className="pt-3 border-t border-border">
-          <div className="font-sans font-bold text-xs text-foreground mb-3 flex items-center gap-1.5">
-            <Icon name="link" className="w-4 h-4 text-muara-ocean" />
-            <span>Tautan Web & Media Sosial Mahasiswa (Opsional)</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div>
-              <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
-                Website Pribadi / Blog
-              </label>
-              <input
-                type="url"
-                value={formData.websiteUrl || ""}
-                onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
-                placeholder="https://yoursite.dev"
-                className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
-              />
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {step === 0 && (
+          <fieldset className="space-y-4">
+            <legend className="font-display text-xl font-semibold text-foreground">Identitas UBSI</legend>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field id="fullName" label="Nama Lengkap" value={formData.fullName} onChange={(value) => update("fullName", value)} required />
+              <Field id="phoneWa" label="WhatsApp / Kontak Aktif" value={formData.phoneWa} onChange={(value) => update("phoneWa", value)} required />
+              <Field id="nim" label="NIM Mahasiswa UBSI" value={formData.nim} onChange={(value) => update("nim", value.replace(/\D/g, ""))} required maxLength={8} />
+              <Field id="kelas" label="Kode Kelas" value={formData.kelas} onChange={(value) => update("kelas", value.toUpperCase())} required />
+              <SelectField id="campus" label="Kampus Asal UBSI" value={formData.campus} options={UBSI_CAMPUSES} onChange={(value) => update("campus", value)} />
+              <SelectField id="prodi" label="Program Studi" value={formData.prodi} options={UBSI_PRODI_LIST} onChange={(value) => update("prodi", value)} />
             </div>
+          </fieldset>
+        )}
 
-            <div>
-              <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
-                LinkedIn Profile
-              </label>
-              <input
-                type="url"
-                value={formData.linkedinUrl || ""}
-                onChange={(e) => setFormData({ ...formData, linkedinUrl: e.target.value })}
-                placeholder="https://linkedin.com/in/username"
-                className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
-              />
+        {step === 1 && (
+          <fieldset className="space-y-4">
+            <legend className="font-display text-xl font-semibold text-foreground">Proof of Work</legend>
+            <Field id="portfolioUrl" label="Tautan Repositori atau Portofolio" value={formData.portfolioUrl} onChange={(value) => update("portfolioUrl", value)} required type="url" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <SelectField id="division" label="Divisi Pilihan" value={formData.division} options={["builder", "creative"]} onChange={(value) => update("division", value as "builder" | "creative")} />
+              <Field id="track" label="Track Spesialisasi" value={formData.track} onChange={(value) => update("track", value)} required />
             </div>
+            <TextAreaField id="toolchainNarrative" label="Toolchain dan workflow yang dikuasai" value={formData.toolchainNarrative} onChange={(value) => update("toolchainNarrative", value)} required />
+          </fieldset>
+        )}
 
-            <div>
-              <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
-                Instagram (@ atau URL)
-              </label>
-              <input
-                type="text"
-                value={formData.instagramUrl || ""}
-                onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })}
-                placeholder="@username atau URL profil"
-                className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
-              />
+        {step === 2 && (
+          <fieldset className="space-y-4">
+            <legend className="font-display text-xl font-semibold text-foreground">Profil publik</legend>
+            <p className="text-sm text-secondary">Semua field di sini opsional. Isi yang ingin kamu tampilkan di profil anggota.</p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field id="websiteUrl" label="Website pribadi" value={formData.websiteUrl || ""} onChange={(value) => update("websiteUrl", value)} type="url" />
+              <Field id="linkedinUrl" label="LinkedIn" value={formData.linkedinUrl || ""} onChange={(value) => update("linkedinUrl", value)} type="url" />
+              <Field id="instagramUrl" label="Instagram" value={formData.instagramUrl || ""} onChange={(value) => update("instagramUrl", value)} />
+              <Field id="xUrl" label="X / Twitter" value={formData.xUrl || ""} onChange={(value) => update("xUrl", value)} />
             </div>
+          </fieldset>
+        )}
 
-            <div>
-              <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
-                X / Twitter (@ atau URL)
-              </label>
-              <input
-                type="text"
-                value={formData.xUrl || ""}
-                onChange={(e) => setFormData({ ...formData, xUrl: e.target.value })}
-                placeholder="@username atau URL profil"
-                className="w-full rounded-lg border border-border bg-slate-50 px-3.5 py-2 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
-              />
+        {step === 3 && (
+          <fieldset className="space-y-4">
+            <legend className="font-display text-xl font-semibold text-foreground">Review pendaftaran</legend>
+            <div className="divide-y divide-stroke rounded-lg border border-stroke bg-surface-alt text-sm">
+              <Summary label="Nama" value={formData.fullName} />
+              <Summary label="UBSI" value={`${formData.campus} · ${formData.prodi} · ${formData.kelas}`} />
+              <Summary label="Proof of Work" value={formData.portfolioUrl} />
+              <Summary label="Divisi" value={`${formData.division} · ${formData.track}`} />
             </div>
-          </div>
+            <p className="text-xs leading-relaxed text-secondary">Dengan mengirim formulir, kamu menyatakan data UBSI dan karya yang dikirim benar serta bersedia mengikuti proses review komunitas.</p>
+          </fieldset>
+        )}
+
+        <div className="flex flex-col-reverse gap-3 border-t border-stroke pt-5 sm:flex-row sm:justify-between">
+          <button type="button" onClick={previous} disabled={step === 0} className="min-h-11 rounded-md border border-stroke px-4 py-2.5 text-sm font-semibold text-foreground disabled:opacity-40">Kembali</button>
+          {step < 3 ? (
+            <button type="button" onClick={next} className="min-h-11 rounded-md bg-foreground px-5 py-2.5 text-sm font-semibold text-white hover:bg-secondary">Lanjut</button>
+          ) : (
+            <button type="submit" disabled={loading} className="min-h-11 rounded-md bg-muara-ocean px-5 py-2.5 text-sm font-semibold text-white hover:bg-muara-ocean-dark disabled:opacity-50">{loading ? "Mengirim..." : "Kirim pendaftaran"}</button>
+          )}
         </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-lg bg-muara-ocean hover:bg-muara-ocean-dark py-3 font-sans font-bold text-white text-sm transition-all disabled:opacity-50 shadow-sm mt-2 flex items-center justify-center gap-2"
-        >
-          <Icon name="verified" className="w-4 h-4" />
-          <span>{loading ? "Memvalidasi & Mengirim..." : "Kirim Proof of Work Mahasiswa UBSI"}</span>
-        </button>
       </form>
     </div>
   );
+}
+
+function Field({ id, label, value, onChange, required = false, type = "text", maxLength }: { id: string; label: string; value: string; onChange: (value: string) => void; required?: boolean; type?: string; maxLength?: number }) {
+  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><input id={id} type={type} value={value} required={required} maxLength={maxLength} onChange={(event) => onChange(event.target.value)} className="w-full rounded-md border border-stroke bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white" /></div>;
+}
+
+function SelectField({ id, label, value, options, onChange }: { id: string; label: string; value: string; options: readonly string[]; onChange: (value: string) => void }) {
+  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label} *</label><select id={id} value={value} onChange={(event) => onChange(event.target.value)} className="w-full rounded-md border border-stroke bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white">{options.map((option) => <option key={option} value={option}>{option}</option>)}</select></div>;
+}
+
+function TextAreaField({ id, label, value, onChange, required }: { id: string; label: string; value: string; onChange: (value: string) => void; required?: boolean }) {
+  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><textarea id={id} value={value} required={required} rows={4} onChange={(event) => onChange(event.target.value)} className="w-full rounded-md border border-stroke bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white" /></div>;
+}
+
+function Summary({ label, value }: { label: string; value: string }) {
+  return <div className="grid gap-1 px-4 py-3 sm:grid-cols-[140px_1fr]"><dt className="font-medium text-secondary">{label}</dt><dd className="break-words text-foreground">{value || "Belum diisi"}</dd></div>;
 }
