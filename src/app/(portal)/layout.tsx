@@ -27,6 +27,13 @@ export default async function PortalLayout({
 
   const member = memberData as Member | null;
 
+  // Exited/banned members see lifecycle status instead of re-entering onboarding.
+  if (member?.membership_status === "exited" || member?.reapply_blocked) {
+    redirect("/membership-exit");
+  }
+  if (member?.membership_status === "banned") {
+    redirect("/membership-exit?status=banned");
+  }
   // Unregistered, pending, or non-active members redirected to onboarding
   if (!member || member.registration_status !== "approved" || !member.is_active) {
     redirect("/onboarding");
