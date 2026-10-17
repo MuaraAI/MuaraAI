@@ -28,7 +28,7 @@ export async function saveApiKey(input: SaveKeyInput) {
   // Check approved member
   const { data: member } = await supabase
     .from("members")
-    .select("id, registration_status, is_active")
+    .select("id, registration_status, is_active, membership_status, reapply_blocked")
     .eq("id", user.id)
     .single();
 
@@ -36,6 +36,13 @@ export async function saveApiKey(input: SaveKeyInput) {
     return {
       success: false,
       error: "Hanya anggota resmi yang aktif yang dapat membuat API key.",
+    };
+  }
+
+  if (member.membership_status !== "active" || member.reapply_blocked === true) {
+    return {
+      success: false,
+      error: "Akun membership ini tidak dapat membuat API key.",
     };
   }
 
