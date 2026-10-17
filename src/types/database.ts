@@ -1,6 +1,17 @@
 export type MemberHierarchy = "maintainer" | "head" | "lead" | "member";
 export type MemberDivision = "builder" | "creative";
 export type RegistrationStatus = "pending" | "approved" | "rejected";
+export type MembershipStatus = "active" | "exited" | "banned";
+
+export interface MembershipIntakePolicy {
+  policy_version: string;
+  effective_at: string;
+  allowed_university: string;
+  allowed_cohort: number;
+  allowed_semester: number;
+  minimum_active_days_before_exit: number;
+  block_reapply_after_exit: boolean;
+}
 
 export interface Member {
   id: string;
@@ -32,6 +43,12 @@ export interface Member {
   linkedin_url: string | null;
   portfolio_url: string | null;
   registration_status: RegistrationStatus;
+  membership_status: MembershipStatus;
+  membership_started_at: string | null;
+  exited_at: string | null;
+  exit_reason: string | null;
+  reapply_blocked: boolean;
+  intake_policy_version: string | null;
   is_active: boolean;
   dues_valid_until: string | null;
   total_commits: number;
