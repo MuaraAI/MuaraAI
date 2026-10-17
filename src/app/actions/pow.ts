@@ -3,6 +3,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { notifyMaintainers } from "@/lib/notify";
 import { PoWInput, validatePoWSubmission } from "@/lib/validation";
+import { canSubmitIntake } from "@/lib/membership";
+import type { MembershipIntakePolicy } from "@/types/database";
 
 export async function submitProofOfWork(data: PoWInput) {
   const validation = validatePoWSubmission(data);
@@ -20,12 +22,31 @@ export async function submitProofOfWork(data: PoWInput) {
     return { success: false, error: "Sesi tidak ditemukan. Silakan login kembali dengan GitHub." };
   }
 
-  // Prevent existing approved members from being downgraded
+  const { data: setting, error: settingError } = await supabase
+    .from("community_settings")
+    .select("value")
+    .eq("key", "membership_intake")
+    .single();
+
+  if (settingError || !setting?.value) {
+    return { success: false, error: "Konfigurasi pendaftaran sedang tidak tersedia." };
+  }
+
+  const policy = setting.value as MembershipIntakePolicy;
   const { data: existing } = await supabase
     .from("members")
-    .select("registration_status, hierarchy")
+    .select("registration_status, hierarchy, membership_status, reapply_blocked, created_at")
     .eq("id", user.id)
     .maybeSingle();
+
+  const intakeDecision = canSubmitIntake(
+    existing,
+    policy,
+    new Date()
+  );
+  if (!intakeDecision.allowed) {
+    return { success: false, error: intakeDecision.reason };
+  }
 
   if (existing?.registration_status === "approved") {
     return { success: false, error: "Akun Anda sudah berstatus anggota resmi aktif." };
@@ -77,6 +98,12 @@ export async function submitProofOfWork(data: PoWInput) {
           : `https://x.com/${data.xUrl.replace(/^@/, "").trim()}`
         : null,
       registration_status: "pending",
+      membership_status: "active",
+      membership_started_at: null,
+      reapply_blocked: false,
+      intake_policy_version: policy.policy_version,
+      angkatan: policy.allowed_cohort,
+      semester: policy.allowed_semester,
       is_active: true,
       updated_at: new Date().toISOString(),
     },
