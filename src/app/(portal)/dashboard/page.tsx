@@ -32,12 +32,49 @@ export default async function DashboardProfilePage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
-          Profil Anggota & Status Keanggotaan
+        <p className="text-xs font-mono uppercase tracking-[0.16em] text-muara-ocean">Member workspace</p>
+        <h1 className="mt-2 font-display text-3xl sm:text-4xl font-bold text-foreground mb-1">
+          Beranda
         </h1>
-        <p className="text-xs text-secondary font-sans">
-          Informasi portofolio terverifikasi, spesialisasi divisi, dan identitas mahasiswa dalam ekosistem Muara AI.
+        <p className="text-sm text-secondary font-sans">
+          Pantau status membership dan lanjutkan langkah berikutnya di MuaraAI.
         </p>
+      </div>
+
+      <section className="rounded-[18px] border border-stroke bg-white p-6 shadow-diffusion">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div className="text-xs font-mono uppercase text-secondary">Status membership</div>
+            <div className="mt-2 flex items-center gap-2 text-xl font-display font-bold text-foreground">
+              <span className="h-2.5 w-2.5 rounded-full bg-status-success" aria-hidden="true" />
+              Aktif
+            </div>
+            <p className="mt-2 text-sm text-secondary">Akun kamu dapat mengakses ruang belajar, project, dan akses bersama.</p>
+          </div>
+          <Link href="/dashboard/learn" className="inline-flex min-h-11 items-center justify-center rounded-md bg-foreground px-4 py-2.5 text-sm font-semibold text-white hover:bg-secondary transition-colors">
+            Lanjut belajar
+          </Link>
+        </div>
+      </section>
+
+      <section className="grid gap-4 sm:grid-cols-3">
+        <Link href="/dashboard/learn" className="rounded-xl border border-stroke bg-surface-alt p-5 transition-colors hover:border-muara-ocean">
+          <div className="text-xs font-mono uppercase text-secondary">Berikutnya</div>
+          <div className="mt-2 font-display font-semibold text-foreground">Buka materi belajar</div>
+        </Link>
+        <Link href="/dashboard/vault" className="rounded-xl border border-stroke bg-surface-alt p-5 transition-colors hover:border-muara-ocean">
+          <div className="text-xs font-mono uppercase text-secondary">Akses</div>
+          <div className="mt-2 font-display font-semibold text-foreground">Kelola API key</div>
+        </Link>
+        <Link href="/membership-exit" className="rounded-xl border border-stroke bg-surface-alt p-5 transition-colors hover:border-muara-ocean">
+          <div className="text-xs font-mono uppercase text-secondary">Lifecycle</div>
+          <div className="mt-2 font-display font-semibold text-foreground">Lihat status membership</div>
+        </Link>
+      </section>
+
+      <div className="flex items-center justify-between gap-4">
+        <h2 className="font-display text-xl font-bold text-foreground">Profil lengkap</h2>
+        <span className="text-xs text-secondary">Data yang terverifikasi</span>
       </div>
 
       {member.registration_status === "pending" && (
