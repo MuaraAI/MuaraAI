@@ -31,7 +31,7 @@ export async function approveApplicant(memberId: string) {
 
   const { data: member, error: fetchErr } = await supabase
     .from("members")
-    .select("id, github_username, email, full_name")
+    .select("id, github_username, email, full_name, registration_status, membership_status, reapply_blocked, membership_started_at")
     .eq("id", memberId)
     .single();
 
@@ -39,11 +39,22 @@ export async function approveApplicant(memberId: string) {
     return { success: false, error: "Member not found" };
   }
 
-  // Update DB status to approved
+  if (member.reapply_blocked || member.membership_status === "exited") {
+    return { success: false, error: "Member ini sudah pernah keluar dan tidak dapat di-approve ulang." };
+  }
+
+  if (member.registration_status !== "pending") {
+    return { success: false, error: "Pendaftar ini tidak lagi berada dalam status pending." };
+  }
+
+  // Update DB status to approved without resetting the original start date
   const { error: updateErr } = await supabase
     .from("members")
     .update({
       registration_status: "approved",
+      membership_status: "active",
+      is_active: true,
+      membership_started_at: member.membership_started_at ?? new Date().toISOString(),
       reviewed_at: new Date().toISOString(),
     })
     .eq("id", memberId);
