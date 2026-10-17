@@ -1,6 +1,8 @@
+import React from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isMaintainer } from "@/lib/guards";
+import AdminShell from "@/components/portal/admin-shell";
 
 export default async function AdminLayout({
   children,
@@ -12,9 +14,7 @@ export default async function AdminLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect("/api/auth/login");
-  }
+  if (!user) redirect("/api/auth/login");
 
   const { data: member } = await supabase
     .from("members")
@@ -22,9 +22,7 @@ export default async function AdminLayout({
     .eq("id", user.id)
     .maybeSingle();
 
-  if (!isMaintainer(member)) {
-    redirect("/dashboard");
-  }
+  if (!isMaintainer(member)) redirect("/dashboard");
 
-  return <>{children}</>;
+  return <AdminShell>{children}</AdminShell>;
 }

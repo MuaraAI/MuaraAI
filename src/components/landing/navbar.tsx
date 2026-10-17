@@ -34,32 +34,18 @@ export default function Navbar({ user }: NavbarProps) {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-7 text-xs font-mono font-medium text-secondary">
           <Link href="/#projects" className="hover:text-foreground transition-colors">
-            Projects
-          </Link>
-          <Link href="/#accolades" className="hover:text-foreground transition-colors">
-            Accolades
-          </Link>
-          <Link href="/#manifesto" className="hover:text-foreground transition-colors">
-            Manifesto
+            Project
           </Link>
           <Link href="/members" className="hover:text-foreground transition-colors">
             Anggota
           </Link>
-          <Link href="/#syndicate" className="hover:text-foreground transition-colors">
-            Maintainers
-          </Link>
-          <Link href="/#treasury" className="hover:text-foreground transition-colors">
-            Treasury
+          <Link href="/onboarding" className="hover:text-foreground transition-colors">
+            Cara Gabung
           </Link>
         </div>
 
         {/* Right Actions */}
         <div className="hidden md:flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-alt border border-stroke px-2.5 py-0.5 text-[11px] font-mono font-semibold text-status-success">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>v2-alpha</span>
-          </span>
-
           <Link
             href={GITHUB_ORG_URL}
             target="_blank"
@@ -84,7 +70,7 @@ export default function Navbar({ user }: NavbarProps) {
               className="inline-flex items-center gap-1.5 rounded-full bg-foreground hover:bg-secondary text-white px-4 py-1.5 text-xs font-sans font-bold transition-all shadow-xs"
             >
               <Icon name="login" className="w-3.5 h-3.5 text-white" />
-              <span>Login</span>
+              <span>Masuk</span>
             </Link>
           )}
         </div>
@@ -107,44 +93,23 @@ export default function Navbar({ user }: NavbarProps) {
           <Link
             href="/#projects"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-1.5 text-secondary hover:text-foreground"
+            className="block min-h-11 py-3 text-secondary hover:text-foreground"
           >
-            Projects
-          </Link>
-          <Link
-            href="/#accolades"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-1.5 text-secondary hover:text-foreground"
-          >
-            Accolades
-          </Link>
-          <Link
-            href="/#manifesto"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-1.5 text-secondary hover:text-foreground"
-          >
-            Manifesto
+            Project
           </Link>
           <Link
             href="/members"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-1.5 text-secondary hover:text-foreground"
+            className="block min-h-11 py-3 text-secondary hover:text-foreground"
           >
             Anggota
           </Link>
           <Link
-            href="/#syndicate"
+            href="/onboarding"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-1.5 text-secondary hover:text-foreground"
+            className="block min-h-11 py-3 text-secondary hover:text-foreground"
           >
-            Maintainers
-          </Link>
-          <Link
-            href="/#treasury"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-1.5 text-secondary hover:text-foreground"
-          >
-            Treasury
+            Cara Gabung
           </Link>
           <div className="pt-2 border-t border-stroke">
             {user ? (

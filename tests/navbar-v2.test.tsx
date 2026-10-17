@@ -3,12 +3,15 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import Navbar from "../src/components/landing/navbar";
 
-describe("Navbar v2 Floating Pill", () => {
-  it("renders floating pill navbar with brand, links, and v2-alpha badge", () => {
+describe("Public navigation shell", () => {
+  it("renders the MuaraAI v3 public destinations", () => {
     render(<Navbar user={null} />);
     expect(screen.getByText("Muara AI")).toBeDefined();
-    expect(screen.getByText("Anggota")).toBeDefined();
-    expect(screen.getByText("Maintainers")).toBeDefined();
-    expect(screen.getByText("v2-alpha")).toBeDefined();
+    expect(screen.getAllByText("Project").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Anggota").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Cara Gabung").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Masuk").length).toBeGreaterThan(0);
+    expect(screen.queryByText("Maintainers")).toBeNull();
+    expect(screen.queryByText("v2-alpha")).toBeNull();
   });
 });
