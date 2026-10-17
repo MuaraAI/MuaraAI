@@ -32,17 +32,7 @@ export function canSubmitIntake(
   if (member.reapply_blocked || member.membership_status === "exited") {
     return { allowed: false, reason: "Akun ini sudah pernah keluar dan tidak dapat mendaftar ulang." };
   }
-  if (
-    member.registration_status === "approved" &&
-    member.membership_status === "active"
-  ) {
-    const createdAt = member.created_at ? new Date(member.created_at) : null;
-    const isGrandfathered =
-      member.hierarchy === "maintainer" &&
-      createdAt &&
-      !Number.isNaN(createdAt.getTime()) &&
-      createdAt < new Date(policy.effective_at);
-    if (isGrandfathered) return { allowed: true };
+  if (member.registration_status === "approved") {
     return { allowed: false, reason: "Akun Anda sudah berstatus anggota resmi aktif." };
   }
   return { allowed: true };

@@ -11,7 +11,7 @@ const policy = {
   block_reapply_after_exit: true,
 };
 
-it("grandfathers an existing Founder without membership_started_at", () => {
+it("blocks an existing approved Founder from submitting intake again", () => {
   const result = canSubmitIntake({
     registration_status: "approved",
     membership_status: "active",
@@ -19,7 +19,16 @@ it("grandfathers an existing Founder without membership_started_at", () => {
     reapply_blocked: false,
     created_at: "2026-10-01T00:00:00.000Z",
   }, policy, new Date("2026-10-17T00:00:00.000Z"));
-  expect(result.allowed).toBe(true);
+  expect(result.allowed).toBe(false);
+
+  const submitDecision = canSubmitIntake({
+    registration_status: "approved",
+    membership_status: "active",
+    hierarchy: "maintainer",
+    reapply_blocked: false,
+    created_at: "2026-10-01T00:00:00.000Z",
+  }, policy, new Date("2026-10-17T00:00:00.000Z"));
+  expect(submitDecision.allowed).toBe(false);
 });
 
 it("blocks exited members from reapplying", () => {
