@@ -14,9 +14,12 @@ describe("Landing Core Sections", () => {
     expect(screen.queryByText(/ai bot ciel/i)).toBeNull();
   });
 
-  it("displays 126+ automated tests metric", () => {
+  it("displays the Learn Build Contribute current", () => {
     render(<MetricsBar />);
-    expect(screen.getByText(/126\+/)).toBeDefined();
+    expect(screen.getByText("Belajar")).toBeDefined();
+    expect(screen.getByText("Membangun")).toBeDefined();
+    expect(screen.getByText("Berkontribusi")).toBeDefined();
+    expect(screen.queryByText(/126\+/)).toBeNull();
   });
 
   it("renders manifesto comparing pasaran vs muara ai", () => {
