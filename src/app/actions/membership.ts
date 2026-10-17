@@ -47,33 +47,15 @@ export async function requestMembershipExit(reason?: string) {
     };
   }
 
-  const exitedAt = new Date().toISOString();
-  const { error: updateError } = await supabase
-    .from("members")
-    .update({
-      membership_status: "exited",
-      is_active: false,
-      reapply_blocked: true,
-      exited_at: exitedAt,
-      exit_reason: reason?.trim().slice(0, 500) || null,
-    })
-    .eq("id", user.id)
-    .eq("membership_status", "active")
-    .eq("reapply_blocked", false);
+  const { data, error: rpcError } = await supabase.rpc("request_membership_exit", {
+    p_reason: reason?.trim().slice(0, 500) || null,
+  });
 
-  if (updateError) {
+  if (rpcError) {
     return { success: false, error: "Gagal memperbarui status membership." };
   }
 
-  const [aiResult, ubsiResult] = await Promise.all([
-    supabase.from("ai_api_keys").update({ is_active: false }).eq("user_id", user.id),
-    supabase.from("api_keys").update({ is_active: false }).eq("user_id", user.id),
-  ]);
-
-  if (aiResult.error || ubsiResult.error) {
-    console.error("[membership] API key revocation failed", aiResult.error, ubsiResult.error);
-  }
-
+  const exitedAt = String(data?.exited_at || new Date().toISOString());
   await notifyMaintainers(
     "Member Keluar dari Muara AI",
     `Member @${member.github_username} (${member.full_name}) telah mengajukan keluar.\nWaktu: ${exitedAt}\nAlasan: ${reason?.trim() || "Tidak diberikan"}`

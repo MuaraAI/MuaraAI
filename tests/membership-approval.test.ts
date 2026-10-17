@@ -12,6 +12,7 @@ describe("Applicant approval lifecycle contract", () => {
     expect(source).toContain("membership_status");
     expect(source).toContain("reapply_blocked");
     expect(source).toContain("membership_started_at");
+    expect(source).toContain("reviewed_by: user.id");
   });
 
   it("writes active lifecycle state and preserves first approval timestamp", () => {

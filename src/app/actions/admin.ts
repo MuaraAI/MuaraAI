@@ -27,7 +27,7 @@ async function assertMaintainer() {
 
 // 1. Approve applicant & invite to GitHub Org
 export async function approveApplicant(memberId: string) {
-  const { supabase } = await assertMaintainer();
+  const { supabase, user } = await assertMaintainer();
 
   const { data: member, error: fetchErr } = await supabase
     .from("members")
@@ -55,6 +55,7 @@ export async function approveApplicant(memberId: string) {
       membership_status: "active",
       is_active: true,
       membership_started_at: member.membership_started_at ?? new Date().toISOString(),
+      reviewed_by: user.id,
       reviewed_at: new Date().toISOString(),
     })
     .eq("id", memberId);

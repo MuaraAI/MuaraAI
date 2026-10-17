@@ -44,6 +44,7 @@ BEGIN
     IF OLD.membership_status IS DISTINCT FROM NEW.membership_status
       OR OLD.membership_started_at IS DISTINCT FROM NEW.membership_started_at
       OR OLD.exited_at IS DISTINCT FROM NEW.exited_at
+      OR OLD.exit_reason IS DISTINCT FROM NEW.exit_reason
       OR OLD.reapply_blocked IS DISTINCT FROM NEW.reapply_blocked
       OR OLD.intake_policy_version IS DISTINCT FROM NEW.intake_policy_version THEN
       RAISE EXCEPTION 'Forbidden: lifecycle fields are server-managed';

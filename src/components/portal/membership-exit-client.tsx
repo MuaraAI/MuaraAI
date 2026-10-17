@@ -21,7 +21,7 @@ export default function MembershipExitClient({
   const [done, setDone] = useState(status === "exited");
 
   const earliest = earliestExitAt ? new Date(earliestExitAt) : null;
-  const canExit = status === "active" && (!earliest || Date.now() >= earliest.getTime());
+  const canExit = status === "active" && earliest !== null && Date.now() >= earliest.getTime();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

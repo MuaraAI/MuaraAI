@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { Member } from "@/types/database";
 import Link from "next/link";
 import Icon from "@/components/ui/icon";
+import { getEarliestExitDate } from "@/lib/membership";
+import type { MembershipIntakePolicy } from "@/types/database";
 
 export default async function DashboardProfilePage() {
   const supabase = await createClient();
@@ -17,6 +19,15 @@ export default async function DashboardProfilePage() {
     .single();
 
   const member = memberData as Member;
+  const { data: intakeSetting } = await supabase
+    .from("community_settings")
+    .select("value")
+    .eq("key", "membership_intake")
+    .maybeSingle();
+  const intakePolicy = intakeSetting?.value as MembershipIntakePolicy | undefined;
+  const earliestExitAt = intakePolicy
+    ? getEarliestExitDate(member.membership_started_at, intakePolicy.minimum_active_days_before_exit)
+    : null;
 
   return (
     <div className="space-y-8">
@@ -36,6 +47,29 @@ export default async function DashboardProfilePage() {
             <div className="font-bold text-sm text-foreground mb-0.5">Status Pendaftaran: Menunggu Review</div>
             Berkas Proof of Work Anda sedang ditinjau oleh Core Team. Anda akan menerima undangan resmi ke GitHub Org setelah diverifikasi.
           </div>
+        </div>
+      )}
+
+      {member.membership_started_at && member.membership_status === "active" && (
+        <div className="rounded-[18px] border border-stroke bg-surface-alt p-5 shadow-diffusion flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="text-xs font-mono uppercase text-secondary">Lifecycle Membership</div>
+            <div className="mt-1 text-sm font-semibold text-foreground">
+              Aktif sejak {new Date(member.membership_started_at).toLocaleDateString("id-ID")}
+            </div>
+            <div className="mt-1 text-xs text-secondary">
+              {earliestExitAt
+                ? `Boleh mengajukan keluar mulai ${earliestExitAt.toLocaleDateString("id-ID")}.`
+                : "Tanggal eligibility exit belum tersedia."}
+            </div>
+          </div>
+          <Link
+            href="/membership-exit"
+            className="inline-flex items-center justify-center gap-1.5 rounded-[10px] border border-stroke bg-white px-4 py-2 text-xs font-semibold text-foreground hover:border-muara-ocean hover:text-muara-ocean transition-colors shadow-xs"
+          >
+            <Icon name="logout" className="w-4 h-4" />
+            Ajukan Keluar
+          </Link>
         </div>
       )}
 
