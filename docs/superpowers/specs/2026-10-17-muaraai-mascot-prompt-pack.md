@@ -11,6 +11,14 @@
   - `/home/curzy/workspace/MuaraAI/maskot/POSE/new-tran/mura_offline.png`
   - `/home/curzy/workspace/MuaraAI/maskot/POSE/new-tran/mura_welcome.png`
   - `/home/curzy/workspace/MuaraAI/maskot/POSE/new-tran/mura_empty_library.png`
+- Approved generated web pose assets:
+  - `Error-Maintenance-Needs-Attention-6.jpeg`
+  - `Empty-State-Nothing-Yet-5.jpeg`
+  - `Access-api-vault-4.jpeg`
+  - `Building-Project-Workspace-3.jpeg`
+  - `learning-learn-2.jpeg`
+  - `welcome-onboarding-1.jpeg`
+- Approved asset directory: `/home/curzy/workspace/MuaraAI/maskot/POSE/MuaraAI/pose/`
 
 ## 1. Generation Workflow
 
@@ -131,7 +139,23 @@ Suggested filename: `mura_web_attention.png`
 Pose and state: Mura stands beside a small plain maintenance sign or simple blank panel, holding a compact wrench with both hands in a careful repair pose. The panel must contain no text, no symbols, and no logo. Mura has a concerned but composed expression, with focused eyes and a small determined mouth. The wrench must be simple and secondary to the character. Keep the silhouette friendly and avoid disaster imagery.
 
 Mood: something needs attention, but the situation is understandable and recoverable.
-Use no warning explosion, broken glass, red emergency glow, server room, error text, or dramatic destruction. The pose must work for both a temporary maintenance state and a recoverable error state.
+Use no warning explosion, broken glass, red emergency glow, error text, or dramatic destruction. The pose must work for both a temporary maintenance state and a recoverable error state.
+```
+
+### Pose 07: 404 / Route Not Found
+
+Suggested filename: `mura_web_404.png`
+
+Use this as an additional pose after the six existing web poses. It must communicate that the requested route does not exist, not that the whole system is broken and not that content is merely empty.
+
+```text
+[PASTE CHARACTER ANCHOR BLOCK]
+[PASTE SHARED STATIC OUTPUT BLOCK]
+
+Pose and state: Mura stands in a three-quarter pose beside a simple freestanding signboard or map panel that is visibly turned the wrong way or points toward a blank dead-end path. The signboard must remain completely blank with no number, letter, URL, logo, or readable text. Mura holds a small plain folded map in one hand and points gently toward the empty dead end with the other hand. Give Mura a mildly confused but composed expression: raised eyebrow, slightly tilted head, and a small thoughtful mouth. Keep the expression friendly and lightly humorous, never frightened or distressed.
+
+Mood: the requested page or route was not found, but the user can safely return and continue.
+The silhouette must remain clear at thumbnail size. The map and dead-end sign are communication props only and must stay secondary to Mura. Use no broken-device imagery, no warning explosion, no red emergency glow, no server room, no error-code text, no giant “404” lettering, no browser window, and no background scenery.
 ```
 
 ## 5. Shared Negative Prompt for Static Images
