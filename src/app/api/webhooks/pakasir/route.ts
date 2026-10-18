@@ -26,8 +26,13 @@ export async function POST(req: NextRequest) {
     const transaction = verifyResult.transaction;
 
     // Use service role client for background webhook DB mutations
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://awlwvcmrknkdxnwolcoy.supabase.co";
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl) {
+      console.error("[CRITICAL] NEXT_PUBLIC_SUPABASE_URL is not configured for Pakasir webhook.");
+      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    }
 
     if (!serviceKey) {
       console.error("[CRITICAL] SUPABASE_SERVICE_ROLE_KEY is not configured for Pakasir webhook.");
