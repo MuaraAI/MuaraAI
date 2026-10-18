@@ -1,114 +1,159 @@
-# Muara AI (`muaraai.com`)
+# MuaraAI
 
-> **Where local craft flows global.**
+> Where local craft flows global.
 
-Portal web resmi, direktori keanggotaan berbasis *proof-of-work*, dan kontrol otomasi kas komunitas Muara AI — sindikat riset dan rekayasa kecerdasan buatan mahasiswa Universitas Bina Sarana Informatika (UBSI) Kampus Kota Pontianak.
+MuaraAI adalah komunitas mahasiswa UBSI dari seluruh Indonesia yang lahir di UBSI Pontianak. Komunitas ini terbuka untuk mahasiswa angkatan 2026 dan seterusnya, dengan ruang untuk belajar, membangun project, menunjukkan Proof of Work, dan berkontribusi bersama.
 
----
+Website utama: https://muaraai.com/
+AI Playground: https://ai.muaraai.com/
 
-## 1. Apa itu Muara AI
+![MuaraAI logo](public/brand/muara-logo.png)
 
-Muara AI adalah studio dan komunitas praktisi rekayasa AI independen yang menolak keras budaya *FOMO*, plagiarisme joki tugas, dan keluaran AI mentah tanpa kurasi (*anti-slop*).
+## Produk dan project
 
-Portal `muaraai.com` mengintegrasikan:
-1. **The Hall of Projects**: Etalase proyek perangkat lunak produksi nyata (`UBSI API` & `Muara AI Gateway`).
-2. **The Accolades**: Arsip verifikasi sertifikat penghargaan, kejuaraan hackathon, dan kompetisi nasional.
-3. **The Syndicate**: Direktori anggota terverifikasi live dari database Supabase dengan filter kategori dan leaderboard *Top Commits*.
-4. **Sistem Kas QRIS Otomatis (Pakasir Gateway)**: Pembayaran iuran kas digital mandiri (Rp 3.000 / minggu atau Rp 12.000 / bulan) dengan transparansi saldo terbuka tanpa unggah struk manual.
-5. **Muara Learn**: Pusat pengetahuan riset internal dengan audit pencatatan pembaca (*read-tracking*) berbasis waktu server.
-6. **Maintainer Control Plane**: Panel khusus pengurus inti untuk mereview berkas pendaftar, mengundang otomatis ke GitHub Organization via API, mencatat pengeluaran kas, serta mengirim broadcast email via Resend API.
+### Muara Arus 1
 
----
+Muara Arus 1 adalah AI lokal akademik dan coding buatan MuaraAI.
 
-## 2. Arsitektur & Teknologi
+- Model ID: `muara-arus-1`
+- Ukuran: 1.5B parameter
+- Runtime: ditujukan berjalan 100% offline
+- Fokus saat ini: FTI UBSI, program SI, SIA, dan IF
+- Playground: https://ai.muaraai.com/
+- GitHub: https://github.com/MuaraAI/muara-arus-1
+- Hugging Face: https://huggingface.co/MuaraAI/muara-arus-1
+- Ollama: https://ollama.com/MuaraAI/muara-arus-1
+
+Model ini dikembangkan untuk membantu mahasiswa memahami materi akademik yang tersedia dan mengerjakan tugas dengan konteks sumber yang jelas. Cakupan pengetahuan dapat berkembang setelah dataset dan evaluasinya diperluas.
+
+### UBSI API
+
+UBSI API adalah REST API unofficial yang menyatukan enam layanan digital UBSI ke dalam antarmuka JSON. Mahasiswa menggunakan akun mereka sendiri untuk mengakses layanan yang tersedia.
+
+Layanan yang tercakup:
+
+- StudentV2 / SIAKAD
+- MyBest LMS
+- Elibrary
+- EJournal
+- Repository
+- News Portal
+
+- Website: https://ubsi-api.muaraai.com
+- Repository: https://github.com/MuaraAI/UBSI-API
+
+UBSI API dikembangkan secara independen dan tidak berafiliasi, disponsori, atau dikelola oleh UBSI.
+
+## Komunitas
+
+MuaraAI dimulai dari mahasiswa UBSI Pontianak dan berkembang menuju komunitas nasional. Pontianak adalah founding hub dan pusat utama pertemuan offline. Jakarta menjadi regional hub, sementara kampus UBSI lain terhubung sebagai node komunitas.
+
+Ketentuan intake saat ini:
+
+- Mahasiswa UBSI dari kampus di seluruh Indonesia.
+- Angkatan 2026 dan seterusnya.
+- Proses pendaftaran menggunakan GitHub OAuth dan Proof of Work.
+- Detail verifikasi, membership, iuran, dan akses tersedia setelah login.
+
+Tim inti:
+
+- Yuken Velino | NIM 15260767 — `@Curzyori` — Founder, Maintainer, Builder
+- Muhammad Raffli Aldiansyah | NIM 15260161 — `@Seeyaa77` — Co-Founder, Maintainer, Builder
+- Verzio Yamanansyah | NIM 15260225 — `@MyKineID` — Co-Founder, Maintainer, Builder
+
+## Struktur aplikasi
 
 ```text
 muaraai.com/
-├── (public)             # Halaman publik (Deep Water Dark Theme)
-│   ├── /                # Landing page (Hero, Projects, Accolades, Syndicate, Treasury)
-│   ├── /terms           # Ketentuan layanan meritokrasi
-│   ├── /privacy         # Kebijakan privasi identitas GitHub
-│   └── /code-of-conduct # Aturan anti-slop, anti-joki, dan etika rekayasa
-│
-├── (portal)             # Area terproteksi anggota & pengurus
-│   ├── /dashboard       # Profil anggota & status keanggotaan
-│   ├── /dashboard/vault # Vault & API Key generator (Muara AI & UBSI API)
-│   ├── /dashboard/treasury # Bayar kas via QRIS Pakasir & riwayat mutasi
-│   ├── /dashboard/learn # Feed materi riset Muara Learn
-│   │
-│   └── /admin           # Hak akses terkunci khusus Maintainer
-│       ├── /review      # Antrean PoW -> 1-klik Approve & invite GitHub Org
-│       ├── /treasury    # Pencatatan biaya operasional (VPS, domain, lomba)
-│       ├── /learn       # Terbitkan materi baru & audit siapa saja pembacanya
-│       ├── /mail        # Console kirim broadcast via Resend API & outbox log
-│       ├── /achievements# Tambah sertifikat & prestasi baru
-│       └── /members     # Audit tunggakan kas & kontrol blacklist (>30 hari)
-│
-└── api/
-    ├── auth/callback    # Pertukaran sesi GitHub OAuth SSO (.muaraai.com)
-    └── webhooks/pakasir # Webhook pembayaran QRIS (verifikasi fail-closed server-to-server)
+├── /                       # Landing page dan showcase komunitas
+├── /members                # Direktori publik anggota
+├── /onboarding             # Pendaftaran Proof of Work UBSI
+├── /terms                 # Ketentuan layanan
+├── /privacy               # Kebijakan privasi
+├── /code-of-conduct       # Norma dan etika komunitas
+├── /dashboard              # Workspace member: status dan next action
+├── /dashboard/learn       # Muara Learn
+├── /dashboard/treasury    # Iuran dan kas komunitas
+├── /dashboard/vault       # Akses API internal member
+└── /admin                 # Workspace maintainer
+    ├── /review            # Review pendaftar
+    ├── /members           # Audit membership dan lifecycle
+    ├── /treasury         # Pencatatan kas
+    ├── /learn            # Pengelolaan materi
+    ├── /mail             # Inbox dan email komunitas
+    └── /achievements     # Prestasi komunitas
 ```
 
-- **Framework**: Next.js 15 (App Router), React 19, TypeScript
-- **Styling**: Tailwind CSS (Deep Water: `#070B14`, `#0B132B`, `#06B6D4`)
-- **Font & Ikon**: Self-hosted lokal Inter & Space Grotesk (`public/fonts/`); Google Material Symbols Rounded (Zero emoji di UI, zero remote CDN)
-- **Database & Auth**: Supabase PostgreSQL (`awlwvcmrknkdxnwolcoy`) + Supabase Auth (100% GitHub OAuth)
-- **Payment Gateway**: Pakasir Dynamic QRIS API
-- **Email & Alerts**: Resend SDK + Webhook Discord & Telegram Bot
-- **Pengujian**: Vitest + React Testing Library (100% Offline Passing)
+## Teknologi
 
----
+- Next.js 15 App Router
+- React 19
+- TypeScript
+- Tailwind CSS
+- `motion/react` untuk motion UI yang fungsional
+- Supabase PostgreSQL dan Supabase Auth
+- GitHub OAuth
+- Pakasir QRIS
+- Resend
+- Vitest dan React Testing Library
+- Font lokal Inter, Space Grotesk, dan JetBrains Mono
+- Inline SVG icon system, tanpa emoji sebagai ikon UI
 
-## 3. Instalasi & Menjalankan Lokal
+## Desain dan motion
 
-### Prasyarat
+Visual MuaraAI memakai Fluid Currents Light:
+
+- Kanvas terang estuary.
+- Deep riverbed ink `#072033`.
+- River current blue `#0369A1`.
+- Logo resmi dari `public/brand/muara-logo.png`.
+- Mura sebagai mascot pendukung pada onboarding, empty state, error, dan halaman 404.
+- Peta nasional di hero menggunakan SVG Indonesia, rute yang tergambar bertahap, dan Pontianak sebagai founding hub.
+- Motion mengikuti prinsip Laku: scroll reveal, active state, route drawing, dan progressive disclosure.
+- Semua motion memiliki fallback `prefers-reduced-motion`.
+
+## Menjalankan lokal
+
+Prasyarat:
+
 - Node.js 20.x atau 22.x LTS
-- Akun GitHub aktif
-
-### Langkah Setup
-1. Clone repositori:
-   ```bash
-   git clone https://github.com/MuaraAI/MuaraAI.git
-   cd MuaraAI
-   ```
-
-2. Pasang dependensi:
-   ```bash
-   npm install
-   ```
-
-3. Salin file environment:
-   ```bash
-   cp .env.example .env.local
-   ```
-   Lengkapi variabel environment sesuai konfigurasi Supabase, Pakasir, dan Resend.
-
-4. Jalankan development server:
-   ```bash
-   npm run dev
-   ```
-   Buka [http://localhost:3000](http://localhost:3000) di browser Anda.
-
----
-
-## 4. Pengujian Otomatis & Standar Kualitas
-
-Proyek ini mewajibkan pengujian otomatis dan typecheck bebas galat sebelum kode dapat digabungkan:
+- Akun GitHub aktif untuk OAuth lokal
 
 ```bash
-# Menjalankan seluruh test suite offline
+git clone https://github.com/MuaraAI/MuaraAI.git
+cd MuaraAI
+npm install
+cp .env.example .env.local
+npm run dev
+```
+
+Buka http://localhost:3000.
+
+Jangan memasukkan secret asli ke README, source code, test, atau commit. Isi `.env.local` hanya di mesin lokal.
+
+## Verifikasi
+
+```bash
 npm test
-
-# Pemeriksaan tipe TypeScript
-npx tsc --noEmit
-
-# Kompilasi build produksi Next.js
 npm run build
 ```
 
----
+Build terakhir memverifikasi 23 route dan test suite lokal mencakup UI, membership lifecycle, auth boundaries, public content, mascot, dan responsive-oriented contracts.
 
-## 5. Lisensi
+## Official links
 
-Dirilis di bawah lisensi resmi [MIT License](LICENSE).
-Hak Cipta © 2026 Core Team Muara AI (Yuken Velino, M Raffli Aldiansyah, Verzio).
+- Website: https://muaraai.com/
+- AI Playground: https://ai.muaraai.com/
+- GitHub: https://github.com/MuaraAI
+- X: https://x.com/MuaraAI
+- Instagram: https://www.instagram.com/muara.ai/
+- Threads: https://www.threads.com/@muara.ai
+- Hugging Face: https://huggingface.co/MuaraAI
+- Ollama: https://ollama.com/MuaraAI
+- Email: mailto:admin@muaraai.com
+
+## Lisensi
+
+Lihat [LICENSE](LICENSE) untuk ketentuan lisensi repository.
+
+Hak cipta © 2026 MuaraAI Core Team.
