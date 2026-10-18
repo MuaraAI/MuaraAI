@@ -24,11 +24,11 @@ Muara Arus 1 adalah AI lokal akademik dan coding buatan MuaraAI.
 - Hugging Face: https://huggingface.co/MuaraAI/muara-arus-1
 - Ollama: https://ollama.com/MuaraAI/muara-arus-1
 
-Model ini dikembangkan untuk membantu mahasiswa memahami materi akademik yang tersedia dan mengerjakan tugas dengan konteks sumber yang jelas. Cakupan pengetahuan dapat berkembang setelah dataset dan evaluasinya diperluas.
+Model ini membantu mahasiswa memahami materi akademik yang tersedia dan mengerjakan tugas dengan konteks sumber yang jelas. Cakupan pengetahuan berkembang seiring dataset dan evaluasinya.
 
 ### UBSI API
 
-UBSI API adalah REST API unofficial yang menyatukan enam layanan digital UBSI ke dalam antarmuka JSON. Mahasiswa menggunakan akun mereka sendiri untuk mengakses layanan yang tersedia.
+UBSI API adalah REST API unofficial yang menyatukan enam layanan digital UBSI ke dalam antarmuka JSON. Mahasiswa memakai akun mereka sendiri untuk mengakses layanan yang tersedia.
 
 Layanan yang tercakup:
 
@@ -46,13 +46,13 @@ UBSI API dikembangkan secara independen dan tidak berafiliasi, disponsori, atau 
 
 ## Komunitas
 
-MuaraAI dimulai dari mahasiswa UBSI Pontianak dan berkembang menuju komunitas nasional lintas kampus. Pontianak adalah founding hub dan pusat utama pertemuan offline. Jakarta menjadi regional hub, sementara mahasiswa dari kampus lain di seluruh Indonesia terhubung sebagai node komunitas.
+MuaraAI dimulai dari mahasiswa UBSI Pontianak dan berkembang menjadi komunitas nasional lintas kampus. Pontianak adalah founding hub dan pusat utama pertemuan offline. Node jaringan pada peta landing saat ini merujuk universitas mitra lintas wilayah seperti UNTAN, ITB, UI, UGM, ITS, USU, UNAND, UNHAS, UNMUL, UNSRAT, UNIPA, dan UNCEN; label node menunjukkan jangkauan komunitas, bukan klaim chapter aktif.
 
 Ketentuan intake saat ini:
 
 - Mahasiswa dari kampus mana pun di seluruh Indonesia.
 - Angkatan 2026 dan seterusnya.
-- Proses pendaftaran menggunakan GitHub OAuth dan Proof of Work.
+- Alur pendaftaran: isi form onboarding terlebih dahulu, setujui Privacy Policy, Terms of Service, dan Code of Conduct, baru login GitHub OAuth, lalu submit Proof of Work.
 - Detail verifikasi, membership, iuran, dan akses tersedia setelah login.
 
 Tim inti:
@@ -65,51 +65,57 @@ Tim inti:
 
 ```text
 muaraai.com/
-├── /                       # Landing page dan showcase komunitas
-├── /members                # Direktori publik anggota
-├── /onboarding             # Pendaftaran Proof of Work UBSI
+├── /                      # Landing page dan showcase komunitas
+├── /members               # Direktori publik anggota
+├── /onboarding            # Form pendaftaran + legal gate + GitHub OAuth
 ├── /terms                 # Ketentuan layanan
 ├── /privacy               # Kebijakan privasi
 ├── /code-of-conduct       # Norma dan etika komunitas
-├── /dashboard              # Workspace member: status dan next action
+├── /dashboard             # Workspace member: status dan next action
 ├── /dashboard/learn       # Muara Learn
-├── /dashboard/treasury    # Iuran dan kas komunitas
+├── /dashboard/treasury    # Kas komunitas (QRIS Segera hadir)
 └── /admin                 # Workspace maintainer
     ├── /review            # Review pendaftar
     ├── /members           # Audit membership dan lifecycle
-    ├── /treasury         # Pencatatan kas
-    ├── /learn            # Pengelolaan materi
-    ├── /mail             # Inbox dan email komunitas
-    └── /achievements     # Prestasi komunitas
+    ├── /treasury          # Pencatatan kas
+    ├── /learn             # Pengelolaan materi
+    ├── /mail              # Inbox dan email komunitas
+    └── /achievements      # Prestasi komunitas
 ```
 
 ## Teknologi
 
 - Next.js 15 App Router
 - React 19
-- TypeScript
+- TypeScript strict
 - Tailwind CSS
 - `motion/react` untuk motion UI yang fungsional
-- Supabase PostgreSQL dan Supabase Auth
-- GitHub OAuth
-- Pakasir QRIS
-- Resend
+- Supabase PostgreSQL dan Supabase Auth (GitHub OAuth)
+- Resend untuk email
+- Discord dan Telegram untuk notifikasi private maintainer
 - Vitest dan React Testing Library
 - Font lokal Inter, Space Grotesk, dan JetBrains Mono
 - Inline SVG icon system, tanpa emoji sebagai ikon UI
+
+## Keamanan
+
+- Semua secret hanya dari environment variable server, tanpa fallback di kode.
+- Fail-fast ketika `NEXT_PUBLIC_SUPABASE_URL` atau `NEXT_PUBLIC_SUPABASE_ANON_KEY` tidak diset.
+- Security headers aktif: HSTS, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`.
+- Notifikasi Discord mematikan ambient mention (`allowed_mentions.parse = []`).
+- Email outbound di-escape; error internal tidak dikirim mentah ke client.
+- Dokumen planning internal (`docs/prd`, `docs/superpowers`) dan state lokal tidak ikut repository.
 
 ## Desain dan motion
 
 Visual MuaraAI memakai Fluid Currents Light:
 
-- Kanvas terang estuary.
-- Deep riverbed ink `#072033`.
-- River current blue `#0369A1`.
-- Logo resmi dari `public/brand/muara-logo.png`.
+- Kanvas terang estuary, deep riverbed ink `#072033`, river current blue `#0369A1`.
+- Logo resmi dari `public/brand/muara-logo.png`, juga dipakai sebagai favicon.
 - Mura sebagai mascot pendukung pada onboarding, empty state, error, dan halaman 404.
-- Peta nasional di hero menggunakan SVG Indonesia, rute yang tergambar bertahap, dan Pontianak sebagai founding hub.
+- Peta nasional di hero memakai SVG Indonesia: rute digambar bertahap menuju Pontianak sebagai founding hub, dengan parcel bergerak dan hub pulse.
 - Motion mengikuti prinsip Laku: scroll reveal, active state, route drawing, dan progressive disclosure.
-- Semua motion memiliki fallback `prefers-reduced-motion`.
+- Semua motion memiliki fallback `prefers-reduced-motion` (route langsung terlihat tanpa animasi).
 
 ## Menjalankan lokal
 
@@ -128,16 +134,23 @@ npm run dev
 
 Buka http://localhost:3000.
 
-Jangan memasukkan secret asli ke README, source code, test, atau commit. Isi `.env.local` hanya di mesin lokal.
+Untuk OAuth lokal, daftarkan Redirect URL berikut di Supabase (Authentication → URL Configuration):
+
+```text
+http://localhost:3000/api/auth/callback
+```
+
+Jangan memasukkan secret asli ke README, source code, test, atau commit. Isi `.env.local` hanya di mesin lokal. Lihat `.env.example` untuk daftar variabel.
 
 ## Verifikasi
 
 ```bash
 npm test
+npx tsc --noEmit
 npm run build
 ```
 
-Build terakhir memverifikasi 23 route dan test suite lokal mencakup UI, membership lifecycle, auth boundaries, public content, mascot, dan responsive-oriented contracts.
+Build terakhir memverifikasi 25 route (termasuk `robots.txt`, `sitemap.xml`, dan `icon.png`) dan 130 test yang mencakup UI, membership lifecycle, webhook Pakasir, notification safety, auth boundaries, public content, mascot, dan kontrak responsive.
 
 ## Official links
 
