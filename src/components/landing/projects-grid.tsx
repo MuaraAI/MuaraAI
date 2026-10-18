@@ -2,31 +2,26 @@ import Link from "next/link";
 import React from "react";
 import Icon from "@/components/ui/icon";
 import FadeIn from "@/components/ui/fade-in";
+import { communityContent } from "@/lib/community-content";
 import SpotlightCard from "@/components/ui/spotlight-card";
 
 export default function ProjectsGrid() {
   const projects = [
     {
-      title: "UBSI API",
-      version: "v1.1.5",
-      badge: "LIVE & PRODUCTION",
-      description:
-        "REST API Aggregator tidak resmi untuk 6 layanan digital kampus UBSI (SIAKAD StudentV2, MyBest LMS, Elibrary OPAC, EJournal OJS, Repository EPrints, dan Portal Berita). Dilengkapi 2-tier cache Redis dan vault kredensial multi-tenant.",
-      tags: ["Python 3.12+", "FastAPI", "Redis Cache", "Scrapling", "126 Tests"],
-      liveUrl: "https://ubsi-api.muaraai.com",
-      repoUrl: "https://github.com/MuaraAI/UBSI-API",
-      statusColor: "emerald",
+      title: "Muara Arus 1",
+      badge: "AI LOKAL",
+      description: "AI akademik dan coding buatan MuaraAI untuk membantu mahasiswa FTI UBSI dari prodi SI, SIA, dan IF belajar dari materi yang tersedia.",
+      tags: ["muara-arus-1", "1.5B parameter", "Offline", "SI · SIA · IF"],
+      liveUrl: communityContent.muaraArusOne.playground,
+      repoUrl: communityContent.muaraArusOne.github,
     },
     {
-      title: "Muara AI Gateway",
-      version: "v1.0 Flash",
-      badge: "ACTIVE PORTAL",
-      description:
-        "Portal anggota dan self-service dashboard API key untuk gateway model AI Muara V1 Flash. Terintegrasi penuh dengan SSO 'Login with MuaraAI' dan per-role dynamic rate limits.",
-      tags: ["Next.js 15", "Cloudflare Worker", "Supabase SSR", "SSO Auth", "WebCrypto"],
-      liveUrl: "https://ai.muaraai.com",
-      repoUrl: "https://github.com/MuaraAI/ai-web",
-      statusColor: "cyan",
+      title: "UBSI API",
+      badge: "UNOFFICIAL PROJECT",
+      description: "REST API tidak resmi yang menyatukan enam layanan digital UBSI. Mahasiswa login dengan akun mereka sendiri untuk mengakses layanan yang tersedia secara lebih terstruktur.",
+      tags: ["StudentV2", "MyBest", "Elibrary", "EJournal", "Repository", "News"],
+      liveUrl: communityContent.ubsiApi.liveUrl,
+      repoUrl: communityContent.ubsiApi.repository,
     },
   ];
 
@@ -39,11 +34,11 @@ export default function ProjectsGrid() {
               Karya & Artefak Nyata
             </h2>
             <p className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              The Hall of Projects
+              Karya yang bisa dipakai.
             </p>
           </div>
           <p className="text-sm text-secondary max-w-md font-sans">
-            Setiap proyek dibangun dengan standar rekayasa ketat, zero secret leaks, dan pengujian otomatis 100% offline.
+            Project komunitas yang lahir dari kebutuhan belajar dan membangun solusi nyata.
           </p>
         </div>
 
@@ -59,7 +54,6 @@ export default function ProjectsGrid() {
                       <span className="h-1.5 w-1.5 rounded-full bg-teal-600" />
                       {p.badge}
                     </span>
-                    <span className="text-xs font-mono text-secondary">{p.version}</span>
                   </div>
 
                   <h3 className="font-display text-2xl font-bold text-foreground group-hover:text-muara-ocean transition-colors mb-3">

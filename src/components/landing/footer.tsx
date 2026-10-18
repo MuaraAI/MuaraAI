@@ -43,7 +43,7 @@ export default function Footer() {
         </div>
 
         <div className="text-xs text-slate-500 text-center md:text-right">
-          <p>MIT License • Zero Slop • 100% Independent</p>
+          <p>Komunitas mahasiswa UBSI · Lahir di Pontianak</p>
         </div>
       </div>
     </footer>

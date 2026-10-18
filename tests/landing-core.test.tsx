@@ -10,7 +10,7 @@ describe("Landing Core Sections", () => {
   it("displays strictly the 2 live flagship projects", () => {
     render(<ProjectsGrid />);
     expect(screen.getByText(/ubsi api/i)).toBeDefined();
-    expect(screen.getByText(/muara ai gateway/i)).toBeDefined();
+    expect(screen.getByText(/Muara Arus 1/i)).toBeDefined();
     expect(screen.queryByText(/ai bot ciel/i)).toBeNull();
   });
 
@@ -22,10 +22,10 @@ describe("Landing Core Sections", () => {
     expect(screen.queryByText(/126\+/)).toBeNull();
   });
 
-  it("renders manifesto comparing pasaran vs muara ai", () => {
+  it("renders the community principles", () => {
     render(<Manifesto />);
-    expect(screen.getByText(/pengguna pasaran/i)).toBeDefined();
-    expect(screen.getByText(/praktisi muara ai/i)).toBeDefined();
+    expect(screen.getByText(/Belajar dari sumber yang jelas/i)).toBeDefined();
+    expect(screen.getByText(/Berbagi antar kampus/i)).toBeDefined();
   });
 
   it("renders member benefits", () => {

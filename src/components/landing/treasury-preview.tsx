@@ -74,7 +74,7 @@ export default function TreasuryPreview({
                 {formatRupiah(totalExpenses)}
               </div>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Biaya operasional riil yang telah dibayarkan (sewa VPS Tencent, domain muaraai.com, dan pendaftaran lomba).
+                Ringkasan penggunaan kas komunitas untuk kegiatan, tools, dan kebutuhan bersama.
               </p>
             </div>
           </FadeIn>
