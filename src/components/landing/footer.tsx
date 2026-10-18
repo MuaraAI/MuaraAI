@@ -32,15 +32,13 @@ export default function Footer() {
           <Link href="/code-of-conduct" className="hover:text-muara-ocean transition-colors">
             Code of Conduct
           </Link>
-          <Link
-            href={GITHUB_ORG_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-muara-ocean transition-colors flex items-center gap-1.5"
-          >
-            <Icon name="code" className="w-4 h-4" />
-            GitHub Org
+          <Link href="https://x.com/MuaraAI" target="_blank" rel="noopener noreferrer" className="hover:text-muara-ocean transition-colors">X</Link>
+          <Link href="https://www.instagram.com/muara.ai/" target="_blank" rel="noopener noreferrer" className="hover:text-muara-ocean transition-colors">Instagram</Link>
+          <Link href="https://www.threads.com/@muara.ai" target="_blank" rel="noopener noreferrer" className="hover:text-muara-ocean transition-colors">Threads</Link>
+          <Link href={GITHUB_ORG_URL} target="_blank" rel="noopener noreferrer" className="hover:text-muara-ocean transition-colors flex items-center gap-1.5">
+            <Icon name="code" className="w-4 h-4" /> GitHub Org
           </Link>
+          <Link href="mailto:admin@muaraai.com" className="hover:text-muara-ocean transition-colors">Email</Link>
         </div>
 
         <div className="text-xs text-slate-500 text-center md:text-right">
