@@ -32,6 +32,16 @@ describe("guided national onboarding", () => {
     expect(kelas.value).toBe("");
   });
 
+  it("requires legal agreement before the GitHub handoff", () => {
+    render(<PoWForm />);
+    for (let index = 0; index < 3; index += 1) fireEvent.click(screen.getByRole("button", { name: /Lanjut/i }));
+    const githubButton = screen.getByRole("button", { name: /Lanjut ke GitHub/i }) as HTMLButtonElement;
+    expect(githubButton.disabled).toBe(true);
+    expect(screen.getByRole("link", { name: /Privacy Policy/i })).toBeTruthy();
+    fireEvent.click(screen.getByRole("checkbox"));
+    expect(githubButton.disabled).toBe(false);
+  });
+
   it("moves forward and back without losing the draft", () => {
     render(<PoWForm />);
     const name = screen.getByLabelText(/Nama Lengkap/i);

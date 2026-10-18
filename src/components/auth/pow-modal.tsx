@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react"; import Link from "next/link";
 import { submitProofOfWork } from "@/app/actions/pow";
 import { PoWInput } from "@/lib/validation";
 import Icon from "@/components/ui/icon";
@@ -9,7 +9,7 @@ type Step = 0 | 1 | 2 | 3;
 
 const steps = ["Identitas kampus", "Proof of Work", "Profil publik", "Review"];
 
-export default function PoWForm() {
+export default function PoWForm({ authenticated = false }: { authenticated?: boolean }) {
   const [step, setStep] = useState<Step>(0);
   const [formData, setFormData] = useState<PoWInput>({
     fullName: "", nim: "", campus: "", prodi: "", kelas: "", phoneWa: "",
@@ -17,8 +17,17 @@ export default function PoWForm() {
     instagramUrl: "", xUrl: "", threadsUrl: "", toolchainNarrative: "",
   });
   const [loading, setLoading] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (!authenticated || typeof window === "undefined" || !window.localStorage) return;
+    const draft = window.localStorage.getItem("muaraai_onboarding_draft");
+    if (draft) {
+      try { setFormData(JSON.parse(draft) as PoWInput); } catch { window.localStorage.removeItem("muaraai_onboarding_draft"); }
+    }
+  }, [authenticated]);
 
   const update = <K extends keyof PoWInput>(key: K, value: PoWInput[K]) => {
     setFormData((current) => ({ ...current, [key]: value }));
@@ -29,12 +38,21 @@ export default function PoWForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    if (!agreed) {
+      setError("Setujui Privacy Policy, Terms of Service, dan Code of Conduct sebelum lanjut.");
+      return;
+    }
     setError(null);
-    const res = await submitProofOfWork(formData);
+    if (!authenticated) {
+      window.localStorage.setItem("muaraai_onboarding_draft", JSON.stringify(formData));
+      window.location.href = "/api/auth/login?next=/onboarding";
+      return;
+    }
+    setLoading(true);
+    const result = await submitProofOfWork(formData);
     setLoading(false);
-    if (res.success) setSuccess(true);
-    else setError(res.error || "Gagal mengirimkan Proof of Work.");
+    if (result.success) setSuccess(true);
+    else setError(result.error || "Gagal mengirimkan Proof of Work.");
   };
 
   if (success) {
@@ -119,12 +137,18 @@ export default function PoWForm() {
           </fieldset>
         )}
 
+        {step === 3 && (
+          <label className="flex items-start gap-3 rounded-lg border border-stroke bg-surface-alt p-4 text-xs leading-relaxed text-secondary">
+            <input type="checkbox" checked={agreed} onChange={(event) => { setAgreed(event.target.checked); setError(null); }} className="mt-0.5 h-4 w-4 shrink-0 accent-muara-ocean" />
+            <span>Saya menyetujui <Link href="/privacy" target="_blank" className="font-semibold text-muara-ocean underline">Privacy Policy</Link>, <Link href="/terms" target="_blank" className="font-semibold text-muara-ocean underline">Terms of Service</Link>, dan <Link href="/code-of-conduct" target="_blank" className="font-semibold text-muara-ocean underline">Code of Conduct</Link> MuaraAI.</span>
+          </label>
+        )}
         <div className="flex flex-col-reverse gap-3 border-t border-stroke pt-5 sm:flex-row sm:justify-between">
           <button type="button" onClick={previous} disabled={step === 0} className="min-h-11 rounded-md border border-stroke px-4 py-2.5 text-sm font-semibold text-foreground disabled:opacity-40">Kembali</button>
           {step < 3 ? (
             <button type="button" onClick={next} className="min-h-11 rounded-md bg-foreground px-5 py-2.5 text-sm font-semibold text-white hover:bg-secondary">Lanjut</button>
           ) : (
-            <button type="submit" disabled={loading} className="min-h-11 rounded-md bg-muara-ocean px-5 py-2.5 text-sm font-semibold text-white hover:bg-muara-ocean-dark disabled:opacity-50">{loading ? "Mengirim..." : "Kirim pendaftaran"}</button>
+            <button type="submit" disabled={loading || !agreed} className="min-h-11 rounded-md bg-muara-ocean px-5 py-2.5 text-sm font-semibold text-white hover:bg-muara-ocean-dark disabled:cursor-not-allowed disabled:opacity-50">{authenticated ? (loading ? "Mengirim..." : "Kirim pendaftaran") : "Lanjut ke GitHub"}</button>
           )}
         </div>
       </form>
