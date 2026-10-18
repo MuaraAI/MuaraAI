@@ -95,7 +95,7 @@ export async function getPakasirTransactionDetail(
 }
 
 export async function verifyAndProcessPakasirWebhook(
-  payload: { order_id: string; amount: number; project: string },
+  payload: { order_id: string; amount: number },
   options?: {
     apiKey?: string;
     project?: string;
@@ -103,19 +103,22 @@ export async function verifyAndProcessPakasirWebhook(
   }
 ): Promise<{ success: boolean; transaction?: TransactionDetailResponse["transaction"] }> {
   try {
+    const project = options?.project || process.env.PAKASIR_PROJECT;
     const detail = await getPakasirTransactionDetail(payload.order_id, payload.amount, options);
     if (!detail.transaction) {
       return { success: false };
     }
 
     if (
-      detail.transaction.status === "completed" &&
-      detail.transaction.amount === payload.amount
+      !project ||
+      detail.transaction.project !== project ||
+      detail.transaction.status !== "completed" ||
+      detail.transaction.amount !== payload.amount
     ) {
-      return { success: true, transaction: detail.transaction };
+      return { success: false };
     }
 
-    return { success: false };
+    return { success: true, transaction: detail.transaction };
   } catch (e) {
     return { success: false };
   }
