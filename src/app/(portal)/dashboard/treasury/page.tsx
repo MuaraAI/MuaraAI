@@ -87,12 +87,7 @@ export default async function MemberTreasuryPage() {
                 <div className="text-sm font-bold text-foreground">Paket 1 Minggu</div>
                 <div className="text-xs font-mono text-secondary mt-0.5">Rp 3.000 (+7 hari aktif)</div>
               </div>
-              <button
-                type="button"
-                className="rounded-[8px] bg-white hover:bg-muara-ocean hover:text-white border border-muara-ocean px-3.5 py-2 text-xs font-mono font-bold text-muara-ocean transition-colors shadow-xs"
-              >
-                Scan QRIS (3k)
-              </button>
+              <span className="rounded-full border border-stroke bg-white px-3 py-1.5 text-[10px] font-mono font-semibold uppercase tracking-[0.08em] text-secondary">Segera hadir</span>
             </div>
 
             <div className="rounded-[10px] border border-stroke bg-surface-alt p-4 flex items-center justify-between">
@@ -100,12 +95,7 @@ export default async function MemberTreasuryPage() {
                 <div className="text-sm font-bold text-foreground">Paket 1 Bulan (4 Minggu)</div>
                 <div className="text-xs font-mono text-secondary mt-0.5">Rp 12.000 (+28 hari aktif)</div>
               </div>
-              <button
-                type="button"
-                className="rounded-[8px] bg-muara-ocean hover:bg-muara-ocean-dark px-3.5 py-2 text-xs font-mono font-bold text-white transition-colors shadow-xs"
-              >
-                Scan QRIS (12k)
-              </button>
+              <span className="rounded-full border border-stroke bg-white px-3 py-1.5 text-[10px] font-mono font-semibold uppercase tracking-[0.08em] text-secondary">Segera hadir</span>
             </div>
           </div>
         </div>
