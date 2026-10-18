@@ -3,17 +3,16 @@
 import React, { useState } from "react";
 import { submitProofOfWork } from "@/app/actions/pow";
 import { PoWInput } from "@/lib/validation";
-import { UBSI_PRODI_LIST } from "@/lib/constants";
 import Icon from "@/components/ui/icon";
 
 type Step = 0 | 1 | 2 | 3;
 
-const steps = ["Identitas UBSI", "Proof of Work", "Profil publik", "Review"];
+const steps = ["Identitas kampus", "Proof of Work", "Profil publik", "Review"];
 
 export default function PoWForm() {
   const [step, setStep] = useState<Step>(0);
   const [formData, setFormData] = useState<PoWInput>({
-    fullName: "", nim: "", campus: "UBSI Pontianak", prodi: "Informatika (S1)", kelas: "", phoneWa: "",
+    fullName: "", nim: "", campus: "", prodi: "", kelas: "", phoneWa: "",
     division: "builder", track: "Web & Apps Systems", portfolioUrl: "", websiteUrl: "", linkedinUrl: "",
     instagramUrl: "", xUrl: "", threadsUrl: "", toolchainNarrative: "",
   });
@@ -74,10 +73,10 @@ export default function PoWForm() {
             <div className="grid gap-4 sm:grid-cols-2">
               <Field id="fullName" label="Nama Lengkap" value={formData.fullName} onChange={(value) => update("fullName", value)} required />
               <Field id="phoneWa" label="WhatsApp / Kontak Aktif" value={formData.phoneWa} onChange={(value) => update("phoneWa", value)} required />
-              <Field id="nim" label="NIM mahasiswa" value={formData.nim} onChange={(value) => update("nim", value.replace(/\D/g, ""))} required maxLength={8} />
-              <Field id="kelas" label="Kode Kelas" value={formData.kelas} onChange={(value) => update("kelas", value.toUpperCase())} required />
+              <Field id="nim" label="NIM mahasiswa" value={formData.nim} onChange={(value) => update("nim", value.replace(/\D/g, ""))} required maxLength={16} placeholder="Sesuai kartu tanda mahasiswa kampus Anda" />
+              <Field id="kelas" label="Kode Kelas (opsional)" value={formData.kelas || ""} onChange={(value) => update("kelas", value.toUpperCase())} placeholder="Untuk mahasiswa UBSI, misal: 15.1C.30" />
               <Field id="campus" label="Kampus / institusi asal" value={formData.campus} onChange={(value) => update("campus", value)} required placeholder="Contoh: UBSI Pontianak atau Universitas Indonesia" />
-              <SelectField id="prodi" label="Program Studi" value={formData.prodi} options={UBSI_PRODI_LIST} onChange={(value) => update("prodi", value)} />
+              <Field id="prodi" label="Program Studi" value={formData.prodi} onChange={(value) => update("prodi", value)} required placeholder="Contoh: Informatika (S1)" />
             </div>
           </fieldset>
         )}
@@ -112,11 +111,11 @@ export default function PoWForm() {
             <legend className="font-display text-xl font-semibold text-foreground">Review pendaftaran</legend>
             <div className="divide-y divide-stroke rounded-lg border border-stroke bg-surface-alt text-sm">
               <Summary label="Nama" value={formData.fullName} />
-              <Summary label="UBSI" value={`${formData.campus} · ${formData.prodi} · ${formData.kelas}`} />
+              <Summary label="Kampus" value={[formData.campus, formData.prodi, formData.kelas].filter(Boolean).join(" · ")} />
               <Summary label="Proof of Work" value={formData.portfolioUrl} />
               <Summary label="Divisi" value={`${formData.division} · ${formData.track}`} />
             </div>
-            <p className="text-xs leading-relaxed text-secondary">Dengan mengirim formulir, kamu menyatakan data UBSI dan karya yang dikirim benar serta bersedia mengikuti proses review komunitas.</p>
+            <p className="text-xs leading-relaxed text-secondary">Dengan mengirim formulir, kamu menyatakan data kampus dan karya yang dikirim benar serta bersedia mengikuti proses review komunitas.</p>
           </fieldset>
         )}
 

@@ -33,19 +33,22 @@ describe("navigation shells", () => {
 
     expect(screen.getByText("Beranda")).toBeTruthy();
     expect(screen.getByText("Belajar")).toBeTruthy();
-    expect(screen.getByText("Project")).toBeTruthy();
-    expect(screen.getByText("Akun")).toBeTruthy();
+    expect(screen.getByText("Kas")).toBeTruthy();
+    expect(screen.queryByText("Project")).toBeNull();
+    expect(screen.queryByText("Akun")).toBeNull();
+    expect(screen.getAllByRole("link", { name: "Beranda" }).length).toBe(1);
     expect(screen.getByText("Member content")).toBeTruthy();
   });
 
-  it("renders maintainer operations destinations", () => {
+  it("renders maintainer operations destinations without a dead overview route", () => {
     render(
       <AdminShell>
         <p>Operations content</p>
       </AdminShell>,
     );
 
-    expect(screen.getByText("Overview")).toBeTruthy();
+    expect(screen.queryByText("Overview")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Overview" })).toBeNull();
     expect(screen.getByText("Review pendaftar")).toBeTruthy();
     expect(screen.getByText("Anggota")).toBeTruthy();
     expect(screen.getByText("Kas")).toBeTruthy();

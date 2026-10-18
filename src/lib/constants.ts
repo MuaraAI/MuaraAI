@@ -3,6 +3,7 @@ export const COOKIE_DOMAIN = ".muaraai.com";
 
 export const DUES_WEEKLY_FEE = 3000;
 export const DUES_MONTHLY_FEE = 12000;
+export const DUES_CYCLE_DAYS = 7;
 export const ARREARS_BLACKLIST_DAYS = 30;
 
 export const SITE_NAME = "Muara AI";
@@ -29,15 +30,3 @@ export const INDONESIAN_CAMPUSES = [
 ] as const;
 
 export const UBSI_CAMPUSES = INDONESIAN_CAMPUSES; // compatibility for existing imports
-
-export const UBSI_PRODI_LIST = [
-  "Informatika (S1)",
-  "Sistem Informasi (S1)",
-  "Teknologi Informasi (S1)",
-  "Rekayasa Perangkat Lunak (S1)",
-  "Sistem Informasi (D3)",
-  "Sistem Informasi Akuntansi (D3)",
-  "Manajemen (S1)",
-  "Ilmu Komunikasi (S1)",
-  "Lainnya (Mahasiswa UBSI)",
-] as const;

@@ -9,7 +9,6 @@ type AdminShellProps = { children: React.ReactNode };
 type AdminNavItem = { href: string; label: string; icon: IconName };
 
 const adminItems: AdminNavItem[] = [
-  { href: "/admin", label: "Overview", icon: "dashboard" },
   { href: "/admin/review", label: "Review pendaftar", icon: "how_to_reg" },
   { href: "/admin/members", label: "Anggota", icon: "group" },
   { href: "/admin/treasury", label: "Kas", icon: "account_balance_wallet" },
@@ -32,7 +31,7 @@ export default function AdminShell({ children }: AdminShellProps) {
         <div className="mb-5 text-[10px] font-mono uppercase tracking-[0.16em] text-sky-300">Maintainer workspace</div>
         <nav aria-label="Navigasi maintainer" className="grid grid-cols-2 gap-1 md:block md:space-y-1 text-xs font-medium text-slate-200">
           {adminItems.map((item) => {
-            const active = item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
+            const active = pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}

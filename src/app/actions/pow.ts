@@ -48,10 +48,6 @@ export async function submitProofOfWork(data: PoWInput) {
     return { success: false, error: intakeDecision.reason };
   }
 
-  if (existing?.registration_status === "approved") {
-    return { success: false, error: "Akun Anda sudah berstatus anggota resmi aktif." };
-  }
-
   const githubUsername =
     user.user_metadata?.user_name ||
     user.user_metadata?.preferred_username ||
@@ -70,7 +66,7 @@ export async function submitProofOfWork(data: PoWInput) {
       nim: data.nim.trim(),
       campus: data.campus.trim(),
       prodi: data.prodi.trim(),
-      kelas: data.kelas.trim().toUpperCase(),
+      kelas: data.kelas?.trim().toUpperCase() || null,
       phone_wa: data.phoneWa.trim(),
       bio: data.toolchainNarrative.trim(),
       hierarchy: "member",
@@ -98,12 +94,6 @@ export async function submitProofOfWork(data: PoWInput) {
           : `https://x.com/${data.xUrl.replace(/^@/, "").trim()}`
         : null,
       registration_status: "pending",
-      membership_status: "active",
-      membership_started_at: null,
-      reapply_blocked: false,
-      intake_policy_version: policy.policy_version,
-      angkatan: policy.allowed_cohort,
-      semester: policy.allowed_semester,
       is_active: true,
       updated_at: new Date().toISOString(),
     },
@@ -116,8 +106,8 @@ export async function submitProofOfWork(data: PoWInput) {
 
   // Multi-channel alert to maintainers
   await notifyMaintainers(
-    "Pendaftar Mahasiswa UBSI Baru",
-    `Nama: ${data.fullName}\nNIM: ${data.nim} (${data.campus} - ${data.prodi} ${data.kelas.trim().toUpperCase()})\nGitHub: @${githubUsername}\nDivisi: ${data.division} (${data.track})\nPortofolio: ${data.portfolioUrl}\n\nReview di: https://muaraai.com/admin/review`
+    "Pendaftar Mahasiswa Baru",
+    `Nama: ${data.fullName}\nNIM: ${data.nim} (${data.campus} - ${data.prodi}${data.kelas?.trim() ? ` ${data.kelas.trim().toUpperCase()}` : ""})\nGitHub: @${githubUsername}\nDivisi: ${data.division} (${data.track})\nPortofolio: ${data.portfolioUrl}\n\nReview di: https://muaraai.com/admin/review`
   );
 
   return { success: true };

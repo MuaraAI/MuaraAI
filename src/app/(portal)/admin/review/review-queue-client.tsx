@@ -63,7 +63,7 @@ export default function ReviewQueueClient({ initialMembers }: ReviewQueueClientP
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-mono">
             <div>
               <span className="text-slate-500 block mb-1">Kampus Asal:</span>
-              <span className="text-foreground font-bold">{m.campus || "UBSI Pontianak"}</span>
+              <span className="text-foreground font-bold">{m.campus || "-"}</span>
             </div>
             <div>
               <span className="text-slate-500 block mb-1">NIM:</span>

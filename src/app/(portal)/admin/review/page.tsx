@@ -21,7 +21,7 @@ export default async function AdminReviewPage() {
           Review pendaftar
         </h1>
         <p className="text-sm text-secondary">
-          Periksa identitas UBSI dan Proof of Work, lalu pilih keputusan untuk setiap pendaftar.
+          Periksa identitas kampus dan Proof of Work, lalu pilih keputusan untuk setiap pendaftar.
         </p>
       </div>
 

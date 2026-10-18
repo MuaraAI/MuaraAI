@@ -3,7 +3,7 @@ export interface PoWInput {
   nim: string;
   campus: string;
   prodi: string;
-  kelas: string;
+  kelas?: string;
   phoneWa: string;
   division: "builder" | "creative";
   track: string;
@@ -21,17 +21,14 @@ export function validatePoWSubmission(data: PoWInput): { isValid: boolean; error
     return { isValid: false, error: "Nama lengkap minimal 3 karakter." };
   }
   const cleanNim = data.nim?.trim() || "";
-  if (!/^\d{8}$/.test(cleanNim)) {
-    return { isValid: false, error: "NIM wajib berupa 8 digit angka mahasiswa (misal: 15260767)." };
+  if (!/^\d{4,16}$/.test(cleanNim)) {
+    return { isValid: false, error: "NIM wajib berupa 4–16 digit angka sesuai format kampus Anda." };
   }
   if (!data.campus || data.campus.trim().length < 3) {
     return { isValid: false, error: "Pilih kampus atau institusi asal Anda." };
   }
   if (!data.prodi || data.prodi.trim().length < 3) {
-    return { isValid: false, error: "Pilih Program Studi Anda." };
-  }
-  if (!data.kelas || data.kelas.trim().length < 4) {
-    return { isValid: false, error: "Kode kelas UBSI wajib diisi (misal: 15.1C.30)." };
+    return { isValid: false, error: "Isi Program Studi Anda." };
   }
   if (!data.phoneWa || data.phoneWa.trim().length < 9) {
     return { isValid: false, error: "Nomor WhatsApp aktif wajib diisi." };
