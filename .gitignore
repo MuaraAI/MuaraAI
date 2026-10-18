@@ -25,6 +25,7 @@ graphify-out/
 # Internal planning and agent docs
 /docs/prd/
 /docs/superpowers/
+.superpowers/
 
 # Local session helper
 h.md
