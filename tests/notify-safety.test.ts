@@ -15,8 +15,6 @@ function stubAllChannels() {
   vi.stubEnv("RESEND_API_KEY", "re_test_key");
   vi.stubEnv("MAINTAINER_EMAIL", "maintainer@muaraai.com");
   vi.stubEnv("DISCORD_WEBHOOK_URL", "https://discord.com/api/webhooks/1/abc");
-  vi.stubEnv("TELEGRAM_BOT_TOKEN", "bot-token");
-  vi.stubEnv("TELEGRAM_CHAT_ID", "42");
 }
 
 function callFor(urlPart: string): { url: string; body: any; init: RequestInit } {
@@ -76,20 +74,10 @@ describe("notifyMaintainers channel safety", () => {
     expect(discord.body.allowed_mentions).toEqual({ parse: [] });
   });
 
-  it("caps Telegram text at 4096 chars with no dangling MarkdownV2 escape", async () => {
-    await notifyMaintainers("Judul *Khusus_", "*._".repeat(3000));
-
-    const telegram = callFor("api.telegram.org");
-    expect(telegram.body.text.length).toBeLessThanOrEqual(4096);
-    expect(telegram.body.text.endsWith("\\")).toBe(false);
-    expect(telegram.body.parse_mode).toBe("MarkdownV2");
-    expect(telegram.body.text.startsWith("*Judul \\*Khusus\\_*")).toBe(true);
-  });
-
-  it("applies an abort timeout to every webhook request", async () => {
+  it("applies an abort timeout to the Discord webhook request", async () => {
     await notifyMaintainers("Judul", "Pesan");
 
-    expect(fetchMock.mock.calls.length).toBe(2);
+    expect(fetchMock.mock.calls.length).toBe(1);
     for (const call of fetchMock.mock.calls) {
       expect(Boolean((call[1] as RequestInit).signal)).toBe(true);
     }

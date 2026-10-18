@@ -19,9 +19,13 @@ export default async function OnboardingPage() {
     }
   }
 
+  const githubUsername = user
+    ? user.user_metadata?.user_name || user.user_metadata?.preferred_username
+    : undefined;
+
   return (
     <div className="py-16 px-4 sm:px-6 lg:px-8">
-      <PoWForm authenticated={Boolean(user)} />
+      <PoWForm authenticated={Boolean(user)} githubUsername={githubUsername} />
     </div>
   );
 }

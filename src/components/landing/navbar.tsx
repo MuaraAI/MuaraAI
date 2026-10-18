@@ -41,7 +41,7 @@ export default function Navbar({ user }: NavbarProps) {
             Anggota
           </Link>
           <Link href="/onboarding" className="hover:text-foreground transition-colors">
-            Cara Gabung
+            Daftar
           </Link>
         </div>
 
@@ -66,13 +66,21 @@ export default function Navbar({ user }: NavbarProps) {
               <span>Dashboard</span>
             </Link>
           ) : (
-            <Link
-              href="/api/auth/login"
-              className="inline-flex items-center gap-1.5 rounded-full bg-foreground hover:bg-secondary text-white px-4 py-1.5 text-xs font-sans font-bold transition-all shadow-xs"
-            >
-              <Icon name="login" className="w-3.5 h-3.5 text-white" />
-              <span>Masuk</span>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/api/auth/login"
+                className="inline-flex items-center gap-1.5 rounded-full border border-stroke hover:border-foreground text-foreground px-3.5 py-1.5 text-xs font-sans font-semibold transition-all"
+              >
+                <Icon name="login" className="w-3.5 h-3.5" />
+                <span>Masuk</span>
+              </Link>
+              <Link
+                href="/onboarding"
+                className="inline-flex items-center gap-1.5 rounded-full bg-foreground hover:bg-secondary text-white px-4 py-1.5 text-xs font-sans font-bold transition-all shadow-xs"
+              >
+                <span>Daftar</span>
+              </Link>
+            </div>
           )}
         </div>
 
@@ -110,7 +118,7 @@ export default function Navbar({ user }: NavbarProps) {
             onClick={() => setMobileMenuOpen(false)}
             className="block min-h-11 py-3 text-secondary hover:text-foreground"
           >
-            Cara Gabung
+            Daftar
           </Link>
           <div className="pt-2 border-t border-stroke">
             {user ? (
@@ -123,14 +131,23 @@ export default function Navbar({ user }: NavbarProps) {
                 <span>Dashboard</span>
               </Link>
             ) : (
-              <Link
-                href="/api/auth/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-foreground py-2 text-xs font-bold text-white shadow-xs font-sans"
-              >
-                <Icon name="login" className="w-4 h-4 text-white" />
-                <span>Login with GitHub</span>
-              </Link>
+              <div className="flex flex-col gap-2">
+                <Link
+                  href="/api/auth/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-stroke py-2 text-xs font-semibold text-foreground shadow-xs font-sans"
+                >
+                  <Icon name="login" className="w-4 h-4 text-foreground" />
+                  <span>Masuk</span>
+                </Link>
+                <Link
+                  href="/onboarding"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-foreground py-2 text-xs font-bold text-white shadow-xs font-sans"
+                >
+                  <span>Daftar Komunitas</span>
+                </Link>
+              </div>
             )}
           </div>
         </div>

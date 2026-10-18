@@ -92,7 +92,7 @@ muaraai.com/
 - `motion/react` untuk motion UI yang fungsional
 - Supabase PostgreSQL dan Supabase Auth (GitHub OAuth)
 - Resend untuk email
-- Discord dan Telegram untuk notifikasi private maintainer
+- Discord untuk notifikasi private maintainer
 - Vitest dan React Testing Library
 - Font lokal Inter, Space Grotesk, dan JetBrains Mono
 - Inline SVG icon system, tanpa emoji sebagai ikon UI

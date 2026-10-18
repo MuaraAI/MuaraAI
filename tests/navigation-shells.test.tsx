@@ -15,7 +15,7 @@ describe("navigation shells", () => {
 
     expect(screen.getAllByText("Project").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Anggota").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Cara Gabung").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Daftar").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Masuk").length).toBeGreaterThan(0);
     expect(screen.queryByText("Accolades")).toBeNull();
     expect(screen.queryByText("Manifesto")).toBeNull();

@@ -3,7 +3,6 @@ import { Resend } from "resend";
 export interface NotifyResult {
   resend?: boolean;
   discord?: boolean;
-  telegram?: boolean;
 }
 
 export function escapeHtml(value: string): string {
@@ -25,18 +24,11 @@ function truncate(value: string, max: number): string {
   return value.length > max ? `${value.slice(0, max)}` : value;
 }
 
-function escapeTelegramMarkdown(value: string): string {
-  return value.replace(/([_*[\]()~`>#+\-=|{}.!])/g, "\\$1");
-}
-
 export async function notifyMaintainers(title: string, text: string): Promise<NotifyResult> {
   const result: NotifyResult = {};
   const resendApiKey = process.env.RESEND_API_KEY;
   const maintainerEmail = process.env.MAINTAINER_EMAIL;
   const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
-  const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
-  const telegramChatId = process.env.TELEGRAM_CHAT_ID;
-  const telegramTopicId = process.env.TELEGRAM_TOPIC_ID;
   const tasks: Promise<unknown>[] = [];
 
   if (resendApiKey && maintainerEmail) {
@@ -59,22 +51,6 @@ export async function notifyMaintainers(title: string, text: string): Promise<No
         allowed_mentions: { parse: [] },
       }),
     }).then((response) => { result.discord = response.ok; }).catch(() => { result.discord = false; }));
-  }
-
-  if (telegramBotToken && telegramChatId) {
-    // Strip dangling escape backslashes left by truncation so MarkdownV2 still parses.
-    const telegramText = truncate(`*${escapeTelegramMarkdown(title)}*\n\n${escapeTelegramMarkdown(text)}`, 4096).replace(/\\+$/, "");
-    tasks.push(fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      signal: AbortSignal.timeout(10_000),
-      body: JSON.stringify({
-        chat_id: telegramChatId,
-        ...(telegramTopicId ? { message_thread_id: Number(telegramTopicId) } : {}),
-        text: telegramText,
-        parse_mode: "MarkdownV2",
-      }),
-    }).then((response) => { result.telegram = response.ok; }).catch(() => { result.telegram = false; }));
   }
 
   await Promise.allSettled(tasks);

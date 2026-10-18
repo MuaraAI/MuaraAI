@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
+  const next = requestUrl.searchParams.get("next");
 
   if (code) {
     const supabase = await createClient();
@@ -23,7 +24,8 @@ export async function GET(request: Request) {
           .maybeSingle();
 
         if (member && (member.registration_status === "approved" || member.registration_status === "pending")) {
-          return NextResponse.redirect(`${requestUrl.origin}/dashboard`);
+          const target = next && next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+          return NextResponse.redirect(`${requestUrl.origin}${target}`);
         } else {
           // Needs to submit Proof of Work
           return NextResponse.redirect(`${requestUrl.origin}/onboarding`);
