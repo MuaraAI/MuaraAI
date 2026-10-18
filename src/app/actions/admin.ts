@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { isMaintainer } from "@/lib/guards";
+import { escapeHtml, renderEmailHtml } from "@/lib/notify";
 import { Resend } from "resend";
 
 async function assertMaintainer() {
@@ -24,6 +25,9 @@ async function assertMaintainer() {
 
   return { supabase, user };
 }
+
+// Never surface raw DB/provider error strings to the client; log details server-side.
+const GENERIC_ERROR = "Terjadi kesalahan pada server. Silakan coba lagi.";
 
 // 1. Approve applicant & invite to GitHub Org
 export async function approveApplicant(memberId: string) {
@@ -61,7 +65,8 @@ export async function approveApplicant(memberId: string) {
     .eq("id", memberId);
 
   if (updateErr) {
-    return { success: false, error: updateErr.message };
+    console.error("[admin:approveApplicant]", updateErr.message);
+    return { success: false, error: GENERIC_ERROR };
   }
 
   // Auto invite to GitHub Organization via API
@@ -94,7 +99,7 @@ export async function approveApplicant(memberId: string) {
         from: "Muara AI <admin@muaraai.com>",
         to: member.email,
         subject: "Selamat! Proof of Work Anda Diterima di Muara AI",
-        html: `<p>Halo ${member.full_name},</p><p>Karya Anda telah disetujui oleh Core Team. Undangan bergabung ke GitHub Org MuaraAI telah dikirimkan ke akun @${member.github_username}. Silakan cek email/notifikasi GitHub Anda dan kunjungi <a href="https://muaraai.com/dashboard">Dashboard Muara AI</a>.</p>`,
+        html: `<p>Halo ${escapeHtml(member.full_name ?? "")},</p><p>Karya Anda telah disetujui oleh Core Team. Undangan bergabung ke GitHub Org MuaraAI telah dikirimkan ke akun @${escapeHtml(member.github_username ?? "")}. Silakan cek email/notifikasi GitHub Anda dan kunjungi <a href="https://muaraai.com/dashboard">Dashboard Muara AI</a>.</p>`,
       });
     } catch (e) {
       console.error("Resend email failed:", e);
@@ -116,7 +121,10 @@ export async function rejectApplicant(memberId: string) {
     })
     .eq("id", memberId);
 
-  if (error) return { success: false, error: error.message };
+  if (error) {
+    console.error("[admin:rejectApplicant]", error.message);
+    return { success: false, error: GENERIC_ERROR };
+  }
   return { success: true };
 }
 
@@ -136,7 +144,10 @@ export async function logExpense(data: {
     status: "paid",
   });
 
-  if (error) return { success: false, error: error.message };
+  if (error) {
+    console.error("[admin:logExpense]", error.message);
+    return { success: false, error: GENERIC_ERROR };
+  }
   return { success: true };
 }
 
@@ -159,7 +170,10 @@ export async function publishMaterial(data: {
     created_by: user.id,
   });
 
-  if (error) return { success: false, error: error.message };
+  if (error) {
+    console.error("[admin:publishMaterial]", error.message);
+    return { success: false, error: GENERIC_ERROR };
+  }
   return { success: true };
 }
 
@@ -206,10 +220,7 @@ export async function sendBroadcastEmail(data: {
         from: "Muara AI <admin@muaraai.com>",
         to: email,
         subject: data.subject,
-        html: `<div style="font-family:sans-serif;padding:16px;">
-          <h2>${data.subject}</h2>
-          <p style="white-space:pre-wrap;">${data.body}</p>
-        </div>`,
+        html: renderEmailHtml(data.subject, data.body),
       });
 
       // Log to sent_emails
@@ -248,7 +259,10 @@ export async function addAchievement(data: {
     recipient_names: data.recipientNames,
   });
 
-  if (error) return { success: false, error: error.message };
+  if (error) {
+    console.error("[admin:addAchievement]", error.message);
+    return { success: false, error: GENERIC_ERROR };
+  }
   return { success: true };
 }
 
@@ -261,6 +275,9 @@ export async function toggleMemberActive(memberId: string, isActive: boolean) {
     .update({ is_active: isActive })
     .eq("id", memberId);
 
-  if (error) return { success: false, error: error.message };
+  if (error) {
+    console.error("[admin:toggleMemberActive]", error.message);
+    return { success: false, error: GENERIC_ERROR };
+  }
   return { success: true };
 }

@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { isMaintainer } from "@/lib/guards";
-import { notifyMaintainers } from "@/lib/notify";
+import { escapeHtml, notifyMaintainers } from "@/lib/notify";
 import { Resend } from "resend";
 
 export interface ContactSubmissionInput {
@@ -44,7 +44,8 @@ export async function submitContactMessage(input: ContactSubmissionInput) {
   });
 
   if (error) {
-    return { success: false, error: error.message };
+    console.error("[contact:submitContactMessage]", error.message);
+    return { success: false, error: "Terjadi kesalahan pada server. Silakan coba lagi." };
   }
 
   // Multi-channel notification to maintainers
@@ -119,11 +120,11 @@ export async function replyInboxMessage({
             <span style="font-size:18px;font-weight:bold;color:#0284C7;letter-spacing:-0.5px;">Muara AI Syndicate</span>
           </div>
           <p style="font-size:14px;line-height:1.6;margin-bottom:16px;">
-            Halo <strong>${inboxMsg.sender_name}</strong>${inboxMsg.organization ? ` (${inboxMsg.organization})` : ""},
+            Halo <strong>${escapeHtml(inboxMsg.sender_name ?? "")}</strong>${inboxMsg.organization ? ` (${escapeHtml(inboxMsg.organization)})` : ""},
           </p>
-          <div style="font-size:14px;line-height:1.6;white-space:pre-wrap;background:#F8FAFC;padding:16px;border-radius:8px;border:1px solid #E2E8F0;margin-bottom:20px;">${replyBody.trim()}</div>
+          <div style="font-size:14px;line-height:1.6;white-space:pre-wrap;background:#F8FAFC;padding:16px;border-radius:8px;border:1px solid #E2E8F0;margin-bottom:20px;">${escapeHtml(replyBody.trim())}</div>
           <p style="font-size:13px;color:#64748B;line-height:1.5;">
-            Pesan ini dikirimkan langsung oleh <strong>${maintainerName}</strong> dari Maintainer Core Team Muara AI.
+            Pesan ini dikirimkan langsung oleh <strong>${escapeHtml(maintainerName)}</strong> dari Maintainer Core Team Muara AI.
           </p>
           <div style="margin-top:24px;padding-top:16px;border-top:1px solid #E2E8F0;font-size:11px;color:#94A3B8;">
             © ${new Date().getFullYear()} Muara AI • AI Engineering & Creative Syndicate • Pontianak
@@ -133,7 +134,8 @@ export async function replyInboxMessage({
     });
 
     if (sendErr) {
-      return { success: false, error: sendErr.message };
+      console.error("[contact:replyInboxMessage]", sendErr.message);
+      return { success: false, error: "Gagal mengirim balasan email. Silakan coba lagi." };
     }
 
     // Update database status
@@ -157,8 +159,9 @@ export async function replyInboxMessage({
     });
 
     return { success: true };
-  } catch (e: any) {
-    return { success: false, error: e.message || "Gagal mengirim balasan email." };
+  } catch (e) {
+    console.error("[contact:replyInboxMessage]", e);
+    return { success: false, error: "Gagal mengirim balasan email. Silakan coba lagi." };
   }
 }
 
@@ -188,7 +191,8 @@ export async function markInboxMessageRead(messageId: string) {
     .eq("id", messageId);
 
   if (error) {
-    return { success: false, error: error.message };
+    console.error("[contact:markInboxMessageRead]", error.message);
+    return { success: false, error: "Terjadi kesalahan pada server. Silakan coba lagi." };
   }
 
   return { success: true };
