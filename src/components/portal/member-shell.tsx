@@ -42,6 +42,8 @@ export default function MemberShell({ member, children }: MemberShellProps) {
               className={`h-2 w-2 rounded-full ${
                 member.registration_status === "pending"
                   ? "bg-amber-500 animate-pulse"
+                  : member.registration_status === "rejected"
+                  ? "bg-rose-500"
                   : member.is_active
                   ? "bg-status-success"
                   : "bg-status-danger"
@@ -50,6 +52,8 @@ export default function MemberShell({ member, children }: MemberShellProps) {
             <span className="text-[10px] font-mono uppercase text-slate-600 font-semibold">
               {member.registration_status === "pending"
                 ? "Menunggu review"
+                : member.registration_status === "rejected"
+                ? "Pendaftaran ditolak"
                 : member.is_active
                 ? "Member aktif"
                 : "Akses ditangguhkan"}

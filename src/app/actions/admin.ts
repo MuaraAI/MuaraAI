@@ -110,14 +110,19 @@ export async function approveApplicant(memberId: string) {
 }
 
 // 2. Reject applicant
-export async function rejectApplicant(memberId: string) {
-  const { supabase } = await assertMaintainer();
+export async function rejectApplicant(memberId: string, reason?: string) {
+  const { supabase, user } = await assertMaintainer();
+
+  const cleanedReason = reason?.trim() || "Berkas Proof of Work belum memenuhi kriteria komunitas.";
 
   const { error } = await supabase
     .from("members")
     .update({
       registration_status: "rejected",
+      rejection_reason: cleanedReason,
+      reviewed_by: user.id,
       reviewed_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     })
     .eq("id", memberId);
 

@@ -25,9 +25,10 @@ export default function ReviewQueueClient({ initialMembers }: ReviewQueueClientP
   };
 
   const handleReject = async (id: string) => {
-    if (!confirm("Tolak calon anggota ini?")) return;
+    const reason = window.prompt("Alasan penolakan (akan ditampilkan kepada pendaftar):", "Berkas Proof of Work belum memenuhi kriteria komunitas.");
+    if (reason === null) return;
     setProcessingId(id);
-    const res = await rejectApplicant(id);
+    const res = await rejectApplicant(id, reason);
     setProcessingId(null);
     if (res.success) {
       setMembers((prev) => prev.filter((m) => m.id !== id));

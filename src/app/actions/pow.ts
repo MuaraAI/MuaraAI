@@ -35,7 +35,7 @@ export async function submitProofOfWork(data: PoWInput) {
   const policy = setting.value as MembershipIntakePolicy;
   const { data: existing } = await supabase
     .from("members")
-    .select("registration_status, hierarchy, membership_status, reapply_blocked, created_at")
+    .select("registration_status, hierarchy, membership_status, reapply_blocked, created_at, reviewed_at, updated_at")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -94,6 +94,9 @@ export async function submitProofOfWork(data: PoWInput) {
           : `https://x.com/${data.xUrl.replace(/^@/, "").trim()}`
         : null,
       registration_status: "pending",
+      rejection_reason: null,
+      reviewed_by: null,
+      reviewed_at: null,
       is_active: true,
       updated_at: new Date().toISOString(),
     },

@@ -43,6 +43,7 @@ export interface Member {
   linkedin_url: string | null;
   portfolio_url: string | null;
   registration_status: RegistrationStatus;
+  rejection_reason?: string | null;
   membership_status: MembershipStatus;
   membership_started_at: string | null;
   exited_at: string | null;

@@ -13,15 +13,31 @@ const steps = ["Identitas kampus", "Proof of Work", "Profil publik", "Review"];
 export default function PoWForm({
   authenticated = false,
   githubUsername,
+  initialData,
+  rejectionReason,
 }: {
   authenticated?: boolean;
   githubUsername?: string;
+  initialData?: Partial<PoWInput>;
+  rejectionReason?: string;
 }) {
   const [step, setStep] = useState<Step>(0);
   const [formData, setFormData] = useState<PoWInput>({
-    fullName: "", nim: "", campus: "", prodi: "", kelas: "", phoneWa: "",
-    division: "builder", track: "Web & Apps Systems", portfolioUrl: "", websiteUrl: "", linkedinUrl: "",
-    instagramUrl: "", xUrl: "", threadsUrl: "", toolchainNarrative: "",
+    fullName: initialData?.fullName || "",
+    nim: initialData?.nim || "",
+    campus: initialData?.campus || "",
+    prodi: initialData?.prodi || "",
+    kelas: initialData?.kelas || "",
+    phoneWa: initialData?.phoneWa || "",
+    division: initialData?.division || "builder",
+    track: initialData?.track || "Full-stack Web & AI App",
+    toolchainNarrative: initialData?.toolchainNarrative || "",
+    portfolioUrl: initialData?.portfolioUrl || "",
+    websiteUrl: initialData?.websiteUrl || "",
+    linkedinUrl: initialData?.linkedinUrl || "",
+    instagramUrl: initialData?.instagramUrl || "",
+    threadsUrl: initialData?.threadsUrl || "",
+    xUrl: initialData?.xUrl || "",
   });
   const [loading, setLoading] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -95,6 +111,21 @@ export default function PoWForm({
         <h2 className="mt-2 font-display text-2xl font-bold text-foreground">Buat profil komunitasmu</h2>
         <p className="mt-2 text-sm text-secondary">Selesaikan empat langkah singkat. Draft kamu tetap tersimpan saat berpindah langkah.</p>
       </div>
+
+      {rejectionReason && (
+        <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50/80 p-4 text-xs text-amber-950 flex items-start gap-3 shadow-xs">
+          <Icon name="info" className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <div className="font-bold text-sm text-amber-900">Catatan Review Sebelumnya</div>
+            <p className="text-secondary leading-relaxed">
+              &quot;{rejectionReason}&quot;
+            </p>
+            <p className="text-amber-800 font-medium pt-1">
+              Data pendaftaran sebelumnya telah dimuat. Silakan perbaiki hal-hal yang kurang lalu kirim permohonan baru.
+            </p>
+          </div>
+        </div>
+      )}
 
       {authenticated && (
         <div className="mb-8 rounded-xl border border-sky-200 bg-sky-50/80 p-4 text-xs text-sky-900 flex items-start gap-3 shadow-xs">

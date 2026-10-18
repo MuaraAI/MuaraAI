@@ -6,6 +6,8 @@ interface MembershipSnapshot {
   hierarchy?: string;
   reapply_blocked?: boolean;
   created_at?: string;
+  reviewed_at?: string | null;
+  updated_at?: string;
   membership_started_at?: string | null;
 }
 
@@ -41,6 +43,20 @@ export function canSubmitIntake(
   }
   if (member.registration_status === "approved") {
     return { allowed: false, reason: "Akun Anda sudah berstatus anggota resmi aktif." };
+  }
+  if (member.registration_status === "rejected") {
+    const rawTime = member.reviewed_at || member.updated_at || member.created_at;
+    if (rawTime) {
+      const rejectionTimestamp = new Date(rawTime).getTime();
+      const cooldownMs = 24 * 60 * 60 * 1000;
+      if (!Number.isNaN(rejectionTimestamp) && now.getTime() < rejectionTimestamp + cooldownMs) {
+        const remainingHours = Math.max(1, Math.ceil((rejectionTimestamp + cooldownMs - now.getTime()) / (60 * 60 * 1000)));
+        return {
+          allowed: false,
+          reason: `Pendaftaran ulang baru dapat diajukan setelah cooldown 24 jam (sisa ~${remainingHours} jam).`,
+        };
+      }
+    }
   }
   return { allowed: true };
 }

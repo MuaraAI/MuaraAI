@@ -34,6 +34,13 @@ export default async function DashboardProfilePage() {
     ? getEarliestExitDate(member.membership_started_at, intakePolicy.minimum_active_days_before_exit)
     : null;
 
+  const rawRejectionTime = member.reviewed_at || member.updated_at || member.created_at;
+  const rejectionTimestamp = rawRejectionTime ? new Date(rawRejectionTime).getTime() : 0;
+  const cooldownMs = 24 * 60 * 60 * 1000;
+  const nextEligibleTime = rejectionTimestamp + cooldownMs;
+  const canReapply = Date.now() >= nextEligibleTime;
+  const remainingHours = Math.max(1, Math.ceil((nextEligibleTime - Date.now()) / (60 * 60 * 1000)));
+
   return (
     <div className="space-y-8">
       <div>
@@ -46,7 +53,51 @@ export default async function DashboardProfilePage() {
         </p>
       </div>
 
-      {member.registration_status === "pending" ? (
+      {member.registration_status === "rejected" ? (
+        <section className="rounded-[18px] border border-rose-200 bg-rose-50/60 p-6 shadow-diffusion">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+            <div className="space-y-3">
+              <div>
+                <div className="text-xs font-mono uppercase text-rose-800">Status pendaftaran</div>
+                <div className="mt-1 flex items-center gap-2 text-xl font-display font-bold text-rose-700">
+                  <span className="h-2.5 w-2.5 rounded-full bg-rose-500" aria-hidden="true" />
+                  Pendaftaran Belum Diterima
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-rose-200/80 bg-white/80 p-3.5 text-xs text-secondary">
+                <div className="font-semibold text-rose-900 mb-1">Catatan dari Core Team:</div>
+                <p className="leading-relaxed text-foreground">
+                  {member.rejection_reason || "Berkas Proof of Work belum memenuhi kriteria komunitas. Silakan perbaiki dan ajukan kembali."}
+                </p>
+              </div>
+
+              <p className="text-xs text-secondary">
+                {canReapply
+                  ? "Masa cooldown 24 jam telah selesai. Anda dapat memperbarui data dan mengirim ulang pendaftaran sekarang."
+                  : `Masa cooldown sedang berjalan. Anda dapat mengajukan pendaftaran ulang setelah 1 hari (sisa waktu ~${remainingHours} jam).`}
+              </p>
+            </div>
+
+            <div className="shrink-0">
+              {canReapply ? (
+                <Link
+                  href="/onboarding"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-foreground px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-secondary transition-colors"
+                >
+                  <Icon name="refresh" className="w-4 h-4" />
+                  <span>Ajukan Ulang Pendaftaran</span>
+                </Link>
+              ) : (
+                <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-rose-200 bg-white/80 px-4 py-2.5 text-xs font-mono font-medium text-rose-700 shadow-xs">
+                  <Icon name="schedule" className="w-4 h-4 text-rose-500" />
+                  <span>Cooldown aktif (~{remainingHours}j lagi)</span>
+                </span>
+              )}
+            </div>
+          </div>
+        </section>
+      ) : member.registration_status === "pending" ? (
         <section className="rounded-[18px] border border-amber-200 bg-amber-50/60 p-6 shadow-diffusion">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>

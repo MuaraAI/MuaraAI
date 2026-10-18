@@ -54,4 +54,33 @@ describe("member workspace dashboard", () => {
   it("renders pending review banner and badge when applicant is waiting for review", async () => {
     // Verified by component conditional rendering
   });
+
+  it("renders rejection notice, reason, and cooldown state for rejected applicants", async () => {
+    const rejectedMember = {
+      ...member,
+      registration_status: "rejected",
+      rejection_reason: "Portofolio belum memiliki proyek live demo.",
+      reviewed_at: new Date(Date.now() - 25 * 60 * 60 * 1000).toISOString(),
+    };
+
+    // Render directly with mock return
+    const viClient = await import("@/lib/supabase/server");
+    vi.spyOn(viClient, "createClient").mockResolvedValueOnce({
+      auth: { getUser: async () => ({ data: { user: { id: "member-1" } } }) },
+      from: (table: string) => ({
+        select: () => ({
+          eq: () => ({
+            maybeSingle: async () => ({
+              data: table === "members" ? rejectedMember : { value: { minimum_active_days_before_exit: 30 } },
+            }),
+          }),
+        }),
+      }),
+    } as any);
+
+    render(await DashboardProfilePage());
+    expect(screen.getByText("Pendaftaran Belum Diterima")).toBeTruthy();
+    expect(screen.getByText(/Portofolio belum memiliki proyek live demo/i)).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Ajukan Ulang Pendaftaran/i })).toBeTruthy();
+  });
 });

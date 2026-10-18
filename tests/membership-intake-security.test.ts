@@ -40,11 +40,21 @@ describe("Intake policy gate", () => {
     expect(result.allowed).toBe(false);
   });
 
-  it("allows submissions once the policy is in force", () => {
+  it("blocks submissions during the 24h cooldown for rejected applicants", () => {
     const result = canSubmitIntake(
       freshApplicant,
       policy,
-      new Date("2026-10-17T00:00:00.000Z")
+      new Date("2026-10-17T12:00:00.000Z")
+    );
+    expect(result.allowed).toBe(false);
+    expect(result.reason).toContain("cooldown");
+  });
+
+  it("allows submissions once the policy is in force and cooldown has elapsed", () => {
+    const result = canSubmitIntake(
+      freshApplicant,
+      policy,
+      new Date("2026-10-18T00:00:01.000Z")
     );
     expect(result.allowed).toBe(true);
   });
