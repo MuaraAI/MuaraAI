@@ -54,7 +54,7 @@ export default function Navbar({ user }: NavbarProps) {
             className="text-slate-400 hover:text-foreground transition-colors p-1"
             aria-label="GitHub Organization"
           >
-            <Icon name="code" className="w-4 h-4" />
+            <Icon name="github" className="w-4 h-4" />
           </Link>
 
           {user ? (
