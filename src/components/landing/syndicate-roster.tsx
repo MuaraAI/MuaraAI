@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Member } from "@/types/database";
 import Icon from "@/components/ui/icon";
 import FadeIn from "@/components/ui/fade-in";
+import { communityContent } from "@/lib/community-content";
 import SpotlightCard from "@/components/ui/spotlight-card";
 
 export type RosterFilter =
@@ -74,41 +75,15 @@ interface SyndicateRosterProps {
   initialMembers?: Member[];
 }
 
-interface CoreMaintainerConfig {
-  githubUsername: string;
-  fullName: string;
-  title: string;
-  roleBadge: "Founder" | "Co-Founder";
-  division: "builder" | "creative";
-  roles: string[];
-}
-
-const CORE_MAINTAINERS: CoreMaintainerConfig[] = [
-  {
-    githubUsername: "Curzyori",
-    fullName: "Yuken Velino",
-    title: "Founder",
-    roleBadge: "Founder",
-    division: "builder",
-    roles: ["Maintainer", "Builder"],
-  },
-  {
-    githubUsername: "Seeyaa77",
-    fullName: "Seeyaa",
-    title: "Co-Founder",
-    roleBadge: "Co-Founder",
-    division: "creative",
-    roles: ["Maintainer", "Creative"],
-  },
-  {
-    githubUsername: "MyKineID",
-    fullName: "Raffli (Verzio)",
-    title: "Co-Founder",
-    roleBadge: "Co-Founder",
-    division: "builder",
-    roles: ["Maintainer", "Builder"],
-  },
-];
+const CORE_MAINTAINERS = communityContent.coreMaintainers.map((member) => ({
+  githubUsername: member.github,
+  fullName: member.name,
+  nim: member.nim,
+  title: member.title,
+  roleBadge: member.title as "Founder" | "Co-Founder",
+  division: member.division.toLowerCase() as "builder" | "creative",
+  roles: member.roles,
+}));
 
 export default function SyndicateRoster({ initialMembers = [] }: SyndicateRosterProps) {
   // Merge live DB data if member has registered in public.members
@@ -119,11 +94,12 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
     return {
       id: liveMatch?.id || core.githubUsername,
       fullName: liveMatch?.full_name || core.fullName,
+      nim: core.nim,
       githubUsername: core.githubUsername,
       title: liveMatch?.role_title || core.title,
       roleBadge: liveMatch?.sub_hierarchy === "founder" ? ("Founder" as const) : core.roleBadge,
-      division: liveMatch?.division || core.division,
-      roles: liveMatch?.roles && liveMatch.roles.length > 0 ? liveMatch.roles : core.roles,
+      division: core.division,
+      roles: core.roles,
       avatarUrl: `https://github.com/${core.githubUsername}.png`,
       githubUrl: `https://github.com/${core.githubUsername}`,
       linkedinUrl: liveMatch?.linkedin_url,
@@ -140,10 +116,10 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
             Dewan Pengarah & Inisiator
           </h2>
           <p className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Core Syndicate • Maintainers
+            Tim inti MuaraAI
           </p>
           <p className="text-sm text-secondary mt-3 leading-relaxed font-sans">
-            Inisiator dan pengarah rekayasa teknologi independen Muara AI yang mengawal standar kode, riset AI mandiri, dan transparansi komunitas.
+            Founder dan maintainer yang memulai MuaraAI dari UBSI Pontianak dan membangun komunitasnya bersama mahasiswa UBSI.
           </p>
         </div>
 
@@ -171,7 +147,7 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
 
                     <div className="min-w-0">
                       <h3 className="font-display font-bold text-base text-foreground group-hover:text-muara-ocean transition-colors truncate">
-                        {m.fullName}
+                        {m.fullName} | {m.nim}
                       </h3>
                       <p className="text-xs font-mono text-secondary truncate">
                         @{m.githubUsername}
@@ -256,7 +232,7 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                 Direktori Anggota & Roster Lengkap
               </h4>
               <p className="text-xs text-secondary mt-1 max-w-xl font-sans">
-                Jelajahi seluruh profil mahasiswa pengembang, lead proyek, divisi Builder & Creative, filter spesialisasi track, serta pantau komit aktif komunitas.
+                Jelajahi profil mahasiswa UBSI, kampus, kelas, prodi, divisi, dan kontribusi yang tampil secara faktual.
               </p>
             </div>
           </div>
