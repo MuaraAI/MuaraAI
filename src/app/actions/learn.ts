@@ -24,7 +24,8 @@ export async function recordMaterialRead(materialId: string) {
     );
 
   if (error) {
-    return { success: false, error: error.message };
+    console.error("[learn:recordMaterialRead]", error.message);
+    return { success: false, error: "Materi belum dapat ditandai sebagai dibaca." };
   }
 
   return { success: true };
