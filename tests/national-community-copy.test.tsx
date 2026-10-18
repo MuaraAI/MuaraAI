@@ -25,6 +25,14 @@ describe("national community public copy", () => {
       </>,
     );
     expect(screen.queryByText(/AES-256-GCM Vault/i)).toBeNull();
+    expect(screen.getByText("Hugging Face")).toBeTruthy();
+    expect(screen.getByText("Ollama")).toBeTruthy();
+    expect(screen.getByText("UBSI API")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Hugging Face" }).getAttribute("href")).toBe("https://huggingface.co/MuaraAI/muara-arus-1");
+    expect(screen.getByRole("link", { name: "Ollama" }).getAttribute("href")).toBe("https://ollama.com/MuaraAI/muara-arus-1");
+    expect(screen.getByRole("link", { name: "Threads" }).getAttribute("href")).toBe("https://www.threads.com/@muara.ai");
+    expect(screen.getByRole("link", { name: "Instagram" }).getAttribute("href")).toBe("https://www.instagram.com/muara.ai/");
+    expect(screen.getByRole("link", { name: "X" }).getAttribute("href")).toBe("https://x.com/MuaraAI");
     expect(screen.queryByText(/Tencent/i)).toBeNull();
     expect(screen.queryByText(/Zero Slop/i)).toBeNull();
     expect(screen.queryByText(/100% Independent/i)).toBeNull();
