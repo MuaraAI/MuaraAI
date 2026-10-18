@@ -29,6 +29,13 @@ export function canSubmitIntake(
   now: Date
 ): PolicyDecision {
   if (!member) return { allowed: true };
+  const effectiveAt = new Date(policy.effective_at);
+  if (!Number.isNaN(effectiveAt.getTime()) && now < effectiveAt) {
+    return {
+      allowed: false,
+      reason: "Pendaftaran anggota baru belum dibuka. Silakan coba lagi setelah jadwal pendaftaran dimulai.",
+    };
+  }
   if (member.reapply_blocked || member.membership_status === "exited") {
     return { allowed: false, reason: "Akun ini sudah pernah keluar dan tidak dapat mendaftar ulang." };
   }

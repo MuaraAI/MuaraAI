@@ -20,6 +20,9 @@ BEGIN
     RAISE EXCEPTION 'Unauthorized';
   END IF;
 
+  -- Let the lifecycle protection trigger through for this transaction only.
+  PERFORM set_config('app.membership_lifecycle_rpc', 'on', true);
+
   SELECT * INTO v_member
   FROM public.members
   WHERE id = v_user_id
@@ -35,8 +38,10 @@ BEGIN
     RAISE EXCEPTION 'Membership is not eligible for exit';
   END IF;
 
-  IF v_member.hierarchy = 'maintainer' AND v_member.membership_started_at IS NULL THEN
-    RAISE EXCEPTION 'Historical Founder/Maintainer exit requires maintainer processing';
+  -- Without a recorded start date the minimum-active-days window is unknown:
+  -- fail closed instead of skipping the wait.
+  IF v_member.membership_started_at IS NULL THEN
+    RAISE EXCEPTION 'Membership start date is not recorded; exit requires maintainer processing';
   END IF;
 
   SELECT value INTO v_policy
@@ -48,6 +53,11 @@ BEGIN
   END IF;
 
   v_min_days := (v_policy->>'minimum_active_days_before_exit')::integer;
+
+  IF v_min_days IS NULL OR v_min_days < 0 THEN
+    RAISE EXCEPTION 'Membership policy is misconfigured';
+  END IF;
+
   v_earliest := v_member.membership_started_at + make_interval(days => v_min_days);
 
   IF v_now < v_earliest THEN

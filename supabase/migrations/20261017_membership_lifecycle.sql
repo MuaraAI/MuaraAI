@@ -40,6 +40,14 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
+  -- Trusted server-side lifecycle RPCs (e.g. request_membership_exit) mark their
+  -- own transaction. Client roles reach the database only through PostgREST, which
+  -- cannot call set_config (pg_catalog is not an exposed schema), so end users have
+  -- no path to set this GUC; raw SQL access is already owner-level.
+  IF coalesce(current_setting('app.membership_lifecycle_rpc', true), '') = 'on' THEN
+    RETURN NEW;
+  END IF;
+
   IF auth.uid() IS NOT NULL AND NOT public.is_maintainer() THEN
     IF OLD.membership_status IS DISTINCT FROM NEW.membership_status
       OR OLD.membership_started_at IS DISTINCT FROM NEW.membership_started_at
@@ -63,5 +71,34 @@ DROP TRIGGER IF EXISTS trg_protect_member_lifecycle_columns ON public.members;
 CREATE TRIGGER trg_protect_member_lifecycle_columns
 BEFORE UPDATE ON public.members
 FOR EACH ROW EXECUTE FUNCTION public.protect_member_lifecycle_columns();
+
+-- intake_policy_version is server-managed: stamp it from the active intake policy
+-- on first insert so onboarding never writes it (and resubmits never conflict with
+-- the lifecycle trigger above).
+CREATE OR REPLACE FUNCTION public.stamp_member_intake_policy()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_policy jsonb;
+BEGIN
+  SELECT value INTO v_policy
+  FROM public.community_settings
+  WHERE key = 'membership_intake';
+
+  IF v_policy IS NOT NULL AND v_policy->>'policy_version' IS NOT NULL THEN
+    NEW.intake_policy_version := v_policy->>'policy_version';
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_stamp_member_intake_policy ON public.members;
+CREATE TRIGGER trg_stamp_member_intake_policy
+BEFORE INSERT ON public.members
+FOR EACH ROW EXECUTE FUNCTION public.stamp_member_intake_policy();
 
 COMMIT;

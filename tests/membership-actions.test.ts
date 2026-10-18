@@ -14,9 +14,9 @@ describe("Membership action contracts", () => {
     expect(source).toContain("if (!intakeDecision.allowed)");
   });
 
-  it("loads the intake policy and persists its version", () => {
+  it("loads the intake policy without stamping server-managed version fields", () => {
     expect(source).toContain('eq("key", "membership_intake")');
-    expect(source).toContain("intake_policy_version");
-    expect(source).toContain("policy.policy_version");
+    expect(source).not.toContain("intake_policy_version");
+    expect(source).not.toContain("policy.policy_version");
   });
 });
