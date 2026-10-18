@@ -9,10 +9,13 @@ export function createClient() {
     throw new Error("NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY must be configured");
   }
 
+  const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+  const cookieDomain = hostname.endsWith("muaraai.com") ? COOKIE_DOMAIN : undefined;
+
   return createBrowserClient(supabaseUrl, supabaseAnonKey, {
     cookieOptions: {
       name: COOKIE_NAME,
-      domain: process.env.NODE_ENV === "production" ? COOKIE_DOMAIN : undefined,
+      domain: cookieDomain,
       path: "/",
       sameSite: "lax",
     },

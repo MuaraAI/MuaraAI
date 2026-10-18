@@ -6,7 +6,12 @@ import { usePathname } from "next/navigation";
 import Icon, { type IconName } from "@/components/ui/icon";
 
 type MemberShellProps = {
-  member: { full_name: string; github_username: string; is_active: boolean };
+  member: {
+    full_name: string;
+    github_username: string;
+    is_active: boolean;
+    registration_status?: string;
+  };
   children: React.ReactNode;
 };
 
@@ -33,9 +38,21 @@ export default function MemberShell({ member, children }: MemberShellProps) {
           <div className="font-medium text-xs text-foreground truncate">{member.full_name}</div>
           <div className="text-[11px] font-mono text-slate-500">@{member.github_username}</div>
           <div className="mt-2 flex items-center gap-1.5">
-            <span className={`h-2 w-2 rounded-full ${member.is_active ? "bg-status-success" : "bg-status-danger"}`} />
+            <span
+              className={`h-2 w-2 rounded-full ${
+                member.registration_status === "pending"
+                  ? "bg-amber-500 animate-pulse"
+                  : member.is_active
+                  ? "bg-status-success"
+                  : "bg-status-danger"
+              }`}
+            />
             <span className="text-[10px] font-mono uppercase text-slate-600 font-semibold">
-              {member.is_active ? "Member aktif" : "Akses ditangguhkan"}
+              {member.registration_status === "pending"
+                ? "Menunggu review"
+                : member.is_active
+                ? "Member aktif"
+                : "Akses ditangguhkan"}
             </span>
           </div>
         </div>

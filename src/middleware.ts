@@ -16,10 +16,13 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  const hostname = request.nextUrl.hostname;
+  const cookieDomain = hostname.endsWith("muaraai.com") ? COOKIE_DOMAIN : undefined;
+
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookieOptions: {
       name: COOKIE_NAME,
-      domain: process.env.NODE_ENV === "production" ? COOKIE_DOMAIN : undefined,
+      domain: cookieDomain,
       path: "/",
       sameSite: "lax",
     },

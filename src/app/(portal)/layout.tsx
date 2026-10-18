@@ -30,7 +30,7 @@ export default async function PortalLayout({
   if (member?.membership_status === "banned") {
     redirect("/membership-exit?status=banned");
   }
-  if (!member || member.registration_status !== "approved" || !member.is_active) {
+  if (!member) {
     redirect("/onboarding");
   }
 
@@ -40,6 +40,7 @@ export default async function PortalLayout({
         full_name: member.full_name,
         github_username: member.github_username,
         is_active: member.is_active,
+        registration_status: member.registration_status,
       }}
     >
       {children}

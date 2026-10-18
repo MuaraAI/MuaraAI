@@ -1,5 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { COOKIE_NAME, COOKIE_DOMAIN } from "../constants";
 
 export async function createClient() {
@@ -11,10 +11,21 @@ export async function createClient() {
     throw new Error("NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY must be configured");
   }
 
+  let cookieDomain: string | undefined = undefined;
+  try {
+    const headerList = await headers();
+    const host = headerList.get("host") || "";
+    if (host.includes("muaraai.com")) {
+      cookieDomain = COOKIE_DOMAIN;
+    }
+  } catch {
+    // headers() might not be available in certain contexts
+  }
+
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookieOptions: {
       name: COOKIE_NAME,
-      domain: process.env.NODE_ENV === "production" ? COOKIE_DOMAIN : undefined,
+      domain: cookieDomain,
       path: "/",
       sameSite: "lax",
     },

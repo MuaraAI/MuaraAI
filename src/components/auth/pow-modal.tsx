@@ -51,8 +51,14 @@ export default function PoWForm({ authenticated = false }: { authenticated?: boo
     setLoading(true);
     const result = await submitProofOfWork(formData);
     setLoading(false);
-    if (result.success) setSuccess(true);
-    else setError(result.error || "Gagal mengirimkan Proof of Work.");
+    if (result.success) {
+      if (typeof window !== "undefined" && window.localStorage) {
+        window.localStorage.removeItem("muaraai_onboarding_draft");
+      }
+      window.location.href = "/dashboard";
+      return;
+    }
+    setError(result.error || "Gagal mengirimkan Proof of Work.");
   };
 
   if (success) {

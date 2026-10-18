@@ -37,7 +37,23 @@ describe("navigation shells", () => {
     expect(screen.queryByText("Project")).toBeNull();
     expect(screen.queryByText("Akun")).toBeNull();
     expect(screen.getAllByRole("link", { name: "Beranda" }).length).toBe(1);
+    expect(screen.getByText("Member aktif")).toBeTruthy();
     expect(screen.getByText("Member content")).toBeTruthy();
+  });
+
+  it("renders pending review status badge for pending applicants in member shell", () => {
+    render(
+      <MemberShell
+        member={{ full_name: "Applicant", github_username: "newdev", is_active: true, registration_status: "pending" }}
+      >
+        <p>Pending content</p>
+      </MemberShell>,
+    );
+
+    expect(screen.getByText("Menunggu review")).toBeTruthy();
+    expect(screen.getByText("Beranda")).toBeTruthy();
+    expect(screen.getByText("Belajar")).toBeTruthy();
+    expect(screen.getByText("Kas")).toBeTruthy();
   });
 
   it("renders maintainer operations destinations without a dead overview route", () => {

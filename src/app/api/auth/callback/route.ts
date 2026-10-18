@@ -22,10 +22,8 @@ export async function GET(request: Request) {
           .eq("id", user.id)
           .maybeSingle();
 
-        if (member && member.registration_status === "approved") {
+        if (member && (member.registration_status === "approved" || member.registration_status === "pending")) {
           return NextResponse.redirect(`${requestUrl.origin}/dashboard`);
-        } else if (member && member.registration_status === "pending") {
-          return NextResponse.redirect(`${requestUrl.origin}/dashboard?status=pending`);
         } else {
           // Needs to submit Proof of Work
           return NextResponse.redirect(`${requestUrl.origin}/onboarding`);

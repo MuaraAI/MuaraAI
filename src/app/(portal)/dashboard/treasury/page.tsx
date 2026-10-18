@@ -2,6 +2,7 @@ import React from "react";
 import { createClient } from "@/lib/supabase/server";
 import { Member, TreasuryTransaction } from "@/types/database";
 import { calculateMemberBill } from "@/lib/dues";
+import { redirect } from "next/navigation";
 import Icon from "@/components/ui/icon";
 
 export default async function MemberTreasuryPage() {
@@ -14,7 +15,11 @@ export default async function MemberTreasuryPage() {
     .from("members")
     .select("*")
     .eq("id", user?.id)
-    .single();
+    .maybeSingle();
+
+  if (!memberData) {
+    redirect("/onboarding");
+  }
 
   const member = memberData as Member;
 

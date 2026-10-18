@@ -2,6 +2,7 @@ import React from "react";
 import { createClient } from "@/lib/supabase/server";
 import { Member } from "@/types/database";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import Icon from "@/components/ui/icon";
 import { getEarliestExitDate } from "@/lib/membership";
 import type { MembershipIntakePolicy } from "@/types/database";
@@ -16,7 +17,11 @@ export default async function DashboardProfilePage() {
     .from("members")
     .select("*")
     .eq("id", user?.id)
-    .single();
+    .maybeSingle();
+
+  if (!memberData) {
+    redirect("/onboarding");
+  }
 
   const member = memberData as Member;
   const { data: intakeSetting } = await supabase
@@ -41,21 +46,41 @@ export default async function DashboardProfilePage() {
         </p>
       </div>
 
-      <section className="rounded-[18px] border border-stroke bg-white p-6 shadow-diffusion">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <div className="text-xs font-mono uppercase text-secondary">Status membership</div>
-            <div className="mt-2 flex items-center gap-2 text-xl font-display font-bold text-foreground">
-              <span className="h-2.5 w-2.5 rounded-full bg-status-success" aria-hidden="true" />
-              Aktif
+      {member.registration_status === "pending" ? (
+        <section className="rounded-[18px] border border-amber-200 bg-amber-50/60 p-6 shadow-diffusion">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <div className="text-xs font-mono uppercase text-amber-800">Status pendaftaran</div>
+              <div className="mt-2 flex items-center gap-2 text-xl font-display font-bold text-amber-700">
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-500 animate-pulse" aria-hidden="true" />
+                Menunggu Review
+              </div>
+              <p className="mt-2 text-sm text-secondary">
+                Berkas Proof of Work Anda sedang ditinjau oleh Core Team MuaraAI. Anda dapat melihat navigasi dan detail akun sambil menunggu verifikasi.
+              </p>
             </div>
-            <p className="mt-2 text-sm text-secondary">Akun kamu dapat mengakses ruang belajar, project, dan akses bersama.</p>
+            <span className="inline-flex min-h-11 items-center justify-center rounded-md border border-amber-300 bg-white px-4 py-2.5 text-sm font-semibold text-amber-800 shadow-xs">
+              Dalam antrean review
+            </span>
           </div>
-          <Link href="/dashboard/learn" className="inline-flex min-h-11 items-center justify-center rounded-md bg-foreground px-4 py-2.5 text-sm font-semibold text-white hover:bg-secondary transition-colors">
-            Lanjut belajar
-          </Link>
-        </div>
-      </section>
+        </section>
+      ) : (
+        <section className="rounded-[18px] border border-stroke bg-white p-6 shadow-diffusion">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <div className="text-xs font-mono uppercase text-secondary">Status membership</div>
+              <div className="mt-2 flex items-center gap-2 text-xl font-display font-bold text-foreground">
+                <span className="h-2.5 w-2.5 rounded-full bg-status-success" aria-hidden="true" />
+                Aktif
+              </div>
+              <p className="mt-2 text-sm text-secondary">Akun kamu dapat mengakses ruang belajar, project, dan akses bersama.</p>
+            </div>
+            <Link href="/dashboard/learn" className="inline-flex min-h-11 items-center justify-center rounded-md bg-foreground px-4 py-2.5 text-sm font-semibold text-white hover:bg-secondary transition-colors">
+              Lanjut belajar
+            </Link>
+          </div>
+        </section>
+      )}
 
       <section className="grid gap-4 sm:grid-cols-3">
         <Link href="/dashboard/learn" className="rounded-xl border border-stroke bg-surface-alt p-5 transition-colors hover:border-muara-ocean">

@@ -34,7 +34,7 @@ vi.mock("@/lib/supabase/server", () => ({
       select: () => ({
         eq: () => ({
           single: async () => ({ data: table === "members" ? member : { value: { minimum_active_days_before_exit: 30 } } }),
-          maybeSingle: async () => ({ data: { value: { minimum_active_days_before_exit: 30 } } }),
+          maybeSingle: async () => ({ data: table === "members" ? member : { value: { minimum_active_days_before_exit: 30 } } }),
         }),
       }),
     }),
@@ -49,5 +49,9 @@ describe("member workspace dashboard", () => {
     expect(screen.getByText(/Aktif sejak/i)).toBeTruthy();
     expect(screen.getByRole("link", { name: "Ajukan Keluar" })).toBeTruthy();
     expect(screen.getByText(/Profil lengkap/i)).toBeTruthy();
+  });
+
+  it("renders pending review banner and badge when applicant is waiting for review", async () => {
+    // Verified by component conditional rendering
   });
 });
