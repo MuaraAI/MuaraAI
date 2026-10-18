@@ -108,26 +108,41 @@ body {
   }
 }
 
-.national-map-route {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: national-map-route-draw 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.national-campus-map {
+  --m-land: color-mix(in srgb, var(--color-accent) 14%, var(--color-surface));
+  --m-edge: color-mix(in srgb, var(--color-accent) 32%, transparent);
+  --m-ctx: color-mix(in srgb, var(--color-secondary) 12%, transparent);
+  --m-route: var(--color-accent);
+  --m-dot: var(--color-accent);
+  --m-chip: var(--color-surface);
+  --m-chip-edge: var(--color-stroke);
+  --m-hub: var(--color-primary);
+  --m-hub-text: white;
+  --m-muted: var(--color-secondary);
+  position: relative;
+  width: 100%;
+  aspect-ratio: 640 / 260;
+  container-type: inline-size;
 }
-
-.national-map-ring {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: national-map-ring 1800ms ease-out infinite;
-}
-
-@keyframes national-map-route-draw {
-  to { stroke-dashoffset: 0; }
-}
-
-@keyframes national-map-ring {
-  0%, 100% { opacity: .45; transform: scale(1); }
-  55% { opacity: 0; transform: scale(2.2); }
-}
+.national-campus-map > svg { position: absolute; inset: 0; width: 100%; height: auto; }
+.national-campus-map .smap-ctx { fill: var(--m-ctx); }
+.national-campus-map .smap-land { fill: var(--m-land); stroke: var(--m-edge); stroke-width: .6; stroke-linejoin: round; }
+.national-campus-map .smap-route { fill: none; stroke: var(--m-route); stroke-width: 1.3; stroke-linecap: round; opacity: .45; }
+.national-campus-map .smap-route { stroke-dasharray: 1; stroke-dashoffset: 1; animation: smap-draw 1.1s cubic-bezier(.16,1,.3,1) forwards; animation-delay: calc(var(--i) * 140ms + .2s); }
+.national-campus-map .smap-city { fill: var(--m-chip); stroke: var(--m-dot); stroke-width: 1.6; }
+.national-campus-map .smap-hub { fill: var(--m-hub); stroke: var(--m-chip); stroke-width: 2; }
+.national-campus-map .smap-ring { fill: none; stroke: var(--m-hub); stroke-width: 1.5; }
+.national-campus-map .smap-parcel { fill: var(--m-route); stroke: var(--m-chip); stroke-width: 1.2; }
+.national-campus-map .smap-label { position: absolute; padding: .15em .55em; border-radius: 999px; background: var(--m-chip); box-shadow: inset 0 0 0 1px var(--m-chip-edge); color: var(--color-secondary); font-size: clamp(9px, 1.9cqw, 12px); font-weight: 500; line-height: 1.5; white-space: nowrap; pointer-events: none; }
+.national-campus-map .pos-b { transform: translate(-50%, 70%); }
+.national-campus-map .pos-r { transform: translate(14px, -50%); }
+.national-campus-map .smap-hub-label { position: absolute; display: inline-flex; align-items: center; padding: .4em .8em; border-radius: 10px; background: var(--m-hub); color: var(--m-hub-text); font-size: clamp(10px, 2.2cqw, 14px); line-height: 1.2; white-space: nowrap; transform: translate(-18%, calc(-100% - 16px)); box-shadow: 0 6px 18px rgba(7,32,51,.12); pointer-events: none; }
+.national-campus-map .smap-hub-label b { display: block; font-weight: 600; }
+.national-campus-map .smap-hub-label small { display: block; font-family: var(--font-mono); font-size: .72em; opacity: .8; }
+.national-campus-map .smap-cap { position: absolute; left: 0; bottom: 0; font-family: var(--font-mono); font-size: clamp(9px, 1.6cqw, 11px); letter-spacing: .06em; text-transform: uppercase; color: var(--m-muted); }
+@keyframes smap-draw { to { stroke-dashoffset: 0; } }
+.national-campus-map .smap-ring { transform-box: fill-box; transform-origin: center; animation: smap-ring 2.8s ease-out infinite; }
+@keyframes smap-ring { 0%,100% { opacity: .8; transform: scale(1); } 100% { opacity: 0; transform: scale(3.2); } }
 
 @media (prefers-reduced-motion: reduce) {
   *,

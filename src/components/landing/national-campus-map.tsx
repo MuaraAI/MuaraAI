@@ -1,30 +1,48 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useReducedMotion } from "motion/react";
+import { INDONESIA_PATH, MAP_H, MAP_POINTS, MAP_W, NEIGHBOURS_PATH } from "./indonesia-map";
 
-const points = { pontianak: [34, 34], jakarta: [48, 58], depok: [50, 62], yogyakarta: [58, 70] } as const;
+const SOURCES = [
+  { key: "jawa", label: "UBSI Jakarta", pos: "b" as const },
+  { key: "sumatra", label: "UBSI Depok", pos: "r" as const },
+  { key: "sulawesi", label: "UBSI Yogyakarta", pos: "b" as const },
+] as const;
+
+const HUB = MAP_POINTS.hub;
+const pct = (value: number, total: number) => `${((value / total) * 100).toFixed(2)}%`;
+
+function arc([x, y]: readonly [number, number]) {
+  const [hx, hy] = HUB;
+  const mx = (x + hx) / 2;
+  const my = (y + hy) / 2;
+  return `M${x} ${y} Q${mx.toFixed(1)} ${(my - 18).toFixed(1)} ${hx} ${hy}`;
+}
 
 export default function NationalCampusMap() {
   const reducedMotion = useReducedMotion();
-  const hub = points.pontianak;
-  const routes = [points.jakarta, points.depok, points.yogyakarta];
+  const [motionReady, setMotionReady] = useState(false);
+  const routes = SOURCES.map((source) => ({ ...source, d: arc(MAP_POINTS[source.key]) }));
+
+  useEffect(() => {
+    if (!reducedMotion) setMotionReady(true);
+  }, [reducedMotion]);
 
   return (
-    <figure role="img" aria-label="Peta kampus UBSI seluruh Indonesia. Rute komunitas mengarah ke UBSI Pontianak sebagai founding hub, dengan UBSI Jakarta sebagai regional hub." className="national-campus-map relative aspect-[1.35] w-full overflow-visible bg-transparent">
-      <div className="absolute left-0 top-0 text-[10px] font-mono uppercase tracking-[0.16em] text-secondary">Jaringan UBSI nasional</div>
-      <div className="absolute left-[27%] top-[25%] z-10 rounded-md bg-muara-ocean px-2.5 py-1.5 text-[10px] font-semibold text-white shadow-diffusion">UBSI Pontianak</div>
-      <div className="absolute left-[44%] top-[57%] z-10 rounded-md bg-white px-2 py-1 text-[10px] font-semibold text-foreground shadow-sm ring-1 ring-stroke">UBSI Jakarta</div>
-      <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" aria-hidden="true">
-        <path d="M8 38 C22 24, 34 22, 48 28 C62 34, 76 29, 93 39 M18 56 C32 47, 43 51, 58 60 C70 67, 83 62, 94 53 M28 75 C42 68, 53 72, 68 78 C78 82, 88 78, 94 70" fill="none" stroke="#D9E5ED" strokeWidth="1" strokeDasharray="2 2" />
-        {routes.map(([x, y], index) => <path key={index} data-route d={`M${x} ${y} Q${(x + hub[0]) / 2} ${(y + hub[1]) / 2 - 10} ${hub[0]} ${hub[1]}`} fill="none" stroke="#0369A1" strokeWidth="0.8" pathLength="1" className={reducedMotion ? "" : "national-map-route"} style={{ animationDelay: `${index * 180}ms` }} />)}
-        <circle cx={hub[0]} cy={hub[1]} r="4.5" fill="#0369A1" />
-        <circle cx={hub[0]} cy={hub[1]} r="8" fill="none" stroke="#0369A1" strokeWidth="0.8" className={reducedMotion ? "" : "national-map-ring"} />
-        <circle cx={points.jakarta[0]} cy={points.jakarta[1]} r="3" fill="#D97706" />
-        <circle cx={points.depok[0]} cy={points.depok[1]} r="2" fill="#3B5A70" />
-        <circle cx={points.yogyakarta[0]} cy={points.yogyakarta[1]} r="2" fill="#3B5A70" />
+    <figure className="smap smap-light national-campus-map" role="img" aria-label="Peta Indonesia dengan rute komunitas UBSI menuju UBSI Pontianak sebagai founding hub dan UBSI Jakarta sebagai regional hub.">
+      <svg viewBox={`0 0 ${MAP_W} ${MAP_H}`} aria-hidden="true">
+        <path className="smap-ctx" d={NEIGHBOURS_PATH} />
+        <path className="smap-land" d={INDONESIA_PATH} />
+        {routes.map((route, index) => <path key={route.key} className="smap-route" data-route d={route.d} pathLength={1} style={{ ["--i" as string]: index }} />)}
+        {motionReady && !reducedMotion && routes.map((route, index) => <circle key={route.key} className="smap-parcel" r="3.2" opacity="0"><animateMotion path={route.d} dur="3.5s" begin={`${(index * 0.7).toFixed(2)}s`} repeatCount="indefinite" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .25 1" /><animate attributeName="opacity" dur="3.5s" begin={`${(index * 0.7).toFixed(2)}s`} repeatCount="indefinite" values="0;1;1;0" keyTimes="0;.12;.86;1" /></circle>)}
+        {motionReady && !reducedMotion && <circle className="smap-ring" cx={HUB[0]} cy={HUB[1]} r="6" opacity="0"><animate attributeName="r" values="6;26" dur="2.8s" repeatCount="indefinite" /><animate attributeName="opacity" values=".8;0" dur="2.8s" repeatCount="indefinite" /></circle>}
+        {SOURCES.map((source) => <circle key={source.key} className="smap-city" cx={MAP_POINTS[source.key][0]} cy={MAP_POINTS[source.key][1]} r="3.2" />)}
+        <circle className="smap-hub" cx={HUB[0]} cy={HUB[1]} r="6" />
       </svg>
-      <figcaption className="absolute bottom-3 left-0 text-[10px] font-mono uppercase tracking-[0.12em] text-secondary">Founding hub Pontianak · regional hub Jakarta</figcaption>
+      {SOURCES.map((source) => <span key={source.key} className={`smap-label pos-${source.pos}`} style={{ left: pct(MAP_POINTS[source.key][0], MAP_W), top: pct(MAP_POINTS[source.key][1], MAP_H) }} aria-hidden="true">{source.label}</span>)}
+      <span className="smap-hub-label" style={{ left: pct(HUB[0], MAP_W), top: pct(HUB[1], MAP_H) }} aria-hidden="true"><span><b>UBSI Pontianak</b><small>founding hub · offline meetup</small></span></span>
+      <figcaption className="smap-cap" aria-hidden="true">MuaraAI · jaringan mahasiswa UBSI</figcaption>
     </figure>
   );
 }
