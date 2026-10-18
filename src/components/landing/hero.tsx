@@ -27,7 +27,7 @@ export default function Hero() {
             </Link>
           </div>
         </div>
-        <div className="relative min-h-[320px] lg:min-h-[390px]">
+        <div className="relative flex items-center justify-center">
           <NationalCampusMap />
         </div>
       </div>
