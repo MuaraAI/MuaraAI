@@ -7,7 +7,7 @@ import MetricsBar from "../src/components/landing/metrics-bar";
 describe("MuaraAI public redesign", () => {
   it("leads with the UBSI student community purpose", () => {
     render(<Hero />);
-    expect(screen.getByText(/ruang kerja mahasiswa UBSI/i)).toBeTruthy();
+    expect(screen.getByText(/kampus di seluruh Indonesia/i)).toBeTruthy();
     expect(screen.getByText(/Daftar dengan GitHub/i)).toBeTruthy();
     expect(screen.queryByText(/API 99\.9% Uptime/i)).toBeNull();
     expect(screen.queryByText(/AES-256-GCM Vault Active/i)).toBeNull();

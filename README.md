@@ -2,7 +2,7 @@
 
 > Where local craft flows global.
 
-MuaraAI adalah komunitas mahasiswa UBSI dari seluruh Indonesia yang lahir di UBSI Pontianak. Komunitas ini terbuka untuk mahasiswa angkatan 2026 dan seterusnya, dengan ruang untuk belajar, membangun project, menunjukkan Proof of Work, dan berkontribusi bersama.
+MuaraAI adalah komunitas mahasiswa dari seluruh kampus di Indonesia yang lahir dari mahasiswa UBSI Pontianak. Komunitas ini terbuka untuk mahasiswa angkatan 2026 dan seterusnya, dengan ruang untuk belajar, membangun project, menunjukkan Proof of Work, dan berkontribusi bersama.
 
 Website utama: https://muaraai.com/
 AI Playground: https://ai.muaraai.com/
@@ -46,11 +46,11 @@ UBSI API dikembangkan secara independen dan tidak berafiliasi, disponsori, atau 
 
 ## Komunitas
 
-MuaraAI dimulai dari mahasiswa UBSI Pontianak dan berkembang menuju komunitas nasional. Pontianak adalah founding hub dan pusat utama pertemuan offline. Jakarta menjadi regional hub, sementara kampus UBSI lain terhubung sebagai node komunitas.
+MuaraAI dimulai dari mahasiswa UBSI Pontianak dan berkembang menuju komunitas nasional lintas kampus. Pontianak adalah founding hub dan pusat utama pertemuan offline. Jakarta menjadi regional hub, sementara mahasiswa dari kampus lain di seluruh Indonesia terhubung sebagai node komunitas.
 
 Ketentuan intake saat ini:
 
-- Mahasiswa UBSI dari kampus di seluruh Indonesia.
+- Mahasiswa dari kampus mana pun di seluruh Indonesia.
 - Angkatan 2026 dan seterusnya.
 - Proses pendaftaran menggunakan GitHub OAuth dan Proof of Work.
 - Detail verifikasi, membership, iuran, dan akses tersedia setelah login.

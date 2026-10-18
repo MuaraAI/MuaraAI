@@ -9,7 +9,7 @@ export const SITE_NAME = "Muara AI";
 export const SITE_URL = "https://muaraai.com";
 export const GITHUB_ORG_URL = "https://github.com/MuaraAI";
 
-export const UBSI_CAMPUSES = [
+export const INDONESIAN_CAMPUSES = [
   "UBSI Pontianak",
   "UBSI Jakarta Pusat (Kramat 98 / Salemba)",
   "UBSI Jakarta Selatan (Fatmawati)",
@@ -25,7 +25,10 @@ export const UBSI_CAMPUSES = [
   "UBSI Tegal",
   "UBSI Surakarta (Solo)",
   "UBSI Yogyakarta",
+  "Kampus lain di Indonesia",
 ] as const;
+
+export const UBSI_CAMPUSES = INDONESIAN_CAMPUSES; // compatibility for existing imports
 
 export const UBSI_PRODI_LIST = [
   "Informatika (S1)",

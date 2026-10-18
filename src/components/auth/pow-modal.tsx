@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { submitProofOfWork } from "@/app/actions/pow";
 import { PoWInput } from "@/lib/validation";
-import { UBSI_CAMPUSES, UBSI_PRODI_LIST } from "@/lib/constants";
+import { UBSI_PRODI_LIST } from "@/lib/constants";
 import Icon from "@/components/ui/icon";
 
 type Step = 0 | 1 | 2 | 3;
@@ -52,7 +52,7 @@ export default function PoWForm() {
   return (
     <div className="rounded-2xl border border-border bg-white p-6 sm:p-8 max-w-2xl mx-auto shadow-sm">
       <div className="mb-8">
-        <div className="text-xs font-mono uppercase tracking-[0.14em] text-muara-ocean">Pendaftaran UBSI 2026</div>
+        <div className="text-xs font-mono uppercase tracking-[0.14em] text-muara-ocean">Pendaftaran MuaraAI 2026+</div>
         <h2 className="mt-2 font-display text-2xl font-bold text-foreground">Buat profil komunitasmu</h2>
         <p className="mt-2 text-sm text-secondary">Selesaikan empat langkah singkat. Draft kamu tetap tersimpan saat berpindah langkah.</p>
       </div>
@@ -70,13 +70,13 @@ export default function PoWForm() {
       <form onSubmit={handleSubmit} className="space-y-5">
         {step === 0 && (
           <fieldset className="space-y-4">
-            <legend className="font-display text-xl font-semibold text-foreground">Identitas UBSI</legend>
+            <legend className="font-display text-xl font-semibold text-foreground">Identitas kampus</legend>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field id="fullName" label="Nama Lengkap" value={formData.fullName} onChange={(value) => update("fullName", value)} required />
               <Field id="phoneWa" label="WhatsApp / Kontak Aktif" value={formData.phoneWa} onChange={(value) => update("phoneWa", value)} required />
-              <Field id="nim" label="NIM Mahasiswa UBSI" value={formData.nim} onChange={(value) => update("nim", value.replace(/\D/g, ""))} required maxLength={8} />
+              <Field id="nim" label="NIM mahasiswa" value={formData.nim} onChange={(value) => update("nim", value.replace(/\D/g, ""))} required maxLength={8} />
               <Field id="kelas" label="Kode Kelas" value={formData.kelas} onChange={(value) => update("kelas", value.toUpperCase())} required />
-              <SelectField id="campus" label="Kampus Asal UBSI" value={formData.campus} options={UBSI_CAMPUSES} onChange={(value) => update("campus", value)} />
+              <Field id="campus" label="Kampus / institusi asal" value={formData.campus} onChange={(value) => update("campus", value)} required placeholder="Contoh: UBSI Pontianak atau Universitas Indonesia" />
               <SelectField id="prodi" label="Program Studi" value={formData.prodi} options={UBSI_PRODI_LIST} onChange={(value) => update("prodi", value)} />
             </div>
           </fieldset>
@@ -133,8 +133,8 @@ export default function PoWForm() {
   );
 }
 
-function Field({ id, label, value, onChange, required = false, type = "text", maxLength }: { id: string; label: string; value: string; onChange: (value: string) => void; required?: boolean; type?: string; maxLength?: number }) {
-  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><input id={id} type={type} value={value} required={required} maxLength={maxLength} onChange={(event) => onChange(event.target.value)} className="w-full rounded-md border border-stroke bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white" /></div>;
+function Field({ id, label, value, onChange, required = false, type = "text", maxLength, placeholder }: { id: string; label: string; value: string; onChange: (value: string) => void; required?: boolean; type?: string; maxLength?: number; placeholder?: string }) {
+  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><input id={id} type={type} value={value} placeholder={placeholder} required={required} maxLength={maxLength} onChange={(event) => onChange(event.target.value)} className="w-full rounded-md border border-stroke bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white" /></div>;
 }
 
 function SelectField({ id, label, value, options, onChange }: { id: string; label: string; value: string; options: readonly string[]; onChange: (value: string) => void }) {

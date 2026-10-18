@@ -17,7 +17,7 @@ export default function Footer() {
             <span className="font-display font-bold text-foreground text-base">Muara AI</span>
           </div>
           <p className="text-xs text-secondary max-w-sm text-center md:text-left font-sans">
-            Where local craft flows global. Komunitas praktisi & riset AI rekayasa independen eksklusif mahasiswa UBSI.
+            Where local craft flows global. Komunitas mahasiswa dan pembangun AI dari kampus di seluruh Indonesia.
           </p>
         </div>
 
@@ -42,7 +42,7 @@ export default function Footer() {
         </div>
 
         <div className="text-xs text-slate-500 text-center md:text-right">
-          <p>Komunitas mahasiswa UBSI · Lahir di Pontianak</p>
+          <p>Komunitas mahasiswa Indonesia · Lahir di Pontianak</p>
         </div>
       </div>
     </footer>

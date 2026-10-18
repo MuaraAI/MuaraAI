@@ -17,7 +17,7 @@ describe("Proof of Work Validation", () => {
       toolchainNarrative: "I build with Next.js, Claude Code, and test with Vitest.",
     });
     expect(invalid.isValid).toBe(false);
-    expect(invalid.error).toContain("8 digit angka resmi UBSI");
+    expect(invalid.error).toContain("8 digit angka mahasiswa");
   });
 
   it("rejects empty campus or missing kelas", () => {
@@ -34,7 +34,7 @@ describe("Proof of Work Validation", () => {
       toolchainNarrative: "I build with Next.js, Claude Code, and test with Vitest.",
     });
     expect(invalid.isValid).toBe(false);
-    expect(invalid.error).toContain("Pilih kampus asal UBSI Anda");
+    expect(invalid.error).toContain("Pilih kampus atau institusi asal Anda");
   });
 
   it("accepts valid UBSI student submission", () => {

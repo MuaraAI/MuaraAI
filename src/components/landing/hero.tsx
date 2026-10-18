@@ -15,7 +15,7 @@ export default function Hero() {
             <span className="text-muara-ocean">berkontribusi.</span>
           </h1>
           <p className="mt-7 max-w-2xl text-base leading-relaxed text-secondary sm:text-lg">
-            MuaraAI adalah ruang kerja mahasiswa UBSI untuk mengembangkan skill, membuat project, dan menunjukkan Proof of Work bersama komunitas.
+            MuaraAI adalah ruang kerja mahasiswa dari kampus di seluruh Indonesia untuk belajar, membuat project, dan menunjukkan Proof of Work bersama komunitas.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Link href="/api/auth/login" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-foreground px-5 py-3 text-sm font-bold text-white shadow-diffusion transition-colors hover:bg-secondary">

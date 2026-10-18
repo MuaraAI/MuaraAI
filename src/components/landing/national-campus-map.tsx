@@ -30,7 +30,7 @@ export default function NationalCampusMap() {
   }, [reducedMotion]);
 
   return (
-    <figure className="smap smap-light national-campus-map" role="img" aria-label="Peta Indonesia dengan rute komunitas UBSI menuju UBSI Pontianak sebagai founding hub dan UBSI Jakarta sebagai regional hub.">
+    <figure className="smap smap-light national-campus-map" role="img" aria-label="Peta Indonesia dengan rute komunitas mahasiswa dari kampus di seluruh Indonesia menuju Pontianak sebagai founding hub dan Jakarta sebagai regional hub.">
       <svg viewBox={`0 0 ${MAP_W} ${MAP_H}`} aria-hidden="true">
         <path className="smap-ctx" d={NEIGHBOURS_PATH} />
         <path className="smap-land" d={INDONESIA_PATH} />

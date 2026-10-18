@@ -22,10 +22,10 @@ export function validatePoWSubmission(data: PoWInput): { isValid: boolean; error
   }
   const cleanNim = data.nim?.trim() || "";
   if (!/^\d{8}$/.test(cleanNim)) {
-    return { isValid: false, error: "NIM wajib berupa 8 digit angka resmi UBSI (misal: 15260767)." };
+    return { isValid: false, error: "NIM wajib berupa 8 digit angka mahasiswa (misal: 15260767)." };
   }
   if (!data.campus || data.campus.trim().length < 3) {
-    return { isValid: false, error: "Pilih kampus asal UBSI Anda." };
+    return { isValid: false, error: "Pilih kampus atau institusi asal Anda." };
   }
   if (!data.prodi || data.prodi.trim().length < 3) {
     return { isValid: false, error: "Pilih Program Studi Anda." };

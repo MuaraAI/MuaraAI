@@ -14,7 +14,7 @@ export const communityContent = {
   },
   cohortPolicy: {
     minimumCohort: 2026,
-    summary: "Mahasiswa UBSI angkatan 2026 dan seterusnya dari seluruh Indonesia.",
+    summary: "Mahasiswa dari seluruh kampus UBSI di Indonesia, mulai angkatan 2026 dan seterusnya.",
   },
   muaraArusOne: {
     name: "Muara Arus 1",
