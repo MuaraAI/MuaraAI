@@ -61,7 +61,6 @@ export default async function LandingPage() {
     <div className="flex flex-col">
       <Hero />
       <MetricsBar />
-      <NationalCampusMap />
       <WaveDivider />
       <VisionMission />
       <ProjectsGrid />

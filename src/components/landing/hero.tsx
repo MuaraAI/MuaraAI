@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/icon";
+import NationalCampusMap from "@/components/landing/national-campus-map";
 
 export default function Hero() {
   return (
@@ -26,14 +27,8 @@ export default function Hero() {
             </Link>
           </div>
         </div>
-        <div className="relative border-l-2 border-muara-ocean/30 pl-6 sm:pl-8">
-          <p className="max-w-sm text-sm leading-relaxed text-secondary">
-            Dari kampus ke karya nyata. Setiap anggota datang dengan rasa ingin tahu, lalu pulang membawa sesuatu yang bisa dibagikan.
-          </p>
-          <div className="mt-8 flex items-center gap-3 text-xs font-mono text-secondary">
-            <span className="h-2 w-2 rounded-full bg-muara-ocean" aria-hidden="true" />
-            <span>Berbasis Proof of Work</span>
-          </div>
+        <div className="relative min-h-[320px] lg:min-h-[390px]">
+          <NationalCampusMap />
         </div>
       </div>
     </section>
