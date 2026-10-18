@@ -1,258 +1,119 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Member } from "@/types/database";
 import Icon from "@/components/ui/icon";
 import FadeIn from "@/components/ui/fade-in";
-import SpotlightCard from "@/components/ui/spotlight-card";
 import { filterMembers, RosterFilter } from "@/components/landing/syndicate-roster";
 
 interface MembersDirectoryProps {
   initialMembers: Member[];
 }
 
+const filters: { id: RosterFilter; label: string }[] = [
+  { id: "all", label: "Semua" },
+  { id: "maintainer", label: "Maintainer" },
+  { id: "builder", label: "Builder" },
+  { id: "creative", label: "Creative" },
+  { id: "top-commits", label: "Kontributor aktif" },
+];
+
 export default function MembersDirectory({ initialMembers }: MembersDirectoryProps) {
   const [filter, setFilter] = useState<RosterFilter>("all");
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
-    let list = filterMembers(initialMembers, filter);
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter(
-        (m) =>
-          m.full_name.toLowerCase().includes(q) ||
-          m.github_username.toLowerCase().includes(q) ||
-          (m.campus && m.campus.toLowerCase().includes(q)) ||
-          (m.prodi && m.prodi.toLowerCase().includes(q)) ||
-          (m.kelas && m.kelas.toLowerCase().includes(q)) ||
-          (m.track && m.track.toLowerCase().includes(q)) ||
-          (m.division && m.division.toLowerCase().includes(q)) ||
-          (m.role_title && m.role_title.toLowerCase().includes(q))
-      );
-    }
-    return list;
+    const list = filterMembers(initialMembers, filter);
+    const query = search.trim().toLowerCase();
+    if (!query) return list;
+    return list.filter((member) =>
+      [member.full_name, member.github_username, member.campus, member.prodi, member.kelas, member.division, member.role_title]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(query)),
+    );
   }, [initialMembers, filter, search]);
 
   return (
     <div className="space-y-8">
-      {/* Search and Filters Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Search Input */}
-        <div className="relative w-full md:w-80">
-          <Icon
-            name="search"
-            className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"
-          />
+      <div className="flex flex-col gap-4 rounded-xl border border-stroke bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+        <label className="relative block w-full sm:max-w-sm">
+          <span className="sr-only">Cari anggota</span>
+          <Icon name="search" className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
           <input
-            type="text"
+            type="search"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari nama, @github, atau track..."
-            className="w-full rounded-lg border border-border bg-white pl-10 pr-4 py-2.5 text-xs text-foreground placeholder-slate-400 focus:border-muara-ocean focus:outline-none font-mono shadow-sm"
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Cari nama atau @GitHub"
+            aria-label="Cari anggota"
+            className="min-h-11 w-full rounded-md border border-stroke bg-surface-alt pl-10 pr-4 text-sm text-foreground placeholder-slate-400 focus:bg-white"
           />
-          {search && (
+        </label>
+        <div role="group" aria-label="Filter anggota" className="flex flex-wrap gap-2">
+          {filters.map((item) => (
             <button
-              onClick={() => setSearch("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-foreground font-mono"
+              key={item.id}
+              type="button"
+              aria-pressed={filter === item.id}
+              onClick={() => setFilter(item.id)}
+              className={`min-h-11 rounded-md px-3 text-xs font-medium transition-colors ${filter === item.id ? "bg-foreground text-white" : "border border-stroke text-secondary hover:border-muara-ocean hover:text-foreground"}`}
             >
-              ✕
-            </button>
-          )}
-        </div>
-
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap gap-1.5 p-1 bg-slate-100 rounded-lg border border-border">
-          {(
-            [
-              { id: "all", label: "All" },
-              { id: "top-commits", label: "Top Commits" },
-              { id: "maintainer", label: "Maintainer" },
-              { id: "lead", label: "Lead of Project" },
-              { id: "head", label: "Head of Creative/Builder" },
-              { id: "creative", label: "Creative" },
-              { id: "builder", label: "Builder" },
-            ] as const
-          ).map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setFilter(tab.id)}
-              className={`px-3 py-1.5 rounded-md text-xs font-mono transition-colors ${
-                filter === tab.id
-                  ? "bg-muara-ocean text-white font-bold shadow-sm"
-                  : "text-slate-600 hover:text-foreground hover:bg-white"
-              }`}
-            >
-              {tab.label}
+              {item.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Counter */}
-      <div className="text-xs font-mono text-slate-500">
-        Menampilkan <strong>{filtered.length}</strong> anggota terdaftar
+      <div className="flex items-center justify-between text-sm text-secondary">
+        <span><strong className="text-foreground">{filtered.length}</strong> anggota</span>
+        {search ? <button type="button" onClick={() => setSearch("")} className="min-h-11 text-muara-ocean hover:underline">Reset pencarian</button> : null}
       </div>
 
-      {/* Grid */}
       {filtered.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border p-12 text-center text-slate-500 text-sm bg-slate-50 font-mono">
-          Tidak ada anggota yang cocok dengan filter atau pencarian Anda.
+        <div className="rounded-xl border border-dashed border-stroke bg-surface-alt p-12 text-center">
+          <h2 className="font-display text-lg font-semibold text-foreground">Tidak ada anggota yang cocok</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm text-secondary">Coba ubah kata kunci atau pilih filter lain.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((member, idx) => {
-            const isTopThree =
-              filter === "top-commits" && idx < 3 && (member.total_commits || 0) > 0;
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((member, index) => {
+            const titles = Array.from(new Set([member.role_title, ...(member.titles || [])].filter(Boolean)));
             return (
-              <FadeIn key={member.id} delay={idx * 0.05}>
-                <SpotlightCard className="rounded-xl border border-border bg-white p-6 hover:border-muara-ocean transition-all flex flex-col justify-between group shadow-sm h-full">
+              <FadeIn key={member.id} delay={index * 0.04}>
+                <article className="flex h-full flex-col justify-between rounded-xl border border-stroke bg-white p-5 transition-colors hover:border-muara-ocean">
                   <div>
-                    <div className="flex items-start justify-between gap-3 mb-4">
-                      <div className="flex items-center gap-3">
-                        <Image
-                          src={member.avatar_url || `https://github.com/${member.github_username}.png`}
-                          alt={member.full_name}
-                          width={48}
-                          height={48}
-                          className="rounded-full border border-stroke group-hover:border-muara-ocean transition-colors object-cover"
-                          unoptimized
-                        />
-                        <div>
-                          <h3 className="font-display font-bold text-base text-foreground group-hover:text-muara-ocean transition-colors">
-                            {member.full_name}
-                          </h3>
-                          <p className="text-xs font-mono text-slate-500">
-                            @{member.github_username}
-                          </p>
-                        </div>
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src={member.avatar_url || `https://github.com/${member.github_username}.png`}
+                        alt={member.full_name}
+                        width={52}
+                        height={52}
+                        className="rounded-full border border-stroke object-cover"
+                        unoptimized
+                      />
+                      <div className="min-w-0">
+                        <h2 className="truncate font-display text-base font-semibold text-foreground">{member.full_name}</h2>
+                        <p className="truncate text-xs font-mono text-secondary">@{member.github_username}</p>
                       </div>
-
-                      {/* Commit Pill */}
-                      <span
-                        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-mono font-semibold ${
-                          isTopThree
-                            ? "bg-amber-50 border border-amber-300 text-amber-800"
-                            : "bg-slate-50 border border-border text-slate-600"
-                        }`}
-                      >
-                        <Icon
-                          name={isTopThree ? "local_fire_department" : "commit"}
-                          className="w-3.5 h-3.5"
-                        />
-                        {member.total_commits || 0}
-                      </span>
                     </div>
-
-                    {/* Role & Titles (Deduplicated) */}
-                    {(() => {
-                      const uniqueTitles = Array.from(
-                        new Set(
-                          [member.role_title, ...(member.titles || [])].filter(
-                            (t): t is string => Boolean(t && t.trim())
-                          )
-                        )
-                      );
-
-                      return (
-                        <div className="flex flex-wrap gap-1.5 mb-4">
-                          {uniqueTitles.map((title, tIdx) => {
-                            const isFounder = /founder/i.test(title);
-                            const isMaintainer = /maintainer/i.test(title);
-                            return (
-                              <span
-                                key={tIdx}
-                                className={`rounded px-2 py-0.5 text-[11px] font-mono ${
-                                  isFounder
-                                    ? "bg-amber-100 text-amber-900 border border-amber-300 font-bold"
-                                    : isMaintainer
-                                    ? "bg-sky-50 text-sky-900 border border-sky-200 font-semibold"
-                                    : "bg-surface-alt border border-stroke text-slate-700 font-medium"
-                                }`}
-                              >
-                                {title}
-                              </span>
-                            );
-                          })}
-                          <span
-                            className={`rounded px-2 py-0.5 text-[10px] font-mono uppercase font-bold ${
-                              member.division === "builder"
-                                ? "bg-emerald-50 border border-emerald-200 text-emerald-700"
-                                : "bg-purple-50 border border-purple-200 text-purple-700"
-                            }`}
-                          >
-                            {member.division}
-                          </span>
-                        </div>
-                      );
-                    })()}
-
-                    {member.bio && (
-                      <p className="text-xs text-slate-600 line-clamp-2 mb-3 leading-relaxed">
-                        {member.bio}
-                      </p>
-                    )}
-
-                    {/* Campus & Kelas Badge */}
-                    <div className="flex flex-wrap items-center gap-1.5 mb-3 text-[11px] font-mono">
-                      <span className="inline-flex items-center gap-1 rounded bg-slate-50 border border-slate-200 px-2 py-0.5 text-slate-700">
-                        <Icon name="school" className="w-3 h-3 text-muara-ocean" />
-                        <span>{member.campus || "UBSI Pontianak"}</span>
-                      </span>
-                      {member.kelas && (
-                        <span className="rounded bg-slate-50 border border-slate-200 px-1.5 py-0.5 text-slate-600 font-bold uppercase">
-                          {member.kelas}
-                        </span>
-                      )}
+                    <div className="mt-5 flex flex-wrap gap-1.5">
+                      {titles.map((title) => <span key={title} className="rounded-md border border-stroke bg-surface-alt px-2 py-1 text-[11px] font-medium text-foreground">{title}</span>)}
+                      <span className="rounded-md border border-stroke px-2 py-1 text-[11px] font-medium capitalize text-secondary">{member.division}</span>
                     </div>
-
-                    {member.track && (
-                      <div className="text-[11px] font-mono text-slate-500 mb-4 flex items-center gap-1.5">
-                        <Icon name="terminal" className="w-3.5 h-3.5 text-slate-400" />
-                        <span className="truncate">Track: {member.track}</span>
-                      </div>
-                    )}
+                    <dl className="mt-5 space-y-2 text-xs">
+                      <div className="flex justify-between gap-3"><dt className="text-secondary">Kampus</dt><dd className="text-right text-foreground">{member.campus || "UBSI Pontianak"}</dd></div>
+                      {member.kelas ? <div className="flex justify-between gap-3"><dt className="text-secondary">Kelas</dt><dd className="text-right font-mono text-foreground">{member.kelas}</dd></div> : null}
+                      {member.prodi ? <div className="flex justify-between gap-3"><dt className="text-secondary">Prodi</dt><dd className="text-right text-foreground">{member.prodi}</dd></div> : null}
+                    </dl>
                   </div>
-
-                  {/* Social links */}
-                  <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                    {member.github_url && (
-                      <Link
-                        href={member.github_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-slate-400 hover:text-muara-ocean transition-colors"
-                        aria-label="GitHub Profile"
-                      >
-                        <Icon name="code" className="w-4 h-4" />
-                      </Link>
-                    )}
-                    {member.linkedin_url && (
-                      <Link
-                        href={member.linkedin_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-slate-400 hover:text-muara-ocean transition-colors"
-                        aria-label="LinkedIn Profile"
-                      >
-                        <Icon name="public" className="w-4 h-4" />
-                      </Link>
-                    )}
-                    {member.portfolio_url && (
-                      <Link
-                        href={member.portfolio_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-slate-400 hover:text-muara-ocean transition-colors ml-auto text-[11px] font-mono flex items-center gap-1"
-                      >
-                        <span>Portofolio</span>
-                        <Icon name="open_in_new" className="w-3 h-3" />
-                      </Link>
-                    )}
+                  <div className="mt-5 flex items-center justify-between border-t border-stroke pt-4">
+                    <span className="text-xs text-secondary">{member.total_commits || 0} kontribusi</span>
+                    <Link href={member.github_url || `https://github.com/${member.github_username}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1 text-xs font-semibold text-muara-ocean hover:underline">
+                      GitHub <Icon name="open_in_new" className="h-3.5 w-3.5" />
+                    </Link>
                   </div>
-                </SpotlightCard>
+                </article>
               </FadeIn>
             );
           })}

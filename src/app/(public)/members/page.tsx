@@ -33,13 +33,13 @@ export default async function MembersPage() {
               <span>Beranda</span>
             </Link>
             <span>/</span>
-            <span>Roster Direktori</span>
+            <span>Direktori publik</span>
           </div>
           <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
             Direktori Anggota Muara AI
           </h1>
           <p className="text-xs text-slate-500 mt-2 max-w-2xl leading-relaxed">
-            Daftar pengembang perangkat lunak, arsitek sistem AI, dan desainer visual yang tergabung dalam sindikat rekayasa teknologi Muara AI.
+            Kenali mahasiswa UBSI yang belajar, membangun project, dan berkontribusi bersama MuaraAI.
           </p>
         </div>
 
@@ -48,7 +48,7 @@ export default async function MembersPage() {
           className="inline-flex items-center gap-2 rounded-lg bg-muara-ocean hover:bg-muara-ocean-dark text-white px-5 py-2.5 text-xs font-bold font-sans transition-all shadow-sm shrink-0 w-fit"
         >
           <Icon name="person_add" className="w-4 h-4" />
-          <span>Gabung Sindikat (PoW)</span>
+          <span>Daftar dengan GitHub</span>
         </Link>
       </div>
 
