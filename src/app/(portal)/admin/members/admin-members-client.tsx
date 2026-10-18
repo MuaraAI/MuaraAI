@@ -69,6 +69,7 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
               <th className="py-2.5 px-3">Member</th>
               <th className="py-2.5 px-3">Lifecycle</th>
               <th className="py-2.5 px-3">Intake</th>
+              <th className="py-2.5 px-3">Mulai Membership</th>
               <th className="py-2.5 px-3">Masa Aktif Kas</th>
               <th className="py-2.5 px-3">Tunggakan</th>
               <th className="py-2.5 px-3 text-center">Status Akses</th>
@@ -100,6 +101,11 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
                   </td>
                   <td className="py-3 px-3 text-[10px] text-secondary">
                     {m.intake_policy_version || "Grandfathered"}
+                  </td>
+                  <td className="py-3 px-3 text-[10px] text-secondary">
+                    {m.membership_started_at
+                      ? new Date(m.membership_started_at).toLocaleDateString("id-ID")
+                      : "Historis / belum dicatat"}
                   </td>
                   <td className="py-3 px-3 text-secondary">
                     {m.dues_valid_until || "Belum Bayar"}

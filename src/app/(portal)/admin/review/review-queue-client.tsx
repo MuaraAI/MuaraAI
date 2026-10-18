@@ -93,14 +93,6 @@ export default function ReviewQueueClient({ initialMembers }: ReviewQueueClientP
                 {m.portfolio_url}
               </Link>
             </div>
-            {m.bio && (
-              <div className="sm:col-span-2 lg:col-span-4">
-                <span className="text-slate-500 block mb-1">Toolchain & Workflow:</span>
-                <p className="text-slate-700 bg-slate-50 p-3 rounded-lg border border-border whitespace-pre-wrap font-sans">
-                  {m.bio}
-                </p>
-              </div>
-            )}
           </div>
 
           <div className="flex items-center justify-end gap-3 pt-3 border-t border-border">

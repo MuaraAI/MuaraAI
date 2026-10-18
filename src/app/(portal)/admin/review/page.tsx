@@ -18,10 +18,10 @@ export default async function AdminReviewPage() {
     <div className="space-y-8">
       <div>
         <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
-          Review Antrean Pendaftar Mahasiswa UBSI
+          Review pendaftar
         </h1>
-        <p className="text-xs text-slate-500">
-          Tinjau berkas Proof of Work dan identitas kampus calon anggota. Klik Approve untuk menyetujui sekaligus mengundang ke GitHub Org MuaraAI secara otomatis.
+        <p className="text-sm text-secondary">
+          Periksa identitas UBSI dan Proof of Work, lalu pilih keputusan untuk setiap pendaftar.
         </p>
       </div>
 
