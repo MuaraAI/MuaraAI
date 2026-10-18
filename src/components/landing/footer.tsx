@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import React from "react";
 import { GITHUB_ORG_URL } from "@/lib/constants";
 import Icon from "@/components/ui/icon";
@@ -10,8 +11,8 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex flex-col items-center md:items-start gap-2">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-surface-alt border border-stroke text-muara-ocean font-display font-bold text-sm shadow-xs">
-              <Icon name="waves" className="w-4 h-4 text-muara-ocean" />
+            <span className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-white border border-stroke overflow-hidden shadow-xs">
+              <Image src="/brand/muara-logo.png" alt="" width={32} height={32} className="h-7 w-7 object-contain" />
             </span>
             <span className="font-display font-bold text-foreground text-base">Muara AI</span>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import React, { useState } from "react";
 import { GITHUB_ORG_URL } from "@/lib/constants";
 import Icon from "@/components/ui/icon";
@@ -22,8 +23,8 @@ export default function Navbar({ user }: NavbarProps) {
         {/* Brand */}
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <span className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-surface-alt border border-stroke text-muara-ocean font-display font-bold text-base group-hover:border-muara-ocean transition-colors shadow-xs">
-              <Icon name="waves" className="w-4 h-4 text-muara-ocean" />
+            <span className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-white border border-stroke overflow-hidden group-hover:border-muara-ocean transition-colors shadow-xs">
+              <Image src="/brand/muara-logo.png" alt="" width={32} height={32} className="h-7 w-7 object-contain" priority />
             </span>
             <span className="font-display font-bold text-base tracking-tight text-foreground group-hover:text-muara-ocean transition-colors">
               Muara AI

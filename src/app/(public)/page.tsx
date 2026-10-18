@@ -1,6 +1,7 @@
 import React from "react";
 import Hero from "@/components/landing/hero";
 import MetricsBar from "@/components/landing/metrics-bar";
+import NationalCampusMap from "@/components/landing/national-campus-map";
 import VisionMission from "@/components/landing/vision-mission";
 import ProjectsGrid from "@/components/landing/projects-grid";
 import AccoladesGrid from "@/components/landing/accolades-grid";
@@ -60,6 +61,7 @@ export default async function LandingPage() {
     <div className="flex flex-col">
       <Hero />
       <MetricsBar />
+      <NationalCampusMap />
       <WaveDivider />
       <VisionMission />
       <ProjectsGrid />
