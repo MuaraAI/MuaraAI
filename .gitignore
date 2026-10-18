@@ -22,8 +22,17 @@ pnpm-debug.log*
 *.tsbuildinfo
 graphify-out/
 
+# Internal planning and agent docs
+/docs/prd/
+/docs/superpowers/
+
 # Local session helper
 h.md
+
+# Deployment
+.vercel/
+coverage/
+*.log
 
 # OS
 .DS_Store
