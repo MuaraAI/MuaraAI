@@ -13,7 +13,6 @@ export type MuraPose =
   | "welcome"
   | "learning"
   | "building"
-  | "access"
   | "empty"
   | "maintenance"
   | "not-found";
@@ -22,7 +21,6 @@ export const MURA_POSE_ASSETS: Record<MuraPose, string> = {
   welcome: "/mascot/mura/welcome-onboarding-1.jpeg",
   learning: "/mascot/mura/learning-learn-2.jpeg",
   building: "/mascot/mura/building-project-workspace-3.jpeg",
-  access: "/mascot/mura/access-api-vault-4.jpeg",
   empty: "/mascot/mura/empty-state-nothing-yet-5.jpeg",
   maintenance: "/mascot/mura/error-maintenance-needs-attention-6.jpeg",
   "not-found": "/mascot/mura/404-7.jpeg",
@@ -73,11 +71,6 @@ const PRESETS: Record<MuraPose, Preset> = {
     animate: { opacity: [0, 1, 1, 1], x: [8, 0, 0, 0], scale: [1, 1, 1.015, 1] },
     transition: { duration: 1.4, times: [0, 0.4, 0.7, 1], ease: HYDRO },
     inView: true,
-  },
-  access: {
-    initial: { opacity: 0, y: 8, scale: 1 },
-    animate: { opacity: [0, 1, 1, 1], y: [8, 0, 0, 0], scale: [1, 1, 1.015, 1] },
-    transition: { duration: 2, times: [0, 0.3, 0.65, 1], ease: HYDRO },
   },
   empty: {
     initial: { opacity: 0, y: 8, rotate: -1 },

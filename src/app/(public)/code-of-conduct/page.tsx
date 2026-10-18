@@ -49,7 +49,7 @@ export default function CodeOfConductPage() {
           </h2>
           <p>
             Dilarang keras menyimpan token, API key, atau password langsung ke dalam repositori publik. Seluruh kredensial 
-            wajib diisolasi via environment variable dan sistem vault terenkripsi AES-256. Setiap kebocoran kredensial 
+            wajib diisolasi via environment variable. Setiap kebocoran kredensial
             akan ditangani dengan rotasi instan.
           </p>
         </section>

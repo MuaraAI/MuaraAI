@@ -62,10 +62,6 @@ export default async function DashboardProfilePage() {
           <div className="text-xs font-mono uppercase text-secondary">Berikutnya</div>
           <div className="mt-2 font-display font-semibold text-foreground">Buka materi belajar</div>
         </Link>
-        <Link href="/dashboard/vault" className="rounded-xl border border-stroke bg-surface-alt p-5 transition-colors hover:border-muara-ocean">
-          <div className="text-xs font-mono uppercase text-secondary">Akses</div>
-          <div className="mt-2 font-display font-semibold text-foreground">Kelola API key</div>
-        </Link>
         <Link href="/membership-exit" className="rounded-xl border border-stroke bg-surface-alt p-5 transition-colors hover:border-muara-ocean">
           <div className="text-xs font-mono uppercase text-secondary">Lifecycle</div>
           <div className="mt-2 font-display font-semibold text-foreground">Lihat status membership</div>

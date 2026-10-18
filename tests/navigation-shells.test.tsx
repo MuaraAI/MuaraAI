@@ -34,7 +34,6 @@ describe("navigation shells", () => {
     expect(screen.getByText("Beranda")).toBeTruthy();
     expect(screen.getByText("Belajar")).toBeTruthy();
     expect(screen.getByText("Project")).toBeTruthy();
-    expect(screen.getByText("Akses")).toBeTruthy();
     expect(screen.getByText("Akun")).toBeTruthy();
     expect(screen.getByText("Member content")).toBeTruthy();
   });

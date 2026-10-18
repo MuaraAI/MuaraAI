@@ -74,7 +74,6 @@ muaraai.com/
 ├── /dashboard              # Workspace member: status dan next action
 ├── /dashboard/learn       # Muara Learn
 ├── /dashboard/treasury    # Iuran dan kas komunitas
-├── /dashboard/vault       # Akses API internal member
 └── /admin                 # Workspace maintainer
     ├── /review            # Review pendaftar
     ├── /members           # Audit membership dan lifecycle

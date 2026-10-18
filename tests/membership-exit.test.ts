@@ -22,7 +22,5 @@ describe("Membership exit action contract", () => {
     expect(actionSource).toContain('rpc("request_membership_exit"');
     expect(migrationSource).toContain("membership_status = 'exited'");
     expect(migrationSource).toContain("reapply_blocked = true");
-    expect(migrationSource).toContain("UPDATE ai.api_keys");
-    expect(migrationSource).toContain("UPDATE ubsi_api.api_keys");
   });
 });

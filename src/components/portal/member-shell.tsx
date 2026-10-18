@@ -16,7 +16,6 @@ const navItems: NavItem[] = [
   { href: "/dashboard", label: "Beranda", icon: "dashboard" },
   { href: "/dashboard/learn", label: "Belajar", icon: "school" },
   { href: "/dashboard", label: "Project", icon: "badge" },
-  { href: "/dashboard/vault", label: "Akses", icon: "lock" },
   { href: "/dashboard/treasury", label: "Akun", icon: "account_balance_wallet" },
 ];
 

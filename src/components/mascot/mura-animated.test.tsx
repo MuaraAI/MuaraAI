@@ -18,7 +18,6 @@ const POSES: [MuraPose, string][] = [
   ["welcome", "/mascot/mura/welcome-onboarding-1.jpeg"],
   ["learning", "/mascot/mura/learning-learn-2.jpeg"],
   ["building", "/mascot/mura/building-project-workspace-3.jpeg"],
-  ["access", "/mascot/mura/access-api-vault-4.jpeg"],
   ["empty", "/mascot/mura/empty-state-nothing-yet-5.jpeg"],
   ["maintenance", "/mascot/mura/error-maintenance-needs-attention-6.jpeg"],
   ["not-found", "/mascot/mura/404-7.jpeg"],
@@ -110,7 +109,7 @@ describe("MuraAnimated", () => {
 
   it("does not render a dead button or link when interactive is false", () => {
     removeMatchMedia();
-    render(<MuraAnimated pose="access" alt="Mura holding a key" />);
+    render(<MuraAnimated pose="building" alt="Mura building" />);
     expect(screen.queryByRole("button")).toBeNull();
     expect(screen.queryByRole("link")).toBeNull();
   });
