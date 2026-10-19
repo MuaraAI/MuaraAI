@@ -69,12 +69,17 @@ export default function MemberShell({ member, children }: MemberShellProps) {
                 key={`${item.label}-${item.href}`}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex min-h-11 items-center gap-2.5 rounded-lg px-3 py-2 transition-colors ${
+                className={`flex min-h-11 items-center justify-between rounded-lg px-3 py-2 transition-colors ${
                   active ? "bg-surface-alt text-foreground font-semibold" : "hover:bg-slate-100 hover:text-foreground"
                 }`}
               >
-                <Icon name={item.icon} className={`w-4 h-4 ${active ? "text-muara-ocean" : "text-secondary"}`} />
-                {item.label}
+                <div className="flex items-center gap-2.5">
+                  <Icon name={item.icon} className={`w-4 h-4 ${active ? "text-muara-ocean" : "text-secondary"}`} />
+                  <span>{item.label}</span>
+                </div>
+                {item.href !== "/dashboard" && member.registration_status !== "approved" && (
+                  <Icon name="lock" className="w-3.5 h-3.5 text-slate-400" />
+                )}
               </Link>
             );
           })}

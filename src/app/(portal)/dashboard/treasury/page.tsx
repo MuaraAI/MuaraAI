@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Member, TreasuryTransaction } from "@/types/database";
 import { calculateMemberBill } from "@/lib/dues";
@@ -22,6 +23,26 @@ export default async function MemberTreasuryPage() {
   }
 
   const member = memberData as Member;
+
+  if (member.registration_status !== "approved") {
+    return (
+      <div className="rounded-[18px] border border-stroke bg-white p-8 sm:p-12 text-center max-w-lg mx-auto shadow-diffusion space-y-4 my-8">
+        <div className="mx-auto w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+          <Icon name="lock" className="w-6 h-6" />
+        </div>
+        <h2 className="font-display font-bold text-xl text-foreground">Fitur Kas Belum Terbuka</h2>
+        <p className="text-xs text-secondary leading-relaxed">
+          Iuran kas dan transparansi saldo anggota hanya aktif setelah pendaftaran Anda disetujui oleh Core Team.
+        </p>
+        <Link
+          href="/dashboard"
+          className="inline-flex min-h-11 items-center justify-center rounded-md bg-foreground px-5 py-2.5 text-xs font-semibold text-white hover:bg-secondary transition-colors"
+        >
+          Kembali ke Beranda Dashboard
+        </Link>
+      </div>
+    );
+  }
 
   // Query transactions for ledger
   const { data: transactionsData } = await supabase
