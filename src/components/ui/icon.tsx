@@ -43,6 +43,8 @@ export type IconName =
   | "list"
   | "error"
   | "warning"
+  | "refresh"
+  | "sync"
   | "github";
 
 interface IconProps extends React.SVGProps<SVGSVGElement> {
@@ -125,6 +127,9 @@ export default function Icon({ name, className = "w-5 h-5", size = 20, ...props 
         return <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />;
       case "history":
         return <path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" />;
+      case "sync":
+      case "refresh":
+        return <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 004 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z" />;
       case "rule":
         return <path d="M2 17h2v.5H3v1h1v.5H2v1h3v-4H2v1zm1-9h1V4H2v1h1v3zm-1 3h1.8L2 13.1v.9h3v-1H3.2L5 10.9V10H2v1zm5-6v2h14V5H7zm0 14h14v-2H7v2zm0-6h14v-2H7v2z" />;
       case "pending":

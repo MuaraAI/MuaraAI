@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { isMaintainer } from "@/lib/guards";
 import { escapeHtml, renderEmailHtml } from "@/lib/notify";
+import { fetchMemberOrgCommits } from "@/lib/github-sync";
 import { Resend } from "resend";
 
 async function assertMaintainer() {
@@ -285,4 +286,32 @@ export async function toggleMemberActive(memberId: string, isActive: boolean) {
     return { success: false, error: GENERIC_ERROR };
   }
   return { success: true };
+}
+
+// 8. Synchronize GitHub commits across all repos in org:MuaraAI
+export async function syncOrgCommits() {
+  const { supabase } = await assertMaintainer();
+
+  const { data: members, error } = await supabase
+    .from("members")
+    .select("id, github_username, total_commits")
+    .eq("registration_status", "approved");
+
+  if (error || !members) {
+    return { success: false, error: error?.message || "Gagal memuat anggota." };
+  }
+
+  const updated: { id: string; username: string; commits: number }[] = [];
+
+  for (const m of members) {
+    if (!m.github_username) continue;
+    const count = await fetchMemberOrgCommits(m.github_username);
+    await supabase
+      .from("members")
+      .update({ total_commits: count, updated_at: new Date().toISOString() })
+      .eq("id", m.id);
+    updated.push({ id: m.id, username: m.github_username, commits: count });
+  }
+
+  return { success: true, count: updated.length, updated };
 }

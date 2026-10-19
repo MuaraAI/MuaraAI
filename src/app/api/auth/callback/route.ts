@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { fetchMemberOrgCommits } from "@/lib/github-sync";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -19,11 +20,25 @@ export async function GET(request: Request) {
         // Check member profile
         const { data: member } = await supabase
           .from("members")
-          .select("id, registration_status")
+          .select("id, registration_status, github_username")
           .eq("id", user.id)
           .maybeSingle();
 
         if (member) {
+          if (member.github_username) {
+            try {
+              const count = await fetchMemberOrgCommits(member.github_username);
+              if (count > 0) {
+                await supabase
+                  .from("members")
+                  .update({ total_commits: count, updated_at: new Date().toISOString() })
+                  .eq("id", user.id);
+              }
+            } catch {
+              // Best-effort non-blocking sync
+            }
+          }
+
           // Every existing member, including pending and rejected users, enters
           // the dashboard. The dashboard renders the correct locked/status UI.
           const target = next && next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";

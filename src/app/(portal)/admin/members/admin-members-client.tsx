@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { Member } from "@/types/database";
-import { toggleMemberActive } from "@/app/actions/admin";
+import { toggleMemberActive, syncOrgCommits } from "@/app/actions/admin";
 import { calculateMemberBill } from "@/lib/dues";
+import Icon from "@/components/ui/icon";
 
 interface AdminMembersClientProps {
   initialMembers: Member[];
@@ -13,6 +14,23 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
   const [members, setMembers] = useState<Member[]>(initialMembers);
   const [filterArrearsOnly, setFilterArrearsOnly] = useState(false);
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [syncingCommits, setSyncingCommits] = useState(false);
+
+  const handleSyncCommits = async () => {
+    setSyncingCommits(true);
+    const res = await syncOrgCommits();
+    setSyncingCommits(false);
+
+    if (res.success && res.updated) {
+      const commitMap = new Map(res.updated.map((u) => [u.id, u.commits]));
+      setMembers((prev) =>
+        prev.map((m) => (commitMap.has(m.id) ? { ...m, total_commits: commitMap.get(m.id)! } : m))
+      );
+      alert(`Berhasil menyinkronkan commit untuk ${res.count} anggota dari org:MuaraAI!`);
+    } else {
+      alert(`Gagal sync commit: ${res.error || "Terjadi kesalahan"}`);
+    }
+  };
 
   const handleToggleActive = async (member: Member) => {
     if (member.membership_status === "exited" || member.reapply_blocked) return;
@@ -47,8 +65,19 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
   return (
     <div className="rounded-[18px] border border-stroke bg-white p-6 sm:p-8 space-y-6 shadow-diffusion">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="font-display font-bold text-base text-foreground">
-          Daftar Seluruh Anggota ({displayed.length})
+        <div className="flex items-center gap-3">
+          <div className="font-display font-bold text-base text-foreground">
+            Daftar Seluruh Anggota ({displayed.length})
+          </div>
+          <button
+            type="button"
+            disabled={syncingCommits}
+            onClick={handleSyncCommits}
+            className="inline-flex items-center gap-1.5 rounded-md border border-stroke bg-surface-alt px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-slate-100 disabled:opacity-50 transition-colors shadow-xs"
+          >
+            <Icon name="sync" className={`w-3.5 h-3.5 text-muara-ocean ${syncingCommits ? "animate-spin" : ""}`} />
+            <span>{syncingCommits ? "Menyinkronkan..." : "Sinkronkan Commit GitHub"}</span>
+          </button>
         </div>
 
         <label className="flex items-center gap-2 text-xs font-mono text-secondary cursor-pointer">
@@ -68,6 +97,7 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
             <tr className="border-b border-stroke text-secondary uppercase">
               <th className="py-2.5 px-3">Member</th>
               <th className="py-2.5 px-3">Lifecycle</th>
+              <th className="py-2.5 px-3 text-center">Commits</th>
               <th className="py-2.5 px-3">Intake</th>
               <th className="py-2.5 px-3">Mulai Membership</th>
               <th className="py-2.5 px-3">Masa Aktif Kas</th>
@@ -98,6 +128,9 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
                     {m.exited_at && (
                       <div className="mt-1 text-[10px] text-secondary">Keluar: {new Date(m.exited_at).toLocaleDateString("id-ID")}</div>
                     )}
+                  </td>
+                  <td className="py-3 px-3 text-center font-bold text-foreground">
+                    {m.total_commits || 0}
                   </td>
                   <td className="py-3 px-3 text-[10px] text-secondary">
                     {m.intake_policy_version || "Grandfathered"}
