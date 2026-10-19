@@ -3,7 +3,6 @@ import Image from "next/image";
 import React from "react";
 import { GITHUB_ORG_URL } from "@/lib/constants";
 import Icon from "@/components/ui/icon";
-import ContactTrigger from "./contact-trigger";
 
 const products = [
   { label: "Muara Arus 1", href: "https://ai.muaraai.com/" },
@@ -34,7 +33,13 @@ export default function Footer() {
             <span className="font-display text-base font-bold text-foreground">MuaraAI</span>
           </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed">Where local craft flows global. Komunitas mahasiswa lintas kampus Indonesia, lahir dari UBSI Pontianak.</p>
-          <ContactTrigger label="Hubungi kemitraan" />
+          <a
+            href="mailto:admin@muaraai.com?subject=Tawaran%20Kemitraan%20MuaraAI"
+            className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-muara-ocean hover:underline transition-colors"
+          >
+            <Icon name="mail" className="w-4 h-4 text-muara-ocean" />
+            <span>Hubungi kemitraan</span>
+          </a>
         </div>
         <nav aria-label="Produk MuaraAI">
           <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-foreground">Produk</h2>
