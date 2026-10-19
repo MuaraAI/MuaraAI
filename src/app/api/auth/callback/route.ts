@@ -34,5 +34,9 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(`${requestUrl.origin}/`);
+  const error = requestUrl.searchParams.get("error_description") || requestUrl.searchParams.get("error");
+  const target = error
+    ? `/onboarding?error=${encodeURIComponent(error)}`
+    : "/onboarding?error=oauth_callback_failed";
+  return NextResponse.redirect(`${requestUrl.origin}${target}`);
 }

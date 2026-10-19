@@ -13,10 +13,32 @@ import JoinFlow from "@/components/landing/join-flow";
 import WaveDivider from "@/components/ui/wave-divider";
 import { createClient } from "@/lib/supabase/server";
 import { Member, Achievement } from "@/types/database";
+import { redirect } from "next/navigation";
 
 export const revalidate = 60; // ISR 60 seconds
 
-export default async function LandingPage() {
+export default async function LandingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ code?: string; next?: string; error?: string }>;
+}) {
+  const params = await searchParams;
+
+  // Some OAuth providers can return to the configured site URL instead of the
+  // application callback. Forward the code to the same exchange handler.
+  if (params.code) {
+    const callback = new URL("/api/auth/callback", "https://muaraai.com");
+    callback.searchParams.set("code", params.code);
+    if (params.next?.startsWith("/") && !params.next.startsWith("//")) {
+      callback.searchParams.set("next", params.next);
+    }
+    redirect(callback.pathname + callback.search);
+  }
+
+  if (params.error) {
+    redirect(`/onboarding?error=${encodeURIComponent(params.error)}`);
+  }
+
   const supabase = await createClient();
 
   // 1. Fetch approved active members (explicit public profile fields only, zero PII)
