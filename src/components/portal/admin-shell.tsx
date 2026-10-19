@@ -13,7 +13,6 @@ const adminItems: AdminNavItem[] = [
   { href: "/admin/members", label: "Anggota", icon: "group" },
   { href: "/admin/treasury", label: "Kas", icon: "account_balance_wallet" },
   { href: "/admin/learn", label: "Materi", icon: "school" },
-  { href: "/admin/mail", label: "Pesan", icon: "mail" },
   { href: "/admin/achievements", label: "Prestasi", icon: "workspace_premium" },
 ];
 

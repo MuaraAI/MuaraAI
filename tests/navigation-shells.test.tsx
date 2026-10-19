@@ -69,7 +69,7 @@ describe("navigation shells", () => {
     expect(screen.getByText("Anggota")).toBeTruthy();
     expect(screen.getByText("Kas")).toBeTruthy();
     expect(screen.getByText("Materi")).toBeTruthy();
-    expect(screen.getByText("Pesan")).toBeTruthy();
+    expect(screen.queryByText("Pesan")).toBeNull();
     expect(screen.getByText("Prestasi")).toBeTruthy();
     expect(screen.getByText("Operations content")).toBeTruthy();
   });
