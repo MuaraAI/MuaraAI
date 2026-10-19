@@ -23,13 +23,15 @@ export async function GET(request: Request) {
           .eq("id", user.id)
           .maybeSingle();
 
-        if (member && (member.registration_status === "approved" || member.registration_status === "pending")) {
+        if (member) {
+          // Every existing member, including pending and rejected users, enters
+          // the dashboard. The dashboard renders the correct locked/status UI.
           const target = next && next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
           return NextResponse.redirect(`${requestUrl.origin}${target}`);
-        } else {
-          // Needs to submit Proof of Work
-          return NextResponse.redirect(`${requestUrl.origin}/onboarding`);
         }
+
+        // Only a GitHub account without a member profile needs onboarding.
+        return NextResponse.redirect(`${requestUrl.origin}/onboarding`);
       }
     }
   }
