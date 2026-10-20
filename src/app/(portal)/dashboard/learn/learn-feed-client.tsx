@@ -23,7 +23,7 @@ export default function LearnFeedClient({ initialMaterials }: LearnFeedClientPro
 
   if (initialMaterials.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border p-12 text-center text-slate-500 text-xs font-mono">
+      <div className="border-2 border-dashed border-[#CFE2EE] p-12 text-center text-slate-500 text-xs font-mono">
         Belum ada materi pembelajaran yang diterbitkan.
       </div>
     );
@@ -36,17 +36,17 @@ export default function LearnFeedClient({ initialMaterials }: LearnFeedClientPro
         return (
           <div
             key={m.id}
-            className="rounded-[18px] border border-stroke bg-white p-6 flex flex-col justify-between hover:border-muara-ocean transition-all shadow-diffusion"
+            className="px-card bg-white p-6 flex flex-col justify-between"
           >
             <div>
               {m.cover_url && (
-                <div className="relative h-40 w-full mb-4 rounded-lg overflow-hidden bg-background">
+                <div className="relative h-40 w-full mb-4 overflow-hidden bg-background">
                   <Image src={m.cover_url} alt={m.title} fill className="object-cover" />
                 </div>
               )}
 
               <div className="flex items-center gap-2 mb-2">
-                <span className="rounded bg-muara-cyan/10 border border-muara-cyan/30 px-2 py-0.5 text-[10px] font-mono text-muara-cyan uppercase font-bold">
+                <span className="px-chip bg-muara-cyan/10 px-2 py-0.5 text-[10px] font-mono text-muara-cyan uppercase font-bold">
                   {m.division}
                 </span>
                 <span className="text-[10px] font-mono text-slate-500">
@@ -64,7 +64,7 @@ export default function LearnFeedClient({ initialMaterials }: LearnFeedClientPro
               <button
                 type="button"
                 onClick={() => handleOpenMaterial(m)}
-                className="inline-flex items-center gap-1.5 rounded-[8px] bg-surface-alt hover:bg-muara-ocean hover:text-white border border-stroke px-3.5 py-2 text-xs font-mono font-semibold text-foreground transition-colors shadow-xs"
+                className="px-btn-ghost [--px-off:3px] inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-mono font-semibold text-foreground transition-colors"
               >
                 <Icon name="open_in_new" className="w-4 h-4 text-muara-ocean" />
                 <span>Buka Materi</span>

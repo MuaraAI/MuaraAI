@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Achievement } from "@/types/database";
 import { addAchievement } from "@/app/actions/admin";
 import Icon from "@/components/ui/icon";
+import { useFeedback } from "@/components/ui/feedback";
 
 interface AdminAchievementsClientProps {
   initialAchievements: Achievement[];
@@ -13,6 +14,7 @@ interface AdminAchievementsClientProps {
 export default function AdminAchievementsClient({
   initialAchievements,
 }: AdminAchievementsClientProps) {
+  const { notify } = useFeedback();
   const [list, setList] = useState<Achievement[]>(initialAchievements);
   const [formData, setFormData] = useState({
     title: "",
@@ -45,17 +47,17 @@ export default function AdminAchievementsClient({
     setLoading(false);
 
     if (res.success) {
-      alert("Prestasi/sertifikat berhasil ditambahkan!");
+      notify({ tone: "success", title: "Prestasi ditambahkan", message: "Sertifikat kini tampil di etalase publik." });
       window.location.reload();
     } else {
-      alert(`Gagal menambah: ${res.error}`);
+      notify({ tone: "error", title: "Gagal menambah", message: String(res.error ?? "Terjadi kesalahan.") });
     }
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Upload Form */}
-      <div className="rounded-xl border border-border bg-surface p-6 sm:p-8 space-y-4">
+      <div className="px-card bg-surface p-6 sm:p-8 space-y-4">
         <h2 className="font-display text-lg font-bold text-white mb-2 flex items-center gap-2">
           <Icon name="workspace_premium" className="w-5 h-5 text-amber-400" />
           Tambah Prestasi Baru
@@ -72,7 +74,7 @@ export default function AdminAchievementsClient({
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="misal: Juara 1 AI Innovation Hackathon 2026"
-              className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-white focus:border-muara-cyan focus:outline-none"
+              className="border-2 border-[#CFE2EE] w-full bg-white px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:outline-none"
             />
           </div>
 
@@ -86,7 +88,7 @@ export default function AdminAchievementsClient({
               value={formData.issuer}
               onChange={(e) => setFormData({ ...formData, issuer: e.target.value })}
               placeholder="misal: Kementerian Komdigi / LLDIKTI XI"
-              className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-white focus:border-muara-cyan focus:outline-none"
+              className="border-2 border-[#CFE2EE] w-full bg-white px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:outline-none"
             />
           </div>
 
@@ -99,7 +101,7 @@ export default function AdminAchievementsClient({
               required
               value={formData.issueDate}
               onChange={(e) => setFormData({ ...formData, issueDate: e.target.value })}
-              className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-white focus:border-muara-cyan focus:outline-none"
+              className="border-2 border-[#CFE2EE] w-full bg-white px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:outline-none"
             />
           </div>
 
@@ -113,7 +115,7 @@ export default function AdminAchievementsClient({
               value={formData.imageUrl}
               onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
               placeholder="https://... (URL gambar bukti sertifikat)"
-              className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-white focus:border-muara-cyan focus:outline-none"
+              className="border-2 border-[#CFE2EE] w-full bg-white px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:outline-none"
             />
           </div>
 
@@ -126,7 +128,7 @@ export default function AdminAchievementsClient({
               value={formData.credentialUrl}
               onChange={(e) => setFormData({ ...formData, credentialUrl: e.target.value })}
               placeholder="https://credential.net/..."
-              className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-white focus:border-muara-cyan focus:outline-none"
+              className="border-2 border-[#CFE2EE] w-full bg-white px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:outline-none"
             />
           </div>
 
@@ -139,14 +141,14 @@ export default function AdminAchievementsClient({
               value={formData.recipientsStr}
               onChange={(e) => setFormData({ ...formData, recipientsStr: e.target.value })}
               placeholder="Yuken Velino, M Raffli, Verzio"
-              className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-white focus:border-muara-cyan focus:outline-none"
+              className="border-2 border-[#CFE2EE] w-full bg-white px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:outline-none"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-muara-cyan hover:bg-muara-cyan-light py-2.5 font-sans font-bold text-background transition-all disabled:opacity-50"
+            className="px-btn w-full py-2.5 font-sans font-bold disabled:opacity-50"
           >
             {loading ? "Menyimpan..." : "Simpan Prestasi"}
           </button>
@@ -154,7 +156,7 @@ export default function AdminAchievementsClient({
       </div>
 
       {/* List Existing */}
-      <div className="rounded-xl border border-border bg-surface p-6 sm:p-8 flex flex-col justify-between">
+      <div className="px-card bg-surface p-6 sm:p-8 flex flex-col justify-between">
         <div>
           <h2 className="font-display text-lg font-bold text-white mb-4 flex items-center gap-2">
             <Icon name="list" className="w-5 h-5 text-amber-400" />
@@ -170,9 +172,9 @@ export default function AdminAchievementsClient({
               {list.map((item) => (
                 <div
                   key={item.id}
-                  className="rounded-lg border border-border/80 bg-background/60 p-3.5 flex items-center gap-3"
+                  className="px-frame [--px-line:#CFE2EE] bg-background/60 p-3.5 flex items-center gap-3"
                 >
-                  <div className="relative h-12 w-16 rounded overflow-hidden bg-background shrink-0">
+                  <div className="relative h-12 w-16 overflow-hidden bg-background shrink-0">
                     <Image src={item.image_url} alt={item.title} fill className="object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">

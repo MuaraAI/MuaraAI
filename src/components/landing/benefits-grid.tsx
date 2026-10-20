@@ -2,6 +2,14 @@ import React from "react";
 import Icon, { IconName } from "@/components/ui/icon";
 import FadeIn from "@/components/ui/fade-in";
 import SpotlightCard from "@/components/ui/spotlight-card";
+import { Section, SectionHeader } from "@/components/ui/section";
+
+// 3 cards per row on a 6-col grid; an unfinished last row stretches so no gap is left.
+function spanFor(idx: number, total: number) {
+  const remainder = total % 3;
+  if (remainder === 0 || idx < total - remainder) return "md:col-span-2";
+  return remainder === 2 ? "md:col-span-3" : "md:col-span-6";
+}
 
 export default function BenefitsGrid() {
   const benefits: { icon: IconName; title: string; desc: string }[] = [
@@ -33,34 +41,27 @@ export default function BenefitsGrid() {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 border-b border-border bg-surface-alt/30">
-      <div className="mx-auto max-w-7xl">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-xs font-mono font-semibold uppercase tracking-wider text-muara-ocean mb-2">
-            Mengapa Bergabung?
-          </h2>
-          <p className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-4">
-            Keuntungan Menjadi Anggota
-          </p>
-          <p className="text-sm text-slate-600">
-            Muara AI dibangun sebagai sarana percepatan karir teknologi dan riset independen.
-          </p>
-        </div>
+    <Section tone="tint">
+      <SectionHeader
+        eyebrow="Mengapa Bergabung?"
+        title="Keuntungan Menjadi Anggota"
+        description="Muara AI dibangun sebagai sarana percepatan karir teknologi dan riset independen."
+      />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="rail grid grid-cols-1 gap-8 md:grid-cols-6">
           {benefits.map((b, idx) => (
-            <FadeIn key={idx} delay={idx * 0.1}>
+            <FadeIn key={idx} delay={(idx % 3) * 0.1} className={`h-full p-[2px] ${spanFor(idx, benefits.length)}`}>
               <SpotlightCard
-                className="rounded-xl border border-border-ocean bg-white p-6 hover:border-muara-ocean transition-all flex flex-col justify-between shadow-ocean h-full"
+                className="px-card px-card-hover flex h-full flex-col justify-between bg-white p-6 sm:p-7"
               >
                 <div>
-                  <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-muara-sky border border-muara-ocean/30 text-muara-ocean mb-4">
+                  <span className="px-icon h-10 w-10 mb-5">
                     <Icon name={b.icon} className="w-5 h-5 text-muara-ocean" />
                   </span>
                   <h3 className="font-display text-base font-bold text-foreground mb-2">
                     {b.title}
                   </h3>
-                  <p className="text-xs leading-relaxed text-slate-600">
+                  <p className="text-sm leading-relaxed text-secondary">
                     {b.desc}
                   </p>
                 </div>
@@ -68,7 +69,6 @@ export default function BenefitsGrid() {
             </FadeIn>
           ))}
         </div>
-      </div>
-    </section>
+    </Section>
   );
 }

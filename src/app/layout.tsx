@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
+import RouteProgress from "@/components/ui/route-progress";
+import { FeedbackProvider } from "@/components/ui/feedback";
 
 export const metadata: Metadata = {
   title: "MuaraAI — Komunitas Mahasiswa Lintas Kampus Indonesia",
@@ -33,7 +36,10 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className="bg-background text-foreground antialiased selection:bg-muara-sky selection:text-muara-ocean">
-        {children}
+        <Suspense fallback={null}>
+          <RouteProgress />
+        </Suspense>
+        <FeedbackProvider>{children}</FeedbackProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",

@@ -4,6 +4,7 @@ import Icon from "@/components/ui/icon";
 import FadeIn from "@/components/ui/fade-in";
 import { communityContent } from "@/lib/community-content";
 import SpotlightCard from "@/components/ui/spotlight-card";
+import { Section, SectionHeader } from "@/components/ui/section";
 
 export default function ProjectsGrid() {
   const projects = [
@@ -26,32 +27,23 @@ export default function ProjectsGrid() {
   ];
 
   return (
-    <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-stroke bg-surface-alt/40">
-      <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-          <div>
-            <h2 className="text-xs font-mono font-semibold uppercase tracking-wider text-muara-ocean mb-2">
-              Karya & Artefak Nyata
-            </h2>
-            <p className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Karya yang bisa dipakai.
-            </p>
-          </div>
-          <p className="text-sm text-secondary max-w-md font-sans">
-            Project komunitas yang lahir dari kebutuhan belajar dan membangun solusi nyata.
-          </p>
-        </div>
+    <Section id="projects" tone="tint">
+      <SectionHeader
+        eyebrow="Karya & Artefak Nyata"
+        title="Karya yang bisa dipakai."
+        description="Project komunitas yang lahir dari kebutuhan belajar dan membangun solusi nyata."
+      />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="rail rail-wide grid grid-cols-1 gap-8 md:grid-cols-2">
           {projects.map((p, idx) => (
-            <FadeIn key={idx} delay={idx * 0.15}>
+            <FadeIn key={idx} direction={idx % 2 === 0 ? "left" : "right"} delay={idx * 0.1} className="h-full p-[2px]">
               <SpotlightCard
-                className="rounded-[18px] border border-stroke bg-white hover:border-muara-ocean transition-all p-8 flex flex-col justify-between group shadow-diffusion hover:shadow-lift h-full"
+                className="px-card px-card-hover group flex h-full flex-col justify-between bg-white p-7 sm:p-8"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-50 border border-teal-200 px-2.5 py-0.5 text-xs font-mono font-semibold text-teal-800">
-                      <span className="h-1.5 w-1.5 rounded-full bg-teal-600" />
+                    <span className="px-chip inline-flex items-center gap-1.5 bg-teal-50 px-2.5 py-0.5 text-xs font-mono font-semibold text-teal-800">
+                      <span className="h-1.5 w-1.5 bg-teal-600" />
                       {p.badge}
                     </span>
                   </div>
@@ -68,7 +60,7 @@ export default function ProjectsGrid() {
                     {p.tags.map((tag, tIdx) => (
                       <span
                         key={tIdx}
-                        className="rounded-[6px] bg-surface-alt border border-stroke px-2.5 py-1 text-xs font-mono text-slate-700"
+                        className="px-chip bg-surface-alt px-2.5 py-1 text-xs font-mono text-slate-700"
                       >
                         {tag}
                       </span>
@@ -76,7 +68,7 @@ export default function ProjectsGrid() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 pt-4 border-t border-stroke">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t-2 border-dashed border-[#CFE2EE] pt-4">
                   <Link
                     href={p.liveUrl}
                     target="_blank"
@@ -100,7 +92,6 @@ export default function ProjectsGrid() {
             </FadeIn>
           ))}
         </div>
-      </div>
-    </section>
+    </Section>
   );
 }

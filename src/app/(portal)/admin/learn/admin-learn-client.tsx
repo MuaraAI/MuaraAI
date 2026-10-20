@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { LearningMaterial } from "@/types/database";
 import { publishMaterial } from "@/app/actions/admin";
 import Icon from "@/components/ui/icon";
+import PixelSelect from "@/components/ui/pixel-select";
+import { useFeedback } from "@/components/ui/feedback";
 
 interface ReadRecord {
   id: string;
@@ -25,6 +27,7 @@ export default function AdminLearnClient({
   initialMaterials,
   initialReads,
 }: AdminLearnClientProps) {
+  const { notify } = useFeedback();
   const [materials, setMaterials] = useState<LearningMaterial[]>(initialMaterials);
   const [formData, setFormData] = useState({
     title: "",
@@ -42,17 +45,17 @@ export default function AdminLearnClient({
     setLoading(false);
 
     if (res.success) {
-      alert("Materi berhasil diterbitkan!");
+      notify({ tone: "success", title: "Materi diterbitkan", message: "Anggota sudah bisa membukanya di Muara Learn." });
       window.location.reload();
     } else {
-      alert(`Gagal menerbitkan: ${res.error}`);
+      notify({ tone: "error", title: "Gagal menerbitkan", message: String(res.error ?? "Terjadi kesalahan.") });
     }
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Publish Form */}
-      <div className="rounded-xl border border-border bg-surface p-6 sm:p-8 space-y-4">
+      <div className="px-card bg-surface p-6 sm:p-8 space-y-4">
         <h2 className="font-display text-lg font-bold text-white mb-2 flex items-center gap-2">
           <Icon name="upload_file" className="w-5 h-5 text-amber-400" />
           Terbitkan Materi Baru
@@ -69,7 +72,7 @@ export default function AdminLearnClient({
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="misal: Standar Agentic Workflow dengan Hermes & MCP"
-              className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-white focus:border-muara-cyan focus:outline-none"
+              className="border-2 border-[#CFE2EE] w-full bg-white px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:outline-none"
             />
           </div>
 
@@ -77,15 +80,16 @@ export default function AdminLearnClient({
             <label className="block text-slate-300 mb-1 font-sans font-medium text-xs">
               Target Divisi
             </label>
-            <select
+            <PixelSelect
+              aria-label="Target Divisi"
               value={formData.division}
-              onChange={(e) => setFormData({ ...formData, division: e.target.value })}
-              className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-white focus:border-muara-cyan focus:outline-none"
-            >
-              <option value="all">Semua Divisi (General)</option>
-              <option value="builder">Khusus Builder</option>
-              <option value="creative">Khusus Creative</option>
-            </select>
+              onChange={(division) => setFormData({ ...formData, division })}
+              options={[
+                { value: "all", label: "Semua Divisi (General)" },
+                { value: "builder", label: "Khusus Builder" },
+                { value: "creative", label: "Khusus Creative" },
+              ]}
+            />
           </div>
 
           <div>
@@ -98,7 +102,7 @@ export default function AdminLearnClient({
               value={formData.resourceUrl}
               onChange={(e) => setFormData({ ...formData, resourceUrl: e.target.value })}
               placeholder="https://drive.google.com/... atau link PDF/Notion"
-              className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-white focus:border-muara-cyan focus:outline-none"
+              className="border-2 border-[#CFE2EE] w-full bg-white px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:outline-none"
             />
           </div>
 
@@ -111,7 +115,7 @@ export default function AdminLearnClient({
               value={formData.coverUrl}
               onChange={(e) => setFormData({ ...formData, coverUrl: e.target.value })}
               placeholder="https://..."
-              className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-white focus:border-muara-cyan focus:outline-none"
+              className="border-2 border-[#CFE2EE] w-full bg-white px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:outline-none"
             />
           </div>
 
@@ -125,14 +129,14 @@ export default function AdminLearnClient({
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Deskripsi singkat topik materi..."
-              className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-white focus:border-muara-cyan focus:outline-none"
+              className="border-2 border-[#CFE2EE] w-full bg-white px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:outline-none"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-muara-cyan hover:bg-muara-cyan-light py-2.5 font-sans font-bold text-background transition-all disabled:opacity-50"
+            className="px-btn w-full py-2.5 font-sans font-bold disabled:opacity-50"
           >
             {loading ? "Menerbitkan..." : "Terbitkan Materi"}
           </button>
@@ -140,7 +144,7 @@ export default function AdminLearnClient({
       </div>
 
       {/* Reader Audit Table */}
-      <div className="rounded-xl border border-border bg-surface p-6 sm:p-8 flex flex-col justify-between">
+      <div className="px-card bg-surface p-6 sm:p-8 flex flex-col justify-between">
         <div>
           <h2 className="font-display text-lg font-bold text-white mb-4 flex items-center gap-2">
             <Icon name="visibility" className="w-5 h-5 text-amber-400" />
@@ -152,7 +156,7 @@ export default function AdminLearnClient({
               Belum ada riwayat klik/baca materi.
             </div>
           ) : (
-            <div className="overflow-x-auto max-h-[480px]">
+            <div className="scroll-slim overflow-x-auto max-h-[480px]">
               <table className="w-full text-left text-xs font-mono">
                 <thead>
                   <tr className="border-b border-border text-slate-500 uppercase">

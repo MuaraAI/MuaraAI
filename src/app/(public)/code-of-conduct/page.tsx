@@ -1,24 +1,14 @@
 import React from "react";
-import Link from "next/link";
 import Icon from "@/components/ui/icon";
+import { PageHeader } from "@/components/ui/section";
 
 export default function CodeOfConductPage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-1.5 text-xs font-mono text-muara-ocean hover:underline mb-8"
-      >
-        <Icon name="arrow_back" className="w-4 h-4 text-muara-ocean" />
-        Kembali ke Beranda
-      </Link>
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <PageHeader eyebrow="Legal" title="Code of Conduct & Etika Rekayasa" description="Norma dan etika yang kami pegang saat belajar dan membangun bersama." />
 
-      <h1 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-6">
-        Code of Conduct & Etika Rekayasa
-      </h1>
-
-      <div className="space-y-8 text-sm leading-relaxed text-slate-600">
-        <section className="rounded-xl border border-border-ocean bg-white p-6 shadow-ocean">
+      <div className="stagger-rise space-y-8 text-sm leading-relaxed text-slate-600">
+        <section className="px-card bg-white p-6">
           <h2 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
             <Icon name="verified" className="w-5 h-5 text-muara-ocean" />
             1. Anti-Slop (Zero Uncurated AI Artifacts)
@@ -30,7 +20,7 @@ export default function CodeOfConductPage() {
           </p>
         </section>
 
-        <section className="rounded-xl border border-border-ocean bg-white p-6 shadow-ocean">
+        <section className="px-card bg-white p-6">
           <h2 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
             <Icon name="school" className="w-5 h-5 text-muara-ocean" />
             2. Integritas Akademik & Anti-Joki
@@ -42,7 +32,7 @@ export default function CodeOfConductPage() {
           </p>
         </section>
 
-        <section className="rounded-xl border border-border-ocean bg-white p-6 shadow-ocean">
+        <section className="px-card bg-white p-6">
           <h2 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
             <Icon name="lock" className="w-5 h-5 text-muara-ocean" />
             3. Zero Hardcoded Secrets & Keamanan Data
@@ -54,7 +44,7 @@ export default function CodeOfConductPage() {
           </p>
         </section>
 
-        <section className="rounded-xl border border-border-ocean bg-white p-6 shadow-ocean">
+        <section className="px-card bg-white p-6">
           <h2 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
             <Icon name="commit" className="w-5 h-5 text-muara-ocean" />
             4. Disiplin Git & Testing Mandatori

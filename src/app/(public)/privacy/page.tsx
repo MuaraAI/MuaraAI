@@ -1,29 +1,18 @@
 import React from "react";
-import Link from "next/link";
-import Icon from "@/components/ui/icon";
+import { PageHeader } from "@/components/ui/section";
 
 export default function PrivacyPage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-1.5 text-xs font-mono text-muara-ocean hover:underline mb-8"
-      >
-        <Icon name="arrow_back" className="w-4 h-4 text-muara-ocean" />
-        Kembali ke Beranda
-      </Link>
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <PageHeader eyebrow="Legal" title="Privacy Policy (Kebijakan Privasi)" description="Cara Muara AI mengelola dan melindungi data yang Anda berikan." />
 
-      <h1 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-6">
-        Privacy Policy (Kebijakan Privasi)
-      </h1>
-
-      <div className="space-y-6 text-sm leading-relaxed text-slate-600">
+      <div className="stagger-rise space-y-6 text-sm leading-relaxed text-slate-600">
         <p>
           Kebijakan privasi ini menjelaskan bagaimana Muara AI mengelola dan melindungi data pribadi yang Anda berikan saat
           menggunakan portal <strong>muaraai.com</strong>.
         </p>
 
-        <section className="rounded-xl border border-border-ocean bg-white p-6 space-y-3 shadow-ocean">
+        <section className="px-card bg-white p-6 space-y-3">
           <h2 className="text-base font-semibold text-foreground">1. Data yang Dikumpulkan</h2>
           <p>
             Kami hanya mengumpulkan data yang relevan untuk kebutuhan autentikasi dan kurasi keanggotaan:
@@ -36,7 +25,7 @@ export default function PrivacyPage() {
           </ul>
         </section>
 
-        <section className="rounded-xl border border-border-ocean bg-white p-6 space-y-3 shadow-ocean">
+        <section className="px-card bg-white p-6 space-y-3">
           <h2 className="text-base font-semibold text-foreground">2. Penggunaan & Keamanan Data</h2>
           <p>
             Data Anda tidak pernah diperjualbelikan kepada pihak ketiga mana pun. Kredensial sensitif dienkripsi menggunakan
@@ -45,7 +34,7 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        <section className="rounded-xl border border-border-ocean bg-white p-6 space-y-3 shadow-ocean">
+        <section className="px-card bg-white p-6 space-y-3">
           <h2 className="text-base font-semibold text-foreground">3. Hak Akses & Penghapusan</h2>
           <p>
             Anggota berhak memperbarui profil atau meminta penonaktifan akun dan pembersihan data pribadi dengan menghubungi

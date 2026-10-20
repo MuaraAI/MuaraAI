@@ -2,6 +2,7 @@ import React from "react";
 import { createClient } from "@/lib/supabase/server";
 import { Member } from "@/types/database";
 import AdminMembersClient from "./admin-members-client";
+import { PortalHeader } from "@/components/ui/section";
 
 export default async function AdminMembersPage() {
   const supabase = await createClient();
@@ -15,14 +16,9 @@ export default async function AdminMembersPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
-          Audit Anggota & Manajemen Blacklist
-        </h1>
-        <p className="text-xs text-secondary font-sans">
+      <PortalHeader eyebrow="Maintainer workspace" title="Audit Anggota & Manajemen Blacklist">
           Pantau status keaktifan anggota, masa aktif iuran kas, dan kendalikan status blacklist jika menunggak lebih dari 30 hari.
-        </p>
-      </div>
+      </PortalHeader>
 
       <AdminMembersClient initialMembers={members} />
     </div>

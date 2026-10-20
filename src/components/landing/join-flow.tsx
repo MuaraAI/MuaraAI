@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import Icon, { IconName } from "@/components/ui/icon";
 import FadeIn from "@/components/ui/fade-in";
+import DrawLine from "@/components/ui/draw-line";
+import { Section, SectionHeader } from "@/components/ui/section";
 
 export default function JoinFlow() {
   const steps: { num: string; title: string; desc: string; icon: IconName }[] = [
@@ -26,39 +28,35 @@ export default function JoinFlow() {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 border-b border-border bg-surface-alt/30">
-      <div className="mx-auto max-w-7xl">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-xs font-mono font-semibold uppercase tracking-wider text-muara-ocean mb-2">
-            Alur Pendaftaran
-          </h2>
-          <p className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-4">
-            3 Langkah Bergabung
-          </p>
-          <p className="text-sm text-slate-600">
-            Tanpa formulir birokrasi berbelit. Kami hanya menilai kualitas artefak kode dan karya rekayasa Anda.
-          </p>
-        </div>
+    <Section tone="tint">
+      <SectionHeader
+        eyebrow="Alur Pendaftaran"
+        title="3 Langkah Bergabung"
+        description="Tanpa formulir birokrasi berbelit. Kami hanya menilai kualitas artefak kode dan karya rekayasa Anda."
+      />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        {/* Dashed pixel track that draws itself behind the steps on desktop */}
+        <div className="relative">
+          <DrawLine />
+        <div className="rail relative grid grid-cols-1 gap-8 md:grid-cols-3">
           {steps.map((s, idx) => (
-            <FadeIn key={idx} delay={idx * 0.15}>
+            <FadeIn key={idx} delay={0.15 + idx * 0.2} className="h-full p-[2px]">
               <div
-                className="rounded-xl border border-border-ocean bg-white p-8 relative flex flex-col justify-between group hover:border-muara-ocean transition-all shadow-ocean h-full"
+                className="px-card px-card-hover group relative flex h-full flex-col justify-between bg-white p-7 sm:p-8"
               >
                 <div>
                   <div className="flex items-center justify-between mb-6">
-                    <span className="font-display font-bold text-3xl text-slate-300 group-hover:text-muara-ocean transition-colors">
+                    <span className="font-mono text-3xl font-bold text-[#B9D3E4] transition-colors duration-300 group-hover:text-muara-ocean">
                       {s.num}
                     </span>
-                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-muara-sky border border-muara-ocean/30 text-muara-ocean">
+                    <span className="px-icon h-10 w-10">
                       <Icon name={s.icon} className="w-5 h-5 text-muara-ocean" />
                     </span>
                   </div>
                   <h3 className="font-display text-lg font-bold text-foreground mb-2">
                     {s.title}
                   </h3>
-                  <p className="text-xs leading-relaxed text-slate-600">
+                  <p className="text-sm leading-relaxed text-secondary">
                     {s.desc}
                   </p>
                 </div>
@@ -66,17 +64,17 @@ export default function JoinFlow() {
             </FadeIn>
           ))}
         </div>
+        </div>
 
-        <div className="mt-12 text-center">
+        <FadeIn className="mt-12 text-center" delay={0.2}>
           <Link
             href="/api/auth/login"
-            className="inline-flex items-center gap-2 rounded-lg bg-muara-ocean hover:bg-muara-ocean-dark text-white px-8 py-3.5 text-sm font-bold transition-all shadow-ocean"
+            className="px-btn inline-flex items-center gap-2 px-8 py-3.5 text-sm font-bold"
           >
             <Icon name="arrow_forward" className="w-4 h-4 text-white" />
             Mulai Kirim Proof of Work Sekarang
           </Link>
-        </div>
-      </div>
-    </section>
+        </FadeIn>
+    </Section>
   );
 }

@@ -38,3 +38,5 @@ coverage/
 # OS
 .DS_Store
 Thumbs.db
+# Local dummy data for `npm run dev` (MUARA_DEV_MOCK=1). Never committed.
+/dev-mock/
