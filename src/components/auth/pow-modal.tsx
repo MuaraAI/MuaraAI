@@ -5,6 +5,7 @@ import { submitProofOfWork } from "@/app/actions/pow";
 import { PoWInput } from "@/lib/validation";
 import Icon from "@/components/ui/icon";
 import campusesData from "@/data/campuses.json";
+import PixelSelect from "@/components/ui/pixel-select";
 
 type Step = 0 | 1 | 2 | 3;
 
@@ -95,17 +96,17 @@ export default function PoWForm({
 
   if (success) {
     return (
-      <div className="rounded-2xl border border-border bg-white p-8 text-center max-w-lg mx-auto shadow-sm">
+      <div className="px-card bg-white p-8 text-center max-w-lg mx-auto">
         <Icon name="check_circle" className="w-12 h-12 text-emerald-600 mx-auto mb-4" />
         <h2 className="font-display text-2xl font-bold text-foreground mb-2">Proof of Work Terkirim!</h2>
         <p className="text-sm text-secondary leading-relaxed mb-6">Data kamu sudah diterima dan akan ditinjau oleh Core Team MuaraAI.</p>
-        <a href="/" className="inline-flex min-h-11 items-center rounded-md bg-muara-ocean text-white px-6 py-2.5 text-sm font-semibold hover:bg-muara-ocean-dark">Kembali ke Beranda</a>
+        <a href="/" className="px-btn inline-flex min-h-11 items-center px-6 py-2.5 text-sm font-semibold">Kembali ke Beranda</a>
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-white p-6 sm:p-8 max-w-2xl mx-auto shadow-sm">
+    <div className="px-card bg-white p-6 sm:p-8 max-w-2xl mx-auto">
       <div className="mb-8">
         <div className="text-xs font-mono uppercase tracking-[0.14em] text-muara-ocean">Pendaftaran MuaraAI 2026+</div>
         <h2 className="mt-2 font-display text-2xl font-bold text-foreground">Buat profil komunitasmu</h2>
@@ -113,7 +114,7 @@ export default function PoWForm({
       </div>
 
       {rejectionReason && (
-        <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50/80 p-4 text-xs text-amber-950 flex items-start gap-3 shadow-xs">
+        <div className="px-frame [--px-line:#FCD34D] mb-6 bg-amber-50/80 p-4 text-xs text-amber-950 flex items-start gap-3">
           <Icon name="info" className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
           <div className="space-y-1">
             <div className="font-bold text-sm text-amber-900">Catatan Review Sebelumnya</div>
@@ -128,7 +129,7 @@ export default function PoWForm({
       )}
 
       {authenticated && (
-        <div className="mb-8 rounded-xl border border-sky-200 bg-sky-50/80 p-4 text-xs text-sky-900 flex items-start gap-3 shadow-xs">
+        <div className="px-frame [--px-line:#7DD3FC] mb-8 bg-sky-50/80 p-4 text-xs text-sky-900 flex items-start gap-3">
           <Icon name="check_circle" className="w-5 h-5 text-muara-ocean shrink-0 mt-0.5" />
           <div className="space-y-1">
             <div className="font-bold text-sm text-foreground">
@@ -149,7 +150,7 @@ export default function PoWForm({
         ))}
       </ol>
 
-      {error && <div role="alert" className="mb-6 rounded-lg border border-rose-200 bg-rose-50 p-3.5 text-sm text-rose-800">{error}</div>}
+      {error && <div role="alert" className="px-frame [--px-line:#FDA4AF] mb-6 bg-rose-50 p-3.5 text-sm text-rose-800">{error}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {step === 0 && (
@@ -199,7 +200,7 @@ export default function PoWForm({
         {step === 3 && (
           <fieldset className="space-y-4">
             <legend className="font-display text-xl font-semibold text-foreground">Review pendaftaran</legend>
-            <div className="divide-y divide-stroke rounded-lg border border-stroke bg-surface-alt text-sm">
+            <div className="px-frame [--px-line:#CFE2EE] divide-y divide-stroke bg-surface-alt text-sm">
               <Summary label="Nama" value={formData.fullName} />
               <Summary label="Kampus" value={[formData.campus, formData.prodi, formData.kelas].filter(Boolean).join(" · ")} />
               <Summary label="Proof of Work" value={formData.portfolioUrl} />
@@ -210,17 +211,17 @@ export default function PoWForm({
         )}
 
         {step === 3 && (
-          <label className="flex items-start gap-3 rounded-lg border border-stroke bg-surface-alt p-4 text-xs leading-relaxed text-secondary">
+          <label className="px-frame [--px-line:#CFE2EE] flex items-start gap-3 bg-surface-alt p-4 text-xs leading-relaxed text-secondary">
             <input type="checkbox" checked={agreed} onChange={(event) => { setAgreed(event.target.checked); setError(null); }} className="mt-0.5 h-4 w-4 shrink-0 accent-muara-ocean" />
             <span>Saya menyetujui <Link href="/privacy" target="_blank" className="font-semibold text-muara-ocean underline">Privacy Policy</Link>, <Link href="/terms" target="_blank" className="font-semibold text-muara-ocean underline">Terms of Service</Link>, dan <Link href="/code-of-conduct" target="_blank" className="font-semibold text-muara-ocean underline">Code of Conduct</Link> MuaraAI.</span>
           </label>
         )}
         <div className="flex flex-col-reverse gap-3 border-t border-stroke pt-5 sm:flex-row sm:justify-between">
-          <button type="button" onClick={previous} disabled={step === 0} className="min-h-11 rounded-md border border-stroke px-4 py-2.5 text-sm font-semibold text-foreground disabled:opacity-40">Kembali</button>
+          <button type="button" onClick={previous} disabled={step === 0} className="px-btn-ghost [--px-off:3px] min-h-11 px-4 py-2.5 text-sm font-semibold text-foreground disabled:opacity-40">Kembali</button>
           {step < 3 ? (
-            <button type="button" onClick={next} className="min-h-11 rounded-md bg-foreground px-5 py-2.5 text-sm font-semibold text-white hover:bg-secondary">Lanjut</button>
+            <button type="button" onClick={next} className="px-btn min-h-11 px-5 py-2.5 text-sm font-semibold">Lanjut</button>
           ) : (
-            <button type="submit" disabled={loading || !agreed} className="min-h-11 rounded-md bg-muara-ocean px-5 py-2.5 text-sm font-semibold text-white hover:bg-muara-ocean-dark disabled:cursor-not-allowed disabled:opacity-50">{authenticated ? (loading ? "Mengirim..." : "Kirim pendaftaran") : "Lanjut ke GitHub"}</button>
+            <button type="submit" disabled={loading || !agreed} className="px-btn min-h-11 px-5 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50">{authenticated ? (loading ? "Mengirim..." : "Kirim pendaftaran") : "Lanjut ke GitHub"}</button>
           )}
         </div>
       </form>
@@ -229,15 +230,15 @@ export default function PoWForm({
 }
 
 function Field({ id, label, value, onChange, required = false, type = "text", maxLength, placeholder, list }: { id: string; label: string; value: string; onChange: (value: string) => void; required?: boolean; type?: string; maxLength?: number; placeholder?: string; list?: string }) {
-  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><input id={id} type={type} list={list} value={value} placeholder={placeholder} required={required} maxLength={maxLength} onChange={(event) => onChange(event.target.value)} className="w-full rounded-md border border-stroke bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white" /></div>;
+  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><input id={id} type={type} list={list} value={value} placeholder={placeholder} required={required} maxLength={maxLength} onChange={(event) => onChange(event.target.value)} className="border-2 border-[#CFE2EE] w-full bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white" /></div>;
 }
 
 function SelectField({ id, label, value, options, onChange }: { id: string; label: string; value: string; options: readonly string[]; onChange: (value: string) => void }) {
-  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label} *</label><select id={id} value={value} onChange={(event) => onChange(event.target.value)} className="w-full rounded-md border border-stroke bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white">{options.map((option) => <option key={option} value={option}>{option}</option>)}</select></div>;
+  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label} *</label><PixelSelect id={id} value={value} onChange={onChange} options={options.map((option) => ({ value: option, label: option.charAt(0).toUpperCase() + option.slice(1) }))} /></div>;
 }
 
 function TextAreaField({ id, label, value, onChange, required }: { id: string; label: string; value: string; onChange: (value: string) => void; required?: boolean }) {
-  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><textarea id={id} value={value} required={required} rows={4} onChange={(event) => onChange(event.target.value)} className="w-full rounded-md border border-stroke bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white" /></div>;
+  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><textarea id={id} value={value} required={required} rows={4} onChange={(event) => onChange(event.target.value)} className="border-2 border-[#CFE2EE] w-full bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white" /></div>;
 }
 
 function Summary({ label, value }: { label: string; value: string }) {

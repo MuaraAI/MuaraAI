@@ -3,8 +3,12 @@
 import React, { useState } from "react";
 import { logExpense } from "@/app/actions/admin";
 import Icon from "@/components/ui/icon";
+import { PortalHeader } from "@/components/ui/section";
+import PixelSelect from "@/components/ui/pixel-select";
+import { useFeedback } from "@/components/ui/feedback";
 
 export default function AdminTreasuryPage() {
+  const { notify } = useFeedback();
   const [formData, setFormData] = useState({
     amount: 150000,
     category: "server",
@@ -26,29 +30,24 @@ export default function AdminTreasuryPage() {
       setSuccess(true);
       setFormData({ amount: 0, category: "server", description: "" });
     } else {
-      alert(`Gagal mencatat pengeluaran: ${res.error}`);
+      notify({ tone: "error", title: "Gagal mencatat pengeluaran", message: String(res.error ?? "Terjadi kesalahan.") });
     }
   };
 
   return (
     <div className="space-y-8 max-w-xl">
-      <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
-          Pencatatan Pengeluaran Kas
-        </h1>
-        <p className="text-xs text-secondary font-sans">
+      <PortalHeader eyebrow="Maintainer workspace" title="Pencatatan Pengeluaran Kas">
           Catat pengeluaran operasional resmi komunitas (sewa VPS Tencent, domain, pendaftaran lomba). Otomatis tercatat di open ledger.
-        </p>
-      </div>
+      </PortalHeader>
 
       {success && (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-xs text-emerald-900 flex items-center gap-2">
+        <div className="px-frame [--px-line:#6EE7B7] bg-emerald-50 p-4 text-xs text-emerald-900 flex items-center gap-2">
           <Icon name="check_circle" className="w-5 h-5 text-emerald-600" />
           <span>Pengeluaran kas berhasil dicatat dan masuk ke ledger publik!</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="rounded-[18px] border border-stroke bg-white p-6 sm:p-8 space-y-4 text-xs font-mono shadow-diffusion">
+      <form onSubmit={handleSubmit} className="px-card bg-white p-6 sm:p-8 space-y-4 text-xs font-mono">
         <div>
           <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
             Nominal Pengeluaran (IDR)
@@ -59,7 +58,7 @@ export default function AdminTreasuryPage() {
             min={1000}
             value={formData.amount || ""}
             onChange={(e) => setFormData({ ...formData, amount: parseInt(e.target.value) || 0 })}
-            className="w-full rounded-[8px] border border-stroke bg-surface-alt px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none"
+            className="border-2 border-[#CFE2EE] w-full bg-surface-alt px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none"
           />
         </div>
 
@@ -67,16 +66,17 @@ export default function AdminTreasuryPage() {
           <label className="block text-slate-700 mb-1 font-sans font-medium text-xs">
             Kategori
           </label>
-          <select
+          <PixelSelect
+            aria-label="Kategori"
             value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            className="w-full rounded-[8px] border border-stroke bg-surface-alt px-3.5 py-2.5 text-foreground focus:border-muara-ocean focus:bg-white focus:outline-none capitalize"
-          >
-            <option value="server">Sewa Server / VPS</option>
-            <option value="domain">Domain & DNS</option>
-            <option value="competition">Registrasi Lomba / Hackathon</option>
-            <option value="other">Operasional Lainnya</option>
-          </select>
+            onChange={(category) => setFormData({ ...formData, category })}
+            options={[
+              { value: "server", label: "Sewa Server / VPS" },
+              { value: "domain", label: "Domain & DNS" },
+              { value: "competition", label: "Registrasi Lomba / Hackathon" },
+              { value: "other", label: "Operasional Lainnya" },
+            ]}
+          />
         </div>
 
         <div>
@@ -89,14 +89,14 @@ export default function AdminTreasuryPage() {
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             placeholder="misal: Perpanjangan VPS Tencent Bulan Oktober 2026 (Bukti transfer terlampir)..."
-            className="w-full rounded-[8px] border border-stroke bg-surface-alt px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
+            className="border-2 border-[#CFE2EE] w-full bg-surface-alt px-3.5 py-2.5 text-foreground placeholder-slate-400 focus:border-muara-ocean focus:bg-white focus:outline-none"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-[8px] bg-muara-ocean hover:bg-muara-ocean-dark py-2.5 font-sans font-bold text-white transition-all disabled:opacity-50 shadow-xs"
+          className="px-btn w-full py-2.5 font-sans font-bold disabled:opacity-50"
         >
           {loading ? "Menyimpan..." : "Catat Pengeluaran"}
         </button>

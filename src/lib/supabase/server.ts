@@ -1,9 +1,23 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies, headers } from "next/headers";
 import { COOKIE_NAME, COOKIE_DOMAIN } from "../constants";
+import { isDevMockEnabled, loadDevMock } from "../dev-mock";
 
-export async function createClient() {
+export function isSupabaseConfigured() {
+  return isDevMockEnabled() || Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+}
+
+type ServerClient = ReturnType<typeof createServerClient>;
+
+export async function createClient(): Promise<ServerClient> {
   const cookieStore = await cookies();
+
+  // Local dummy-data mode (dev only, see lib/dev-mock.ts). Never active in production builds.
+  const devMock = loadDevMock();
+  if (devMock) {
+    return devMock.createMockClient({ getCookie: (name) => cookieStore.get(name)?.value }) as ServerClient;
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Achievement } from "@/types/database";
 import Icon from "@/components/ui/icon";
 import FadeIn from "@/components/ui/fade-in";
+import { Section, SectionHeader } from "@/components/ui/section";
 
 interface AccoladesGridProps {
   initialAchievements?: Achievement[];
@@ -15,33 +16,31 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
   const [activeImage, setActiveImage] = useState<string | null>(null);
 
   return (
-    <section id="accolades" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-stroke bg-white">
-      <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-          <div>
-            <h2 className="text-xs font-mono font-semibold uppercase tracking-wider text-muara-ocean mb-2">
-              Sertifikat & Rekognisi
-            </h2>
-            <p className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              The Accolades (Prestasi Resmi)
-            </p>
-          </div>
-          <p className="text-sm text-secondary max-w-md font-sans">
-            Arsip kredensial, kejuaraan hackathon, dan sertifikasi profesional anggota yang dapat diverifikasi secara publik.
-          </p>
-        </div>
+    <Section id="accolades" tone="white">
+      <SectionHeader
+        eyebrow="Sertifikat & Rekognisi"
+        title="Prestasi & rekognisi anggota"
+        description="Arsip kredensial, kejuaraan hackathon, dan sertifikasi profesional anggota yang dapat diverifikasi secara publik."
+      />
 
         {initialAchievements.length === 0 ? (
-          <div className="rounded-[18px] border border-dashed border-stroke p-12 text-center text-secondary text-sm bg-surface-alt flex flex-col items-center">
-            <Icon name="workspace_premium" className="w-10 h-10 text-muara-ocean mb-2" />
-            Arsip prestasi dan sertifikat kompetisi sedang dalam tahap kurasi kurikulum semester 1.
-          </div>
+          <FadeIn className="p-[2px]">
+            <div className="flex flex-col items-center border-2 border-dashed border-[#CFE2EE] bg-surface-alt/60 px-6 py-14 text-center">
+              <span className="px-icon mb-5 h-14 w-14">
+                <Icon name="workspace_premium" className="h-7 w-7" />
+              </span>
+              <p className="font-display text-lg font-bold text-foreground">Arsip prestasi segera hadir</p>
+              <p className="mt-2 max-w-md text-sm leading-relaxed text-secondary">
+                Arsip prestasi dan sertifikat kompetisi sedang dalam tahap kurasi kurikulum semester 1.
+              </p>
+            </div>
+          </FadeIn>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="rail grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {initialAchievements.map((item, idx) => (
-              <FadeIn key={item.id} delay={idx * 0.1}>
+              <FadeIn key={item.id} delay={(idx % 3) * 0.1} className="h-full p-[2px]">
                 <div
-                  className="rounded-[18px] border border-stroke bg-white overflow-hidden group hover:border-muara-ocean transition-all shadow-diffusion hover:shadow-lift flex flex-col justify-between h-full"
+                  className="px-card px-card-hover bg-white group flex flex-col justify-between h-full"
                 >
                   <div>
                     {/* Certificate Image Preview */}
@@ -65,7 +64,7 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent opacity-60" />
-                      <span className="absolute bottom-2 right-2 rounded-[6px] bg-white/90 px-2 py-0.5 text-[10px] font-mono text-slate-700 border border-stroke shadow-xs">
+                      <span className="px-chip absolute bottom-2 right-2 bg-white/90 px-2 py-0.5 text-[10px] font-mono text-slate-700">
                         Klik untuk perbesar
                       </span>
                     </div>
@@ -85,7 +84,7 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
                           {item.recipient_names.map((name, nIdx) => (
                             <span
                               key={nIdx}
-                              className="rounded-[6px] bg-surface-alt border border-stroke px-2 py-0.5 text-[10px] font-mono text-slate-700"
+                              className="px-chip bg-surface-alt px-2 py-0.5 text-[10px] font-mono text-slate-700"
                             >
                               {name}
                             </span>
@@ -128,12 +127,11 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
                 src={activeImage}
                 alt="Certificate Detail"
                 fill
-                className="object-contain rounded-[18px]"
+                className="object-contain"
               />
             </div>
           </div>
         )}
-      </div>
-    </section>
+    </Section>
   );
 }

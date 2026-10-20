@@ -5,6 +5,7 @@ import { Member, TreasuryTransaction } from "@/types/database";
 import { calculateMemberBill } from "@/lib/dues";
 import { redirect } from "next/navigation";
 import Icon from "@/components/ui/icon";
+import { PortalHeader } from "@/components/ui/section";
 
 export default async function MemberTreasuryPage() {
   const supabase = await createClient();
@@ -26,8 +27,8 @@ export default async function MemberTreasuryPage() {
 
   if (member.registration_status !== "approved") {
     return (
-      <div className="rounded-[18px] border border-stroke bg-white p-8 sm:p-12 text-center max-w-lg mx-auto shadow-diffusion space-y-4 my-8">
-        <div className="mx-auto w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+      <div className="px-card bg-white p-8 sm:p-12 text-center max-w-lg mx-auto space-y-4 my-8">
+        <div className="mx-auto w-12 h-12 bg-slate-100 flex items-center justify-center text-slate-500">
           <Icon name="lock" className="w-6 h-6" />
         </div>
         <h2 className="font-display font-bold text-xl text-foreground">Fitur Kas Belum Terbuka</h2>
@@ -36,7 +37,7 @@ export default async function MemberTreasuryPage() {
         </p>
         <Link
           href="/dashboard"
-          className="inline-flex min-h-11 items-center justify-center rounded-md bg-foreground px-5 py-2.5 text-xs font-semibold text-white hover:bg-secondary transition-colors"
+          className="px-btn inline-flex min-h-11 items-center justify-center px-5 py-2.5 text-xs font-semibold transition-colors"
         >
           Kembali ke Beranda Dashboard
         </Link>
@@ -66,17 +67,12 @@ export default async function MemberTreasuryPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
-          Kas Komunitas & Pembayaran QRIS
-        </h1>
-        <p className="text-xs text-secondary font-sans">
+      <PortalHeader eyebrow="Member workspace" title="Kas Komunitas & Pembayaran QRIS">
           Iuran mingguan Rp 3.000 atau bulanan Rp 12.000. Dikelola secara otomatis via QRIS Pakasir tanpa struk fisik manual.
-        </p>
-      </div>
+      </PortalHeader>
 
       {/* Bill & Status Banner */}
-      <div className="rounded-[18px] border border-stroke bg-white p-6 sm:p-8 shadow-diffusion">
+      <div className="px-card bg-white p-6 sm:p-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-stroke">
           <div>
             <div className="text-xs font-mono text-secondary uppercase">Masa Aktif Kas Anda</div>
@@ -108,38 +104,38 @@ export default async function MemberTreasuryPage() {
         <div className="pt-6">
           <h3 className="text-xs font-mono uppercase text-secondary mb-3 font-semibold">Pilih Paket Pembayaran QRIS</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="rounded-[10px] border border-stroke bg-surface-alt p-4 flex items-center justify-between">
+            <div className="px-frame [--px-line:#CFE2EE] bg-surface-alt p-4 flex items-center justify-between">
               <div>
                 <div className="text-sm font-bold text-foreground">Paket 1 Minggu</div>
                 <div className="text-xs font-mono text-secondary mt-0.5">Rp 3.000 (+7 hari aktif)</div>
               </div>
-              <span className="rounded-full border border-stroke bg-white px-3 py-1.5 text-[10px] font-mono font-semibold uppercase tracking-[0.08em] text-secondary">Segera hadir</span>
+              <span className="px-chip bg-white px-3 py-1.5 text-[10px] font-mono font-semibold uppercase tracking-[0.08em] text-secondary">Segera hadir</span>
             </div>
 
-            <div className="rounded-[10px] border border-stroke bg-surface-alt p-4 flex items-center justify-between">
+            <div className="px-frame [--px-line:#CFE2EE] bg-surface-alt p-4 flex items-center justify-between">
               <div>
                 <div className="text-sm font-bold text-foreground">Paket 1 Bulan (4 Minggu)</div>
                 <div className="text-xs font-mono text-secondary mt-0.5">Rp 12.000 (+28 hari aktif)</div>
               </div>
-              <span className="rounded-full border border-stroke bg-white px-3 py-1.5 text-[10px] font-mono font-semibold uppercase tracking-[0.08em] text-secondary">Segera hadir</span>
+              <span className="px-chip bg-white px-3 py-1.5 text-[10px] font-mono font-semibold uppercase tracking-[0.08em] text-secondary">Segera hadir</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Ledger History Table */}
-      <div className="rounded-[18px] border border-stroke bg-white p-6 sm:p-8 shadow-diffusion">
+      <div className="px-card bg-white p-6 sm:p-8">
         <h2 className="font-display text-lg font-bold text-foreground mb-4 flex items-center gap-2">
           <Icon name="receipt_long" className="w-5 h-5 text-muara-ocean" />
           <span>Riwayat Mutasi Kas Komunitas</span>
         </h2>
 
         {transactions.length === 0 ? (
-          <div className="text-center py-8 text-secondary text-xs font-mono bg-surface-alt rounded-[10px] border border-dashed border-stroke">
+          <div className="border-2 border-dashed border-[#CFE2EE] text-center py-8 text-secondary text-xs font-mono bg-surface-alt">
             Belum ada transaksi tercatat.
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="scroll-slim overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
               <thead>
                 <tr className="border-b border-stroke text-secondary uppercase font-semibold">
@@ -158,7 +154,7 @@ export default async function MemberTreasuryPage() {
                     </td>
                     <td className="py-2.5 px-3">
                       <span
-                        className={`rounded px-1.5 py-0.5 text-[10px] font-bold uppercase ${
+                        className={`px-chip px-1.5 py-0.5 text-[10px] font-bold uppercase ${
                           tx.type === "income"
                             ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
                             : "bg-rose-50 text-rose-800 border border-rose-200"

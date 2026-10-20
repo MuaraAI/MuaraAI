@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Member } from "@/types/database";
 import { approveApplicant, rejectApplicant } from "@/app/actions/admin";
+import { useFeedback } from "@/components/ui/feedback";
 
 interface ReviewQueueClientProps {
   initialMembers: Member[];
 }
 
 export default function ReviewQueueClient({ initialMembers }: ReviewQueueClientProps) {
+  const { prompt, notify } = useFeedback();
   const [members, setMembers] = useState<Member[]>(initialMembers);
   const [processingId, setProcessingId] = useState<string | null>(null);
 
@@ -19,27 +21,36 @@ export default function ReviewQueueClient({ initialMembers }: ReviewQueueClientP
     setProcessingId(null);
     if (res.success) {
       setMembers((prev) => prev.filter((m) => m.id !== id));
+      notify({ tone: "success", title: "Pendaftar disetujui", message: "Undangan GitHub Org sedang dikirim." });
     } else {
-      alert(`Gagal approve: ${res.error}`);
+      notify({ tone: "error", title: "Gagal approve", message: String(res.error ?? "Terjadi kesalahan.") });
     }
   };
 
   const handleReject = async (id: string) => {
-    const reason = window.prompt("Alasan penolakan (akan ditampilkan kepada pendaftar):", "Berkas Proof of Work belum memenuhi kriteria komunitas.");
+    const reason = await prompt({
+      title: "Tolak calon anggota ini?",
+      message: "Alasan ini akan ditampilkan kepada pendaftar. Mereka bisa mendaftar ulang setelah 24 jam.",
+      label: "Alasan penolakan",
+      defaultValue: "Berkas Proof of Work belum memenuhi kriteria komunitas.",
+      confirmLabel: "Tolak pendaftar",
+      tone: "danger",
+    });
     if (reason === null) return;
     setProcessingId(id);
     const res = await rejectApplicant(id, reason);
     setProcessingId(null);
     if (res.success) {
       setMembers((prev) => prev.filter((m) => m.id !== id));
+      notify({ tone: "info", title: "Pendaftar ditolak", message: "Dihapus dari antrean review." });
     } else {
-      alert(`Gagal reject: ${res.error}`);
+      notify({ tone: "error", title: "Gagal reject", message: String(res.error ?? "Terjadi kesalahan.") });
     }
   };
 
   if (members.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border p-12 text-center text-slate-500 text-xs font-mono">
+      <div className="border-2 border-dashed border-[#CFE2EE] p-12 text-center text-slate-500 text-xs font-mono">
         Tidak ada pendaftar baru dalam antrean.
       </div>
     );
@@ -48,7 +59,7 @@ export default function ReviewQueueClient({ initialMembers }: ReviewQueueClientP
   return (
     <div className="space-y-4">
       {members.map((m) => (
-        <div key={m.id} className="rounded-xl border border-border bg-white p-6 shadow-sm space-y-4">
+        <div key={m.id} className="px-card bg-white p-6 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border">
             <div>
               <div className="font-display font-bold text-base text-foreground">{m.full_name}</div>
@@ -100,14 +111,14 @@ export default function ReviewQueueClient({ initialMembers }: ReviewQueueClientP
             <button
               disabled={processingId === m.id}
               onClick={() => handleReject(m.id)}
-              className="rounded-lg border border-red-300 hover:bg-red-50 text-red-600 px-4 py-2 text-xs font-mono transition-colors disabled:opacity-50"
+              className="px-btn-ghost px-btn-ghost-danger px-4 py-2 text-xs font-mono transition-colors disabled:opacity-50"
             >
               Tolak
             </button>
             <button
               disabled={processingId === m.id}
               onClick={() => handleApprove(m.id)}
-              className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 text-xs font-mono font-bold transition-colors disabled:opacity-50 shadow-sm"
+              className="px-btn-success px-5 py-2 text-xs font-mono font-bold transition-colors disabled:opacity-50"
             >
               {processingId === m.id ? "Memproses..." : "Approve & Invite Org"}
             </button>

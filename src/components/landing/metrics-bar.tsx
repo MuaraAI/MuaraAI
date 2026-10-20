@@ -1,5 +1,6 @@
 import React from "react";
 import Icon, { IconName } from "@/components/ui/icon";
+import FadeIn from "@/components/ui/fade-in";
 
 const current = [
   {
@@ -21,22 +22,24 @@ const current = [
 
 export default function MetricsBar() {
   return (
-    <section className="border-b border-stroke bg-surface-alt px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid gap-8 md:grid-cols-3 md:gap-0">
+    <section className="overflow-x-clip border-b border-stroke bg-surface-alt px-4 py-10 sm:px-6 md:py-12 lg:px-8">
+      <div className="mx-auto max-w-[100rem]">
+        <div className="rail grid gap-7 md:grid-cols-3 md:gap-0">
           {current.map((item, index) => (
-            <div
+            <FadeIn
               key={item.title}
-              className={`relative flex gap-4 px-1 md:px-8 ${index > 0 ? "md:border-l md:border-stroke" : ""}`}
+              direction="left"
+              delay={index * 0.12}
+              className={`relative flex gap-4 md:px-8 md:first:pl-0 ${index > 0 ? "md:border-l-2 md:border-dashed md:border-[#CFE2EE]" : ""}`}
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-stroke bg-white text-muara-ocean">
+              <div className="px-icon h-10 w-10 shrink-0">
                 <Icon name={item.icon} className="h-5 w-5" />
               </div>
               <div>
                 <h2 className="font-display text-lg font-semibold text-foreground">{item.title}</h2>
                 <p className="mt-1 text-sm leading-relaxed text-secondary">{item.description}</p>
               </div>
-            </div>
+            </FadeIn>
           ))}
         </div>
       </div>

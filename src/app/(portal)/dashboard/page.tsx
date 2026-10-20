@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import Icon from "@/components/ui/icon";
 import { getEarliestExitDate } from "@/lib/membership";
 import type { MembershipIntakePolicy } from "@/types/database";
+import { PortalHeader } from "@/components/ui/section";
 
 export default async function DashboardProfilePage() {
   const supabase = await createClient();
@@ -43,29 +44,23 @@ export default async function DashboardProfilePage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <p className="text-xs font-mono uppercase tracking-[0.16em] text-muara-ocean">Member workspace</p>
-        <h1 className="mt-2 font-display text-3xl sm:text-4xl font-bold text-foreground mb-1">
-          Beranda
-        </h1>
-        <p className="text-sm text-secondary font-sans">
-          Pantau status membership dan lanjutkan langkah berikutnya di MuaraAI.
-        </p>
-      </div>
+      <PortalHeader eyebrow="Member workspace" title="Beranda">
+        Pantau status membership dan lanjutkan langkah berikutnya di MuaraAI.
+      </PortalHeader>
 
       {member.registration_status === "rejected" ? (
-        <section className="rounded-[18px] border border-rose-200 bg-rose-50/60 p-6 shadow-diffusion">
+        <section className="px-frame [--px-line:#FDA4AF] bg-rose-50/60 p-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
             <div className="space-y-3">
               <div>
                 <div className="text-xs font-mono uppercase text-rose-800">Status pendaftaran</div>
                 <div className="mt-1 flex items-center gap-2 text-xl font-display font-bold text-rose-700">
-                  <span className="h-2.5 w-2.5 rounded-full bg-rose-500" aria-hidden="true" />
+                  <span className="h-2.5 w-2.5 bg-rose-500" aria-hidden="true" />
                   Pendaftaran Belum Diterima
                 </div>
               </div>
 
-              <div className="rounded-lg border border-rose-200/80 bg-white/80 p-3.5 text-xs text-secondary">
+              <div className="px-frame [--px-line:#FDA4AF] bg-white/80 p-3.5 text-xs text-secondary">
                 <div className="font-semibold text-rose-900 mb-1">Catatan dari Core Team:</div>
                 <p className="leading-relaxed text-foreground">
                   {member.rejection_reason || "Berkas Proof of Work belum memenuhi kriteria komunitas. Silakan perbaiki dan ajukan kembali."}
@@ -83,13 +78,13 @@ export default async function DashboardProfilePage() {
               {canReapply ? (
                 <Link
                   href="/onboarding"
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-foreground px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-secondary transition-colors"
+                  className="px-btn inline-flex min-h-11 items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold transition-colors"
                 >
                   <Icon name="refresh" className="w-4 h-4" />
                   <span>Ajukan Ulang Pendaftaran</span>
                 </Link>
               ) : (
-                <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-rose-200 bg-white/80 px-4 py-2.5 text-xs font-mono font-medium text-rose-700 shadow-xs">
+                <span className="px-btn-ghost [--px-off:3px] inline-flex min-h-11 items-center justify-center gap-2 bg-white/80 px-4 py-2.5 text-xs font-mono font-medium text-rose-700">
                   <Icon name="schedule" className="w-4 h-4 text-rose-500" />
                   <span>Cooldown aktif (~{remainingHours}j lagi)</span>
                 </span>
@@ -98,35 +93,35 @@ export default async function DashboardProfilePage() {
           </div>
         </section>
       ) : member.registration_status === "pending" ? (
-        <section className="rounded-[18px] border border-amber-200 bg-amber-50/60 p-6 shadow-diffusion">
+        <section className="px-frame [--px-line:#FCD34D] bg-amber-50/60 p-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <div className="text-xs font-mono uppercase text-amber-800">Status pendaftaran</div>
               <div className="mt-2 flex items-center gap-2 text-xl font-display font-bold text-amber-700">
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-500 animate-pulse" aria-hidden="true" />
+                <span className="h-2.5 w-2.5 bg-amber-500 animate-pulse" aria-hidden="true" />
                 Menunggu Review
               </div>
               <p className="mt-2 text-sm text-secondary">
                 Berkas Proof of Work Anda sedang ditinjau oleh Core Team MuaraAI. Anda dapat melihat navigasi dan detail akun sambil menunggu verifikasi.
               </p>
             </div>
-            <span className="inline-flex min-h-11 items-center justify-center rounded-md border border-amber-300 bg-white px-4 py-2.5 text-sm font-semibold text-amber-800 shadow-xs">
+            <span className="px-btn-ghost [--px-off:3px] inline-flex min-h-11 items-center justify-center px-4 py-2.5 text-sm font-semibold text-amber-800">
               Dalam antrean review
             </span>
           </div>
         </section>
       ) : (
-        <section className="rounded-[18px] border border-stroke bg-white p-6 shadow-diffusion">
+        <section className="px-card bg-white p-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <div className="text-xs font-mono uppercase text-secondary">Status membership</div>
               <div className="mt-2 flex items-center gap-2 text-xl font-display font-bold text-foreground">
-                <span className="h-2.5 w-2.5 rounded-full bg-status-success" aria-hidden="true" />
+                <span className="h-2.5 w-2.5 bg-status-success" aria-hidden="true" />
                 Aktif
               </div>
               <p className="mt-2 text-sm text-secondary">Akun kamu dapat mengakses ruang belajar, project, dan akses bersama.</p>
             </div>
-            <Link href="/dashboard/learn" className="inline-flex min-h-11 items-center justify-center rounded-md bg-foreground px-4 py-2.5 text-sm font-semibold text-white hover:bg-secondary transition-colors">
+            <Link href="/dashboard/learn" className="px-btn inline-flex min-h-11 items-center justify-center px-4 py-2.5 text-sm font-semibold transition-colors">
               Lanjut belajar
             </Link>
           </div>
@@ -134,11 +129,11 @@ export default async function DashboardProfilePage() {
       )}
 
       <section className="grid gap-4 sm:grid-cols-3">
-        <Link href="/dashboard/learn" className="rounded-xl border border-stroke bg-surface-alt p-5 transition-colors hover:border-muara-ocean">
+        <Link href="/dashboard/learn" className="px-frame [--px-line:#CFE2EE] bg-surface-alt p-5 transition-colors">
           <div className="text-xs font-mono uppercase text-secondary">Berikutnya</div>
           <div className="mt-2 font-display font-semibold text-foreground">Buka materi belajar</div>
         </Link>
-        <Link href="/membership-exit" className="rounded-xl border border-stroke bg-surface-alt p-5 transition-colors hover:border-muara-ocean">
+        <Link href="/membership-exit" className="px-frame [--px-line:#CFE2EE] bg-surface-alt p-5 transition-colors">
           <div className="text-xs font-mono uppercase text-secondary">Lifecycle</div>
           <div className="mt-2 font-display font-semibold text-foreground">Lihat status membership</div>
         </Link>
@@ -150,7 +145,7 @@ export default async function DashboardProfilePage() {
       </div>
 
       {member.registration_status === "pending" && (
-        <div className="rounded-[18px] border border-amber-200 bg-amber-50 p-5 text-xs text-amber-900 flex items-start gap-3">
+        <div className="px-frame [--px-line:#FCD34D] bg-amber-50 p-5 text-xs text-amber-900 flex items-start gap-3">
           <Icon name="pending" className="w-5 h-5 text-amber-600 shrink-0" />
           <div>
             <div className="font-bold text-sm text-foreground mb-0.5">Status Pendaftaran: Menunggu Review</div>
@@ -160,7 +155,7 @@ export default async function DashboardProfilePage() {
       )}
 
       {member.membership_started_at && member.membership_status === "active" && (
-        <div className="rounded-[18px] border border-stroke bg-surface-alt p-5 shadow-diffusion flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="px-frame [--px-line:#CFE2EE] bg-surface-alt p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="text-xs font-mono uppercase text-secondary">Lifecycle Membership</div>
             <div className="mt-1 text-sm font-semibold text-foreground">
@@ -174,7 +169,7 @@ export default async function DashboardProfilePage() {
           </div>
           <Link
             href="/membership-exit"
-            className="inline-flex items-center justify-center gap-1.5 rounded-[10px] border border-stroke bg-white px-4 py-2 text-xs font-semibold text-foreground hover:border-muara-ocean hover:text-muara-ocean transition-colors shadow-xs"
+            className="px-btn-ghost [--px-off:3px] inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold text-foreground hover:text-muara-ocean transition-colors"
           >
             <Icon name="logout" className="w-4 h-4" />
             Ajukan Keluar
@@ -183,7 +178,7 @@ export default async function DashboardProfilePage() {
       )}
 
       {/* Main Details Card */}
-      <div className="rounded-[18px] border border-stroke bg-white p-6 sm:p-8 space-y-6 shadow-diffusion">
+      <div className="px-card bg-white p-6 sm:p-8 space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-stroke">
           <div>
             <div className="text-xs font-mono text-secondary uppercase">Nama Lengkap</div>
@@ -199,7 +194,7 @@ export default async function DashboardProfilePage() {
             ).map((title, idx) => (
               <span
                 key={idx}
-                className="rounded-md bg-surface-alt border border-stroke px-2.5 py-1 text-xs font-mono text-muara-ocean font-semibold"
+                className="bg-surface-alt border border-stroke px-2.5 py-1 text-xs font-mono text-muara-ocean font-semibold"
               >
                 {title}
               </span>
@@ -260,7 +255,7 @@ export default async function DashboardProfilePage() {
         {member.bio && (
           <div className="pt-4 border-t border-stroke">
             <div className="text-secondary uppercase font-mono text-xs mb-1.5">Toolchain & Workflow</div>
-            <p className="text-xs text-foreground leading-relaxed font-mono whitespace-pre-wrap bg-surface-alt p-3.5 rounded-[10px] border border-stroke">
+            <p className="px-frame [--px-line:#CFE2EE] text-xs text-foreground leading-relaxed font-mono whitespace-pre-wrap bg-surface-alt p-3.5">
               {member.bio}
             </p>
           </div>
