@@ -12,10 +12,6 @@ export const communityContent = {
     ollama: "https://ollama.com/MuaraAI",
     email: "mailto:admin@muaraai.com",
   },
-  cohortPolicy: {
-    minimumCohort: 2026,
-    summary: "Mahasiswa dari seluruh kampus UBSI di Indonesia, mulai angkatan 2026 dan seterusnya.",
-  },
   muaraArusOne: {
     name: "Muara Arus 1",
     modelId: "muara-arus-1",

@@ -4,9 +4,6 @@ import { canRequestExit, canSubmitIntake, getEarliestExitDate } from "../src/lib
 const policy = {
   policy_version: "ubsi-2026-s1",
   effective_at: "2026-10-17T00:00:00.000Z",
-  allowed_university: "Universitas Bina Sarana Informatika",
-  allowed_cohort: 2026,
-  allowed_semester: 1,
   minimum_active_days_before_exit: 30,
   block_reapply_after_exit: true,
 };

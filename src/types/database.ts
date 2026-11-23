@@ -2,13 +2,11 @@ export type MemberHierarchy = "maintainer" | "head" | "lead" | "member";
 export type MemberDivision = "builder" | "creative";
 export type RegistrationStatus = "pending" | "approved" | "rejected";
 export type MembershipStatus = "active" | "exited" | "banned";
+export type Affiliation = "mahasiswa" | "pelajar" | "umum" | "lainnya";
 
 export interface MembershipIntakePolicy {
   policy_version: string;
   effective_at: string;
-  allowed_university: string;
-  allowed_cohort: number;
-  allowed_semester: number;
   minimum_active_days_before_exit: number;
   block_reapply_after_exit: boolean;
 }
@@ -51,6 +49,11 @@ export interface Member {
   reapply_blocked: boolean;
   intake_policy_version: string | null;
   is_active: boolean;
+  affiliation: Affiliation;
+  join_reason: string | null;
+  secondary_division: MemberDivision | null;
+  secondary_track: string | null;
+  telegram_username: string | null;
   total_commits: number;
   reviewed_by: string | null;
   reviewed_at: string | null;
