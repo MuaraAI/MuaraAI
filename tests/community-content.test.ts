@@ -26,14 +26,15 @@ describe("national community content", () => {
     ]);
     expect(communityContent.coreMaintainers[1]).toMatchObject({
       name: "Muhammad Raffli Aldiansyah",
-      nim: "15260161",
       division: "Builder",
     });
     expect(communityContent.coreMaintainers[2]).toMatchObject({
       name: "Verzio Yamanansyah",
-      nim: "15260225",
       division: "Builder",
     });
+    for (const maintainer of communityContent.coreMaintainers) {
+      expect(maintainer).not.toHaveProperty("nim");
+    }
   });
 
   it("marks Pontianak as founding hub and Jakarta as regional hub", () => {

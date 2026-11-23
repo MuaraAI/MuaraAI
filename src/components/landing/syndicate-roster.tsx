@@ -127,7 +127,6 @@ function PixelEstuary({ seed }: { seed: number }) {
 const CORE_MAINTAINERS = communityContent.coreMaintainers.map((member) => ({
   githubUsername: member.github,
   fullName: member.name,
-  nim: member.nim,
   title: member.title,
   roleBadge: member.title as "Founder" | "Co-Founder",
   division: member.division.toLowerCase() as "builder" | "creative",
@@ -143,7 +142,6 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
     return {
       id: liveMatch?.id || core.githubUsername,
       fullName: liveMatch?.full_name || core.fullName,
-      nim: core.nim,
       githubUsername: core.githubUsername,
       title: liveMatch?.role_title || core.title,
       roleBadge: liveMatch?.sub_hierarchy === "founder" ? ("Founder" as const) : core.roleBadge,
@@ -211,8 +209,6 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                   </h3>
                   <p className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-xs text-secondary">
                     <span>@{m.githubUsername}</span>
-                    <span className="h-1 w-1 bg-secondary/40" aria-hidden="true" />
-                    <span>NIM {m.nim}</span>
                   </p>
 
                   <p className="mb-3 mt-5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-secondary/70">
@@ -278,7 +274,7 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                   Direktori Anggota & Roster Lengkap
                 </h4>
                 <p className="mt-1 max-w-xl font-sans text-xs text-secondary">
-                  Jelajahi profil mahasiswa UBSI, kampus, kelas, prodi, divisi, dan kontribusi yang tampil secara faktual.
+                  Jelajahi profil anggota, institusi, divisi, posisi, dan kontribusi yang tampil secara faktual.
                 </p>
               </div>
             </div>

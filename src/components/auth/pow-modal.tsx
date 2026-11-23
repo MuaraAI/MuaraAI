@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { submitProofOfWork } from "@/app/actions/pow";
-import { AFFILIATIONS, MIN_JOIN_REASON_LENGTH, type Division, type PoWInput } from "@/lib/validation";
+import { AFFILIATIONS, AFFILIATION_LABELS, MIN_JOIN_REASON_LENGTH, type Division, type PoWInput } from "@/lib/validation";
 import type { PositionsConfig } from "@/lib/positions";
 import Icon from "@/components/ui/icon";
 import PixelSelect from "@/components/ui/pixel-select";
@@ -13,12 +13,6 @@ type Step = 0 | 1 | 2 | 3;
 const steps = ["Tentang kamu", "Proof of Work", "Profil publik", "Review"];
 const DRAFT_KEY = "muaraai_onboarding_draft";
 
-const AFFILIATION_LABELS: Record<(typeof AFFILIATIONS)[number], string> = {
-  mahasiswa: "Mahasiswa",
-  pelajar: "Pelajar",
-  umum: "Umum",
-  lainnya: "Lainnya",
-};
 const DIVISION_LABELS: Record<Division, string> = { builder: "Builder", creative: "Creative" };
 const DIVISIONS: readonly Division[] = ["builder", "creative"];
 

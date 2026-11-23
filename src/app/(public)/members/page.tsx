@@ -1,6 +1,7 @@
 import React from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { Member } from "@/types/database";
+import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import MembersDirectory from "@/components/members/members-directory";
 import Link from "next/link";
 import Icon from "@/components/ui/icon";
@@ -16,7 +17,7 @@ export default async function MembersPage() {
     ? await supabase
     .from("members")
     .select(
-      "id, full_name, avatar_url, github_username, hierarchy, sub_hierarchy, roles, titles, division, track, campus, prodi, kelas, total_commits, website_url, github_url, linkedin_url, portfolio_url, bio, role_title"
+      "id, full_name, avatar_url, github_username, hierarchy, sub_hierarchy, roles, titles, division, track, secondary_division, secondary_track, campus, total_commits, website_url, github_url, linkedin_url, portfolio_url, bio, role_title"
     )
     .eq("registration_status", "approved")
     .eq("is_active", true)
@@ -25,12 +26,17 @@ export default async function MembersPage() {
 
   const members = (membersData || []) as unknown as Member[];
 
+  const { data: positionsSetting } = supabase
+    ? await supabase.from("community_settings").select("value").eq("key", POSITIONS_SETTING_KEY).single()
+    : { data: null };
+  const positions = parsePositions(positionsSetting?.value) ?? undefined;
+
   return (
     <div className="mx-auto max-w-[100rem] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <PageHeader
         eyebrow="Direktori Publik"
         title="Direktori Anggota Muara AI"
-        description="Kenali mahasiswa UBSI yang belajar, membangun project, dan berkontribusi bersama MuaraAI."
+        description="Kenali anggota yang belajar, membangun project, dan berkontribusi bersama MuaraAI."
         actions={
           <Link href="/onboarding" className="px-btn inline-flex w-fit items-center gap-2 px-5 py-2.5 font-sans text-xs font-bold">
             <Icon name="github" className="h-4 w-4" />
@@ -40,7 +46,7 @@ export default async function MembersPage() {
       />
 
       {/* Directory Component */}
-      <MembersDirectory initialMembers={members} />
+      <MembersDirectory initialMembers={members} positions={positions} />
     </div>
   );
 }

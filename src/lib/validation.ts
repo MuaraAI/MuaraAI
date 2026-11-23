@@ -2,6 +2,12 @@ import type { Affiliation } from "@/types/database";
 import type { PositionsConfig } from "@/lib/positions";
 
 export const AFFILIATIONS: readonly Affiliation[] = ["mahasiswa", "pelajar", "umum", "lainnya"];
+export const AFFILIATION_LABELS: Record<Affiliation, string> = {
+  mahasiswa: "Mahasiswa",
+  pelajar: "Pelajar",
+  umum: "Umum",
+  lainnya: "Lainnya",
+};
 export type Division = "builder" | "creative";
 export const MIN_JOIN_REASON_LENGTH = 50;
 

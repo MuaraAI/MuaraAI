@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Member } from "@/types/database";
+import type { PositionsConfig } from "@/lib/positions";
 import Icon from "@/components/ui/icon";
 import FadeIn from "@/components/ui/fade-in";
 import { filterMembers, RosterFilter } from "@/components/landing/syndicate-roster";
@@ -11,7 +12,12 @@ import { PixelTabs, TabSlide } from "@/components/ui/pixel-tabs";
 
 interface MembersDirectoryProps {
   initialMembers: Member[];
+  /** Official positions; a member's position chip only shows when it matches this list. */
+  positions?: PositionsConfig;
 }
+
+const DIVISION_LABEL: Record<string, string> = { builder: "Builder", creative: "Creative" };
+const PLACEHOLDER_INSTITUTIONS = ["Tidak disebutkan", "Kampus lain di Indonesia"];
 
 const filters: { id: RosterFilter; label: string }[] = [
   { id: "all", label: "Semua" },
@@ -22,16 +28,19 @@ const filters: { id: RosterFilter; label: string }[] = [
 ];
 const FILTER_ORDER = filters.map((f) => f.id);
 
-export default function MembersDirectory({ initialMembers }: MembersDirectoryProps) {
+export default function MembersDirectory({ initialMembers, positions }: MembersDirectoryProps) {
   const [filter, setFilter] = useState<RosterFilter>("all");
   const [search, setSearch] = useState("");
+
+  const isOfficial = (division?: string | null, track?: string | null) =>
+    Boolean(positions && division && track && (positions as unknown as Record<string, string[]>)[division]?.includes(track));
 
   const filtered = useMemo(() => {
     const list = filterMembers(initialMembers, filter);
     const query = search.trim().toLowerCase();
     if (!query) return list;
     return list.filter((member) =>
-      [member.full_name, member.github_username, member.campus, member.prodi, member.kelas, member.division, member.role_title]
+      [member.full_name, member.github_username, member.campus, member.track, member.division, member.role_title]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(query)),
     );
@@ -91,12 +100,14 @@ export default function MembersDirectory({ initialMembers }: MembersDirectoryPro
                     <div className="mt-5 flex flex-wrap gap-1.5">
                       {titles.map((title) => <span key={title} className="px-chip bg-surface-alt px-2 py-0.5 font-mono text-[11px] font-medium text-foreground">{title}</span>)}
                       <span className="px-chip px-2 py-0.5 font-mono text-[11px] font-medium capitalize text-secondary">{member.division}</span>
+                      {isOfficial(member.division, member.track) ? <span className="px-chip px-2 py-0.5 font-mono text-[11px] font-medium text-foreground">{member.track}</span> : null}
+                      {isOfficial(member.secondary_division, member.secondary_track) ? <span className="px-chip px-2 py-0.5 font-mono text-[11px] font-medium text-secondary">+ {DIVISION_LABEL[member.secondary_division as string]} · {member.secondary_track}</span> : null}
                     </div>
-                    <dl className="mt-5 space-y-2 text-xs">
-                      <div className="flex justify-between gap-3"><dt className="text-secondary">Kampus</dt><dd className="text-right text-foreground">{member.campus || "UBSI Pontianak"}</dd></div>
-                      {member.kelas ? <div className="flex justify-between gap-3"><dt className="text-secondary">Kelas</dt><dd className="text-right font-mono text-foreground">{member.kelas}</dd></div> : null}
-                      {member.prodi ? <div className="flex justify-between gap-3"><dt className="text-secondary">Prodi</dt><dd className="text-right text-foreground">{member.prodi}</dd></div> : null}
-                    </dl>
+                    {member.campus && !PLACEHOLDER_INSTITUTIONS.includes(member.campus) ? (
+                      <dl className="mt-5 space-y-2 text-xs">
+                        <div className="flex justify-between gap-3"><dt className="text-secondary">Institusi</dt><dd className="text-right text-foreground">{member.campus}</dd></div>
+                      </dl>
+                    ) : null}
                   </div>
                   <div className="mt-5 flex items-center justify-between border-t border-stroke pt-4">
                     <span className="text-xs text-secondary">{member.total_commits || 0} kontribusi</span>

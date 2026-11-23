@@ -12,6 +12,7 @@ const member = {
   membership_started_at: "2026-01-01T00:00:00.000Z",
   reapply_blocked: false,
   is_active: true,
+  affiliation: "mahasiswa",
   campus: "UBSI Pontianak",
   kelas: "15.1C.30",
   nim: "15260767",
@@ -48,6 +49,10 @@ describe("member workspace dashboard", () => {
     expect(screen.getByText(/Aktif sejak/i)).toBeTruthy();
     expect(screen.getByRole("link", { name: "Ajukan Keluar" })).toBeTruthy();
     expect(screen.getByText(/Profil lengkap/i)).toBeTruthy();
+    expect(screen.queryByText(/\bNIM\b/i)).toBeNull();
+    expect(screen.queryByText("15260767")).toBeNull();
+    expect(screen.getByText("Institusi")).toBeTruthy();
+    expect(screen.getByText("Status")).toBeTruthy();
   });
 
   it("renders pending review banner and badge when applicant is waiting for review", async () => {
