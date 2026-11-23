@@ -32,7 +32,6 @@ export default function PrivacyPage() {
             <li>Identitas publik GitHub (username, avatar, email publik).</li>
             <li>Nama lengkap, kontak WhatsApp, dan NIM (khusus mahasiswa).</li>
             <li>Tautan portofolio dan deskripsi toolchain rekayasa.</li>
-            <li>Riwayat pembayaran iuran kas melalui gateway Pakasir.</li>
           </ul>
         </section>
 

@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Member } from "@/types/database";
 import { toggleMemberActive, syncOrgCommits } from "@/app/actions/admin";
-import { calculateMemberBill } from "@/lib/dues";
 import Icon from "@/components/ui/icon";
 
 interface AdminMembersClientProps {
@@ -12,7 +11,6 @@ interface AdminMembersClientProps {
 
 export default function AdminMembersClient({ initialMembers }: AdminMembersClientProps) {
   const [members, setMembers] = useState<Member[]>(initialMembers);
-  const [filterArrearsOnly, setFilterArrearsOnly] = useState(false);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [syncingCommits, setSyncingCommits] = useState(false);
 
@@ -38,7 +36,7 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
     const nextState = !member.is_active;
     const confirmMsg = nextState
       ? `Aktifkan kembali akses member @${member.github_username}?`
-      : `Blacklist / Nonaktifkan akses member @${member.github_username}?`;
+      : `Nonaktifkan akses member @${member.github_username}?`;
 
     if (!confirm(confirmMsg)) return;
 
@@ -55,19 +53,12 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
     }
   };
 
-  const displayed = filterArrearsOnly
-    ? members.filter((m) => {
-        const bill = calculateMemberBill(m.dues_valid_until);
-        return bill.isBlacklisted || bill.weeks > 0;
-      })
-    : members;
-
   return (
     <div className="rounded-[18px] border border-stroke bg-white p-6 sm:p-8 space-y-6 shadow-diffusion">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="font-display font-bold text-base text-foreground">
-            Daftar Seluruh Anggota ({displayed.length})
+            Daftar Seluruh Anggota ({members.length})
           </div>
           <button
             type="button"
@@ -79,16 +70,6 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
             <span>{syncingCommits ? "Menyinkronkan..." : "Sinkronkan Commit GitHub"}</span>
           </button>
         </div>
-
-        <label className="flex items-center gap-2 text-xs font-mono text-secondary cursor-pointer">
-          <input
-            type="checkbox"
-            checked={filterArrearsOnly}
-            onChange={(e) => setFilterArrearsOnly(e.target.checked)}
-            className="rounded border-stroke text-muara-ocean focus:ring-0"
-          />
-          Hanya tampilkan yang memiliki tunggakan / batas blacklist
-        </label>
       </div>
 
       <div className="overflow-x-auto">
@@ -100,15 +81,12 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
               <th className="py-2.5 px-3 text-center">Commits</th>
               <th className="py-2.5 px-3">Intake</th>
               <th className="py-2.5 px-3">Mulai Membership</th>
-              <th className="py-2.5 px-3">Masa Aktif Kas</th>
-              <th className="py-2.5 px-3">Tunggakan</th>
               <th className="py-2.5 px-3 text-center">Status Akses</th>
               <th className="py-2.5 px-3 text-right">Aksi</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-stroke text-slate-700">
-            {displayed.map((m) => {
-              const bill = calculateMemberBill(m.dues_valid_until);
+            {members.map((m) => {
               const exited = m.membership_status === "exited" || m.reapply_blocked;
               return (
                 <tr key={m.id} className="hover:bg-surface-alt/60">
@@ -140,25 +118,13 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
                       ? new Date(m.membership_started_at).toLocaleDateString("id-ID")
                       : "Historis / belum dicatat"}
                   </td>
-                  <td className="py-3 px-3 text-secondary">
-                    {m.dues_valid_until || "Belum Bayar"}
-                  </td>
-                  <td className="py-3 px-3">
-                    {bill.weeks > 0 ? (
-                      <span className="text-amber-700 font-bold">
-                        {bill.weeks} minggu (Rp {bill.amount.toLocaleString("id-ID")})
-                      </span>
-                    ) : (
-                      <span className="text-emerald-700">Lunas</span>
-                    )}
-                  </td>
                   <td className="py-3 px-3 text-center">
                     <span className={`inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase ${
                       m.is_active
                         ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
                         : "bg-rose-50 text-rose-800 border border-rose-200"
                     }`}>
-                      {m.is_active ? "Aktif" : "Blacklisted"}
+                      {m.is_active ? "Aktif" : "Nonaktif"}
                     </span>
                   </td>
                   <td className="py-3 px-3 text-right">
@@ -174,7 +140,7 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
                             : "border border-emerald-300 text-emerald-700 hover:bg-emerald-50"
                         }`}
                       >
-                        {processingId === m.id ? "..." : m.is_active ? "Blacklist" : "Buka Blokir"}
+                        {processingId === m.id ? "..." : m.is_active ? "Nonaktifkan" : "Buka Blokir"}
                       </button>
                     )}
                   </td>

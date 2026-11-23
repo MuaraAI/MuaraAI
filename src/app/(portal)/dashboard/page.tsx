@@ -235,13 +235,7 @@ export default async function DashboardProfilePage() {
           <div>
             <div className="text-secondary uppercase font-mono mb-1">Status Keaktifan</div>
             <div className="text-foreground font-mono">
-              {member.is_active ? "Aktif" : "Dinonaktifkan / Tunggakan"}
-            </div>
-          </div>
-          <div>
-            <div className="text-secondary uppercase font-mono mb-1">Masa Aktif Iuran Kas</div>
-            <div className="text-foreground font-mono">
-              {member.dues_valid_until || "Belum dibayar"}
+              {member.is_active ? "Aktif" : "Dinonaktifkan"}
             </div>
           </div>
           <div>

@@ -22,6 +22,22 @@ describe("navigation shells", () => {
     expect(screen.queryByText("Treasury")).toBeNull();
   });
 
+  it("has no dead Kas link in member or admin shells", () => {
+    const { unmount } = render(
+      <MemberShell member={{ full_name: "Yuken", github_username: "Curzyori", is_active: true }}>
+        <p>x</p>
+      </MemberShell>,
+    );
+    expect(screen.queryByRole("link", { name: "Kas" })).toBeNull();
+    unmount();
+    render(
+      <AdminShell>
+        <p>x</p>
+      </AdminShell>,
+    );
+    expect(screen.queryByRole("link", { name: "Kas" })).toBeNull();
+  });
+
   it("renders member workspace destinations", () => {
     render(
       <MemberShell
@@ -33,7 +49,6 @@ describe("navigation shells", () => {
 
     expect(screen.getByText("Beranda")).toBeTruthy();
     expect(screen.getByText("Belajar")).toBeTruthy();
-    expect(screen.getByText("Kas")).toBeTruthy();
     expect(screen.queryByText("Project")).toBeNull();
     expect(screen.queryByText("Akun")).toBeNull();
     expect(screen.getAllByRole("link", { name: "Beranda" }).length).toBe(1);
@@ -53,7 +68,6 @@ describe("navigation shells", () => {
     expect(screen.getByText("Menunggu review")).toBeTruthy();
     expect(screen.getByText("Beranda")).toBeTruthy();
     expect(screen.getByText("Belajar")).toBeTruthy();
-    expect(screen.getByText("Kas")).toBeTruthy();
   });
 
   it("renders maintainer operations destinations without a dead overview route", () => {
@@ -67,7 +81,6 @@ describe("navigation shells", () => {
     expect(screen.queryByRole("link", { name: "Overview" })).toBeNull();
     expect(screen.getByText("Review pendaftar")).toBeTruthy();
     expect(screen.getByText("Anggota")).toBeTruthy();
-    expect(screen.getByText("Kas")).toBeTruthy();
     expect(screen.getByText("Materi")).toBeTruthy();
     expect(screen.queryByText("Pesan")).toBeNull();
     expect(screen.getByText("Prestasi")).toBeTruthy();

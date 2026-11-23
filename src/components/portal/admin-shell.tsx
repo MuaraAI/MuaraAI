@@ -11,7 +11,6 @@ type AdminNavItem = { href: string; label: string; icon: IconName };
 const adminItems: AdminNavItem[] = [
   { href: "/admin/review", label: "Review pendaftar", icon: "how_to_reg" },
   { href: "/admin/members", label: "Anggota", icon: "group" },
-  { href: "/admin/treasury", label: "Kas", icon: "account_balance_wallet" },
   { href: "/admin/learn", label: "Materi", icon: "school" },
   { href: "/admin/achievements", label: "Prestasi", icon: "workspace_premium" },
 ];

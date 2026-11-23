@@ -8,7 +8,7 @@ import AccoladesGrid from "@/components/landing/accolades-grid";
 import Manifesto from "@/components/landing/manifesto";
 import SyndicateRoster from "@/components/landing/syndicate-roster";
 import BenefitsGrid from "@/components/landing/benefits-grid";
-import TreasuryPreview from "@/components/landing/treasury-preview";
+import DonateCta from "@/components/landing/donate-cta";
 import JoinFlow from "@/components/landing/join-flow";
 import WaveDivider from "@/components/ui/wave-divider";
 import { createClient } from "@/lib/supabase/server";
@@ -59,26 +59,6 @@ export default async function LandingPage({
 
   const achievements: Achievement[] = achievementsData || [];
 
-  // 3. Fetch treasury aggregates
-  const { data: transactionsData } = await supabase
-    .from("treasury_transactions")
-    .select("type, amount")
-    .eq("status", "paid");
-
-  let currentBalance = 0;
-  let totalExpenses = 0;
-
-  if (transactionsData) {
-    transactionsData.forEach((tx) => {
-      if (tx.type === "income") {
-        currentBalance += tx.amount;
-      } else if (tx.type === "expense") {
-        currentBalance -= tx.amount;
-        totalExpenses += tx.amount;
-      }
-    });
-  }
-
   return (
     <div className="flex flex-col">
       <Hero />
@@ -93,7 +73,7 @@ export default async function LandingPage({
       <SyndicateRoster initialMembers={members} />
       <BenefitsGrid />
       <WaveDivider inverted />
-      <TreasuryPreview currentBalance={currentBalance} totalExpenses={totalExpenses} />
+      <DonateCta />
       <JoinFlow />
     </div>
   );
