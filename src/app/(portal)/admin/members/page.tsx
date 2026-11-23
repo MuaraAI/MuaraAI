@@ -1,13 +1,15 @@
 import React from "react";
-import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import { getMaintainerClient } from "@/lib/supabase/admin";
 import { Member } from "@/types/database";
 import AdminMembersClient from "./admin-members-client";
 import { PortalHeader } from "@/components/ui/section";
 
 export default async function AdminMembersPage() {
-  const supabase = await createClient();
+  const admin = await getMaintainerClient();
+  if (!admin) redirect("/dashboard");
 
-  const { data: membersData } = await supabase
+  const { data: membersData } = await admin
     .from("members")
     .select("*")
     .order("created_at", { ascending: false });

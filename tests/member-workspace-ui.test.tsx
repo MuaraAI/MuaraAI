@@ -41,6 +41,13 @@ vi.mock("@/lib/supabase/server", () => ({
   }),
 }));
 
+// The dashboard reads the signed-in user's own row (private columns) through the privileged client;
+// in tests that client is the same mock as the regular server client.
+vi.mock("@/lib/supabase/admin", async () => {
+  const server = await import("@/lib/supabase/server");
+  return { createPrivilegedClient: () => server.createClient() };
+});
+
 describe("member workspace dashboard", () => {
   it("leads with status and next action instead of a raw profile heading", async () => {
     render(await DashboardProfilePage());
@@ -69,7 +76,7 @@ describe("member workspace dashboard", () => {
 
     // Render directly with mock return
     const viClient = await import("@/lib/supabase/server");
-    vi.spyOn(viClient, "createClient").mockResolvedValueOnce({
+    vi.spyOn(viClient, "createClient").mockResolvedValue({
       auth: { getUser: async () => ({ data: { user: { id: "member-1" } } }) },
       from: (table: string) => ({
         select: () => ({

@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createPrivilegedClient } from "@/lib/supabase/admin";
 import { isMaintainer } from "@/lib/guards";
 import { escapeHtml } from "@/lib/notify";
 import { fetchMemberOrgCommits } from "@/lib/github-sync";
@@ -35,7 +36,9 @@ const GENERIC_ERROR = "Terjadi kesalahan pada server. Silakan coba lagi.";
 export async function approveApplicant(memberId: string) {
   const { supabase, user } = await assertMaintainer();
 
-  const { data: member, error: fetchErr } = await supabase
+  // email is a private column: read it with the service-role client (caller already verified as maintainer).
+  const privileged = await createPrivilegedClient();
+  const { data: member, error: fetchErr } = await privileged
     .from("members")
     .select("id, github_username, email, full_name, registration_status, membership_status, reapply_blocked, membership_started_at")
     .eq("id", memberId)

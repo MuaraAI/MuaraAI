@@ -1,5 +1,6 @@
 import React from "react";
 import { createClient } from "@/lib/supabase/server";
+import { createPrivilegedClient } from "@/lib/supabase/admin";
 import { Member } from "@/types/database";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -15,11 +16,9 @@ export default async function DashboardProfilePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: memberData } = await supabase
-    .from("members")
-    .select("*")
-    .eq("id", user?.id)
-    .maybeSingle();
+  const { data: memberData } = user
+    ? await (await createPrivilegedClient()).from("members").select("*").eq("id", user.id).maybeSingle()
+    : { data: null };
 
   if (!memberData) {
     redirect("/onboarding");

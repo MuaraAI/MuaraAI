@@ -2,6 +2,7 @@ import React from "react";
 import { redirect } from "next/navigation";
 import PoWForm from "@/components/auth/pow-modal";
 import { createClient } from "@/lib/supabase/server";
+import { createPrivilegedClient } from "@/lib/supabase/admin";
 import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import type { PoWInput } from "@/lib/validation";
 
@@ -33,7 +34,8 @@ export default async function OnboardingPage() {
   let rejectionReason: string | undefined = undefined;
 
   if (user) {
-    const { data: member } = await supabase
+    const privileged = await createPrivilegedClient();
+    const { data: member } = await privileged
       .from("members")
       .select("id, registration_status, full_name, affiliation, campus, phone_wa, telegram_username, portfolio_url, division, track, secondary_division, secondary_track, join_reason, bio, toolchain_narrative, website_url, linkedin_url, instagram_url, threads_url, x_url, rejection_reason, reviewed_at, updated_at, created_at")
       .eq("id", user.id)
