@@ -19,7 +19,6 @@
     "resend": "^4.1.2"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@types/node": "^22.10.7",
     "@types/react": "^19.0.7",

@@ -6,7 +6,7 @@ const publicFiles = [
   "src/components/landing/footer.tsx",
   "src/components/landing/projects-grid.tsx",
   "src/components/landing/manifesto.tsx",
-  "src/components/landing/treasury-preview.tsx",
+  "src/components/landing/donate-cta.tsx",
   "src/components/landing/syndicate-roster.tsx",
 ].map((file) => path.resolve(process.cwd(), file));
 

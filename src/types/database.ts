@@ -51,27 +51,11 @@ export interface Member {
   reapply_blocked: boolean;
   intake_policy_version: string | null;
   is_active: boolean;
-  dues_valid_until: string | null;
   total_commits: number;
   reviewed_by: string | null;
   reviewed_at: string | null;
   created_at: string;
   updated_at: string;
-}
-
-export type TransactionType = "income" | "expense";
-export type TransactionStatus = "pending" | "paid" | "failed";
-
-export interface TreasuryTransaction {
-  id: string;
-  type: TransactionType;
-  amount: number;
-  category: string;
-  description: string;
-  member_id: string | null;
-  status: TransactionStatus;
-  payment_ref: string | null;
-  created_at: string;
 }
 
 export interface LearningMaterial {
@@ -105,41 +89,9 @@ export interface Achievement {
   created_at: string;
 }
 
-export interface SentEmail {
-  id: string;
-  recipient_type: string;
-  recipient_email: string;
-  subject: string;
-  body: string;
-  sent_by: string | null;
-  created_at: string;
-}
-
-export type InboxMessageStatus = "unread" | "read" | "replied";
-
-export interface InboxMessage {
-  id: string;
-  sender_name: string;
-  sender_email: string;
-  organization: string | null;
-  subject: string;
-  message: string;
-  status: InboxMessageStatus;
-  reply_body: string | null;
-  replied_at: string | null;
-  replied_by: string | null;
-  created_at: string;
-}
-
-export interface DuesConfig {
-  weekly_fee: number;
-  monthly_fee: number;
-  arrears_blacklist_days: number;
-}
-
 export interface CommunitySetting {
   key: string;
-  value: DuesConfig | Record<string, unknown>;
+  value: Record<string, unknown>;
   description: string | null;
   updated_at: string;
 }

@@ -16,8 +16,8 @@ export default async function AdminMembersPage() {
 
   return (
     <div className="space-y-8">
-      <PortalHeader eyebrow="Maintainer workspace" title="Audit Anggota & Manajemen Blacklist">
-          Pantau status keaktifan anggota, masa aktif iuran kas, dan kendalikan status blacklist jika menunggak lebih dari 30 hari.
+      <PortalHeader eyebrow="Maintainer workspace" title="Audit Anggota & Status Akses">
+          Pantau status keaktifan anggota dan kendalikan akses mereka.
       </PortalHeader>
 
       <AdminMembersClient initialMembers={members} />

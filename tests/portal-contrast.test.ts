@@ -5,9 +5,7 @@ import path from "node:path";
 describe("Portal Contrast Sanitization", () => {
   const portalFiles = [
     "src/app/(portal)/dashboard/page.tsx",
-    "src/app/(portal)/dashboard/treasury/page.tsx",
     "src/app/(portal)/dashboard/learn/learn-feed-client.tsx",
-    "src/app/(portal)/admin/treasury/page.tsx",
     "src/app/(portal)/admin/members/page.tsx",
   ];
 

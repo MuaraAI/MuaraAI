@@ -63,21 +63,3 @@ export async function requestMembershipExit(reason?: string) {
 
   return { success: true, exitedAt };
 }
-
-export async function getMembershipExitStatus() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return { success: false, error: "Unauthorized" };
-
-  const { data: member, error } = await supabase
-    .from("members")
-    .select("membership_status, membership_started_at, exited_at, exit_reason, reapply_blocked, registration_status")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (error || !member) return { success: false, error: "Profil member tidak ditemukan." };
-  return { success: true, member };
-}

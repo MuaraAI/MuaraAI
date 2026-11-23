@@ -9,7 +9,6 @@ const member = {
   github_username: "exitedstudent",
   division: "builder",
   track: null,
-  dues_valid_until: null,
   is_active: false,
   membership_status: "exited",
   membership_started_at: "2026-10-01T00:00:00.000Z",

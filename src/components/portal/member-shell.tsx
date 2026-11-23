@@ -24,7 +24,6 @@ type NavItem = { href: string; label: string; icon: IconName };
 const navItems: NavItem[] = [
   { href: "/dashboard", label: "Beranda", icon: "dashboard" },
   { href: "/dashboard/learn", label: "Belajar", icon: "school" },
-  { href: "/dashboard/treasury", label: "Kas", icon: "account_balance_wallet" },
 ];
 
 export default function MemberShell({ member, children }: MemberShellProps) {

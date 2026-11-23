@@ -22,7 +22,6 @@ const member = {
   division: "builder",
   track: "General",
   total_commits: 10,
-  dues_valid_until: "2026-12-31",
   portfolio_url: "https://github.com/Curzyori",
   bio: "",
 };

@@ -53,7 +53,8 @@ Ketentuan intake saat ini:
 - Mahasiswa dari kampus mana pun di seluruh Indonesia.
 - Angkatan 2026 dan seterusnya.
 - Alur pendaftaran: isi form onboarding terlebih dahulu, setujui Privacy Policy, Terms of Service, dan Code of Conduct, baru login GitHub OAuth, lalu submit Proof of Work.
-- Detail verifikasi, membership, iuran, dan akses tersedia setelah login.
+- Detail verifikasi, membership, dan akses tersedia setelah login.
+- Dukungan finansial bersifat sukarela lewat donasi: https://sociabuzz.com/muaraai
 
 Tim inti:
 
@@ -73,13 +74,10 @@ muaraai.com/
 ├── /code-of-conduct       # Norma dan etika komunitas
 ├── /dashboard             # Workspace member: status dan next action
 ├── /dashboard/learn       # Muara Learn
-├── /dashboard/treasury    # Kas komunitas (QRIS Segera hadir)
 └── /admin                 # Workspace maintainer
     ├── /review            # Review pendaftar
     ├── /members           # Audit membership dan lifecycle
-    ├── /treasury          # Pencatatan kas
     ├── /learn             # Pengelolaan materi
-    ├── /mail              # Inbox dan email komunitas
     └── /achievements      # Prestasi komunitas
 ```
 
@@ -150,7 +148,7 @@ npx tsc --noEmit
 npm run build
 ```
 
-Build terakhir memverifikasi 25 route (termasuk `robots.txt`, `sitemap.xml`, dan `icon.png`) dan 130 test yang mencakup UI, membership lifecycle, webhook Pakasir, notification safety, auth boundaries, public content, mascot, dan kontrak responsive.
+Build terakhir memverifikasi 25 route (termasuk `robots.txt`, `sitemap.xml`, dan `icon.png`) dan 130 test yang mencakup UI, membership lifecycle, notification safety, auth boundaries, public content, mascot, dan kontrak responsive.
 
 ## Official links
 

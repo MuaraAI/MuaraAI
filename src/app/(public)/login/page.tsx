@@ -97,9 +97,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-secondary">Setelah masuk</p>
           <ul className="mt-5 space-y-4">
             {[
-              ["dashboard", "Dashboard anggota", "Status keanggotaan, iuran, dan langkah berikutnya."],
+              ["dashboard", "Dashboard anggota", "Status keanggotaan dan langkah berikutnya."],
               ["school", "Muara Learn", "Materi belajar yang dikurasi maintainer."],
-              ["account_balance_wallet", "Kas komunitas", "Riwayat iuran dan transparansi pengeluaran."],
             ].map(([icon, title, desc]) => (
               <li key={title} className="flex gap-4">
                 <span className="px-icon h-10 w-10 shrink-0">

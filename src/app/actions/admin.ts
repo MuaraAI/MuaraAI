@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { isMaintainer } from "@/lib/guards";
-import { escapeHtml, renderEmailHtml } from "@/lib/notify";
+import { escapeHtml } from "@/lib/notify";
 import { fetchMemberOrgCommits } from "@/lib/github-sync";
 import { Resend } from "resend";
 
@@ -134,29 +134,6 @@ export async function rejectApplicant(memberId: string, reason?: string) {
   return { success: true };
 }
 
-// 3. Log Expense
-export async function logExpense(data: {
-  amount: number;
-  category: string;
-  description: string;
-}) {
-  const { supabase } = await assertMaintainer();
-
-  const { error } = await supabase.from("treasury_transactions").insert({
-    type: "expense",
-    amount: data.amount,
-    category: data.category,
-    description: data.description,
-    status: "paid",
-  });
-
-  if (error) {
-    console.error("[admin:logExpense]", error.message);
-    return { success: false, error: GENERIC_ERROR };
-  }
-  return { success: true };
-}
-
 // 4. Publish Material
 export async function publishMaterial(data: {
   title: string;
@@ -181,68 +158,6 @@ export async function publishMaterial(data: {
     return { success: false, error: GENERIC_ERROR };
   }
   return { success: true };
-}
-
-// 5. Send Resend Broadcast Mail
-export async function sendBroadcastEmail(data: {
-  recipientType: string;
-  recipientEmail?: string;
-  subject: string;
-  body: string;
-}) {
-  const { supabase, user } = await assertMaintainer();
-
-  let targetEmails: string[] = [];
-
-  if (data.recipientType === "all") {
-    const { data: members } = await supabase
-      .from("members")
-      .select("email")
-      .eq("registration_status", "approved")
-      .not("email", "is", null);
-    targetEmails = (members || []).map((m) => m.email!).filter(Boolean);
-  } else if (data.recipientType === "builder" || data.recipientType === "creative") {
-    const { data: members } = await supabase
-      .from("members")
-      .select("email")
-      .eq("division", data.recipientType)
-      .eq("registration_status", "approved")
-      .not("email", "is", null);
-    targetEmails = (members || []).map((m) => m.email!).filter(Boolean);
-  } else if (data.recipientEmail) {
-    targetEmails = [data.recipientEmail.trim()];
-  }
-
-  const resendApiKey = process.env.RESEND_API_KEY;
-  if (!resendApiKey) {
-    return { success: false, error: "RESEND_API_KEY not configured" };
-  }
-
-  const resend = new Resend(resendApiKey);
-
-  for (const email of targetEmails) {
-    try {
-      await resend.emails.send({
-        from: "Muara AI <admin@muaraai.com>",
-        to: email,
-        subject: data.subject,
-        html: renderEmailHtml(data.subject, data.body),
-      });
-
-      // Log to sent_emails
-      await supabase.from("sent_emails").insert({
-        recipient_type: data.recipientType,
-        recipient_email: email,
-        subject: data.subject,
-        body: data.body,
-        sent_by: user.id,
-      });
-    } catch (e) {
-      console.error(`Failed to send email to ${email}:`, e);
-    }
-  }
-
-  return { success: true, count: targetEmails.length };
 }
 
 // 6. Create Achievement

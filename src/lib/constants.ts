@@ -1,10 +1,7 @@
 export const COOKIE_NAME = "sb-muaraai-auth-token";
 export const COOKIE_DOMAIN = ".muaraai.com";
 
-export const DUES_WEEKLY_FEE = 3000;
-export const DUES_MONTHLY_FEE = 12000;
-export const DUES_CYCLE_DAYS = 7;
-export const ARREARS_BLACKLIST_DAYS = 30;
+export const SOCIABUZZ_URL = "https://sociabuzz.com/muaraai";
 
 export const SITE_NAME = "Muara AI";
 export const SITE_URL = "https://muaraai.com";

@@ -21,11 +21,10 @@ export default function TermsPage() {
         </section>
 
         <section className="px-card bg-white p-6 space-y-3">
-          <h2 className="text-base font-semibold text-foreground">2. Sistem Iuran Kas Komunitas</h2>
+          <h2 className="text-base font-semibold text-foreground">2. Dukungan Sukarela</h2>
           <p>
-            Iuran kas sebesar Rp 3.000 / minggu atau Rp 12.000 / bulan digunakan secara transparan untuk pembiayaan sewa server VPS,
-            domain, kuota API compute, dan registrasi kompetisi. Anggota yang menunggak lebih dari 30 hari berturut-turut akan
-            dinonaktifkan hak akses API dan repositori internalnya hingga tunggakan diselesaikan.
+            Keanggotaan tidak dipungut biaya. Dukungan finansial bersifat sukarela melalui donasi dan digunakan untuk pembiayaan
+            sewa server VPS, domain, kuota API compute, dan registrasi kompetisi.
           </p>
         </section>
 
