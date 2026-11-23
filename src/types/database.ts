@@ -89,32 +89,6 @@ export interface Achievement {
   created_at: string;
 }
 
-export interface SentEmail {
-  id: string;
-  recipient_type: string;
-  recipient_email: string;
-  subject: string;
-  body: string;
-  sent_by: string | null;
-  created_at: string;
-}
-
-export type InboxMessageStatus = "unread" | "read" | "replied";
-
-export interface InboxMessage {
-  id: string;
-  sender_name: string;
-  sender_email: string;
-  organization: string | null;
-  subject: string;
-  message: string;
-  status: InboxMessageStatus;
-  reply_body: string | null;
-  replied_at: string | null;
-  replied_by: string | null;
-  created_at: string;
-}
-
 export interface CommunitySetting {
   key: string;
   value: Record<string, unknown>;

@@ -43,6 +43,14 @@ describe("legacy billing removal", () => {
     expect(fs.readFileSync(path.join(root, ".env.example"), "utf8")).not.toMatch(/pakasir/i);
   });
 
+  it("has no mail center remnants (inbox_messages, sent_emails, contact action) in src", () => {
+    const offenders = sourceFiles(path.join(root, "src")).filter((file) =>
+      /inbox_messages|sent_emails|InboxMessage|SentEmail|submitContactMessage/.test(fs.readFileSync(file, "utf8"))
+    );
+    expect(offenders.map((f) => path.relative(root, f))).toEqual([]);
+    expect(fs.existsSync(path.join(root, "src/app/actions/contact.ts"))).toBe(false);
+  });
+
   it("has no pakasir webhook route", () => {
     expect(fs.existsSync(path.join(root, "src/app/api/webhooks/pakasir/route.ts"))).toBe(false);
   });

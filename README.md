@@ -78,7 +78,6 @@ muaraai.com/
     ├── /review            # Review pendaftar
     ├── /members           # Audit membership dan lifecycle
     ├── /learn             # Pengelolaan materi
-    ├── /mail              # Inbox dan email komunitas
     └── /achievements      # Prestasi komunitas
 ```
 
