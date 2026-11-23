@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Member } from "@/types/database";
 import PortalShell from "@/components/portal/portal-shell";
+import { isMaintainer } from "@/lib/guards";
 
 export default async function PortalLayout({
   children,
@@ -14,7 +15,7 @@ export default async function PortalLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/api/auth/login");
+  if (!user) redirect("/login");
 
   const { data: memberData } = await supabase
     .from("members")
@@ -41,6 +42,7 @@ export default async function PortalLayout({
         github_username: member.github_username,
         is_active: member.is_active,
         registration_status: member.registration_status,
+        is_maintainer: isMaintainer(member),
       }}
     >
       {children}

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Link from "next/link";
+import StatusScene from "@/components/ui/status-scene";
 
 export default function ErrorBoundary({
   error,
@@ -14,20 +16,26 @@ export default function ErrorBoundary({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground px-4">
-      <div className="text-center space-y-4 max-w-md">
-        <span className="font-display font-bold text-6xl text-rose-600">500</span>
-        <h1 className="font-display font-bold text-2xl text-foreground">Terjadi Kesalahan Server</h1>
-        <p className="text-sm text-slate-600">
-          Sistem mengalami kendala tak terduga. Silakan coba muat ulang halaman.
-        </p>
-        <button
-          onClick={() => reset()}
-          className="inline-flex items-center gap-2 rounded-lg bg-muara-ocean hover:bg-muara-ocean-dark text-white px-5 py-2.5 text-xs font-bold transition-colors shadow-sm"
-        >
-          Muat Ulang
-        </button>
-      </div>
+    <div className="flex min-h-screen items-center bg-background text-foreground">
+      <StatusScene
+        code="500"
+        tone="rose"
+        eyebrow="Terjadi kesalahan server"
+        title="Ada yang tersangkut di hulu."
+        description="Sistem mengalami kendala tak terduga. Coba muat ulang halaman; kalau masih terjadi, kabari maintainer lewat admin@muaraai.com."
+        mascotSrc="/mascot/mura/500-maintenance.png"
+        mascotAlt="Mura memegang kunci, siap memperbaiki sistem"
+        actions={
+          <>
+            <button type="button" onClick={() => reset()} className="px-btn inline-flex min-h-11 items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold">
+              Muat Ulang
+            </button>
+            <Link href="/" className="px-btn-ghost inline-flex min-h-11 items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold">
+              Kembali ke Beranda
+            </Link>
+          </>
+        }
+      />
     </div>
   );
 }

@@ -23,7 +23,7 @@ export default function DataState({
     <section
       role={stateRole[kind]}
       aria-live={kind === "error" ? "assertive" : "polite"}
-      className="rounded-xl border border-stroke bg-surface-alt px-6 py-10 text-center"
+      className="px-frame bg-surface-alt px-6 py-10 text-center [--px-line:#CFE2EE]"
     >
       <h2 className="font-display text-lg font-semibold text-foreground">{title}</h2>
       <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-secondary">

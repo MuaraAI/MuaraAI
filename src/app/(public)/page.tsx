@@ -10,8 +10,7 @@ import SyndicateRoster from "@/components/landing/syndicate-roster";
 import BenefitsGrid from "@/components/landing/benefits-grid";
 import DonateCta from "@/components/landing/donate-cta";
 import JoinFlow from "@/components/landing/join-flow";
-import WaveDivider from "@/components/ui/wave-divider";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { Member, Achievement } from "@/types/database";
 import { redirect } from "next/navigation";
 
@@ -39,23 +38,28 @@ export default async function LandingPage({
     redirect(`/onboarding?error=${encodeURIComponent(params.error)}`);
   }
 
-  const supabase = await createClient();
+  // Without Supabase env (e.g. fresh local clone) render the static landing with empty data.
+  const supabase = isSupabaseConfigured() ? await createClient() : null;
 
   // 1. Fetch approved active members (explicit public profile fields only, zero PII)
-  const { data: membersData } = await supabase
+  const { data: membersData } = supabase
+    ? await supabase
     .from("members")
     .select("id, full_name, avatar_url, github_username, hierarchy, sub_hierarchy, roles, titles, division, track, total_commits, website_url, github_url, linkedin_url, portfolio_url")
     .eq("registration_status", "approved")
     .eq("is_active", true)
-    .order("total_commits", { ascending: false });
+    .order("total_commits", { ascending: false })
+    : { data: null };
 
   const members = (membersData || []) as unknown as Member[];
 
   // 2. Fetch achievements
-  const { data: achievementsData } = await supabase
+  const { data: achievementsData } = supabase
+    ? await supabase
     .from("achievements")
     .select("*")
-    .order("issue_date", { ascending: false });
+    .order("issue_date", { ascending: false })
+    : { data: null };
 
   const achievements: Achievement[] = achievementsData || [];
 
@@ -63,16 +67,12 @@ export default async function LandingPage({
     <div className="flex flex-col">
       <Hero />
       <MetricsBar />
-      <WaveDivider />
       <VisionMission />
       <ProjectsGrid />
-      <WaveDivider inverted />
       <AccoladesGrid initialAchievements={achievements} />
       <Manifesto />
-      <WaveDivider />
       <SyndicateRoster initialMembers={members} />
       <BenefitsGrid />
-      <WaveDivider inverted />
       <DonateCta />
       <JoinFlow />
     </div>

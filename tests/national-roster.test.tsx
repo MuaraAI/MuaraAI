@@ -4,14 +4,17 @@ import React from "react";
 import SyndicateRoster from "../src/components/landing/syndicate-roster";
 
 describe("national maintainer roster", () => {
-  it("renders corrected names, NIMs, order, and Builder roles", () => {
+  it("renders corrected names, NIMs, order, and roles", () => {
     render(<SyndicateRoster initialMembers={[]} />);
     const text = document.body.textContent || "";
-    expect(text).toContain("Yuken Velino | 15260767");
-    expect(text).toContain("Muhammad Raffli Aldiansyah | 15260161");
-    expect(text).toContain("Verzio Yamanansyah | 15260225");
-    expect(text.indexOf("Yuken Velino | 15260767")).toBeLessThan(text.indexOf("Muhammad Raffli Aldiansyah | 15260161"));
-    expect(text.indexOf("Muhammad Raffli Aldiansyah | 15260161")).toBeLessThan(text.indexOf("Verzio Yamanansyah | 15260225"));
+    for (const nim of ["15260767", "15260161", "15260225"]) expect(text).toContain(`NIM ${nim}`);
+    expect(text.indexOf("Yuken Velino")).toBeLessThan(text.indexOf("Muhammad Raffli Aldiansyah"));
+    expect(text.indexOf("Muhammad Raffli Aldiansyah")).toBeLessThan(text.indexOf("Verzio Yamanansyah"));
+    const roles = (name: string) => screen.getByRole("list", { name: `Peran ${name}` }).textContent;
+    expect(roles("Yuken Velino")).toContain("AI Engineer");
+    expect(roles("Muhammad Raffli Aldiansyah")).toContain("Backend");
+    expect(roles("Verzio Yamanansyah")).toContain("Desainer");
+    expect(roles("Verzio Yamanansyah")).not.toContain("Handle UI");
     expect(screen.queryByText("Creative")).toBeNull();
   });
 });

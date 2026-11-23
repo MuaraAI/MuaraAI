@@ -7,6 +7,7 @@ import { Member } from "@/types/database";
 import Icon from "@/components/ui/icon";
 import FadeIn from "@/components/ui/fade-in";
 import { filterMembers, RosterFilter } from "@/components/landing/syndicate-roster";
+import { PixelTabs, TabSlide } from "@/components/ui/pixel-tabs";
 
 interface MembersDirectoryProps {
   initialMembers: Member[];
@@ -19,6 +20,7 @@ const filters: { id: RosterFilter; label: string }[] = [
   { id: "creative", label: "Creative" },
   { id: "top-commits", label: "Kontributor aktif" },
 ];
+const FILTER_ORDER = filters.map((f) => f.id);
 
 export default function MembersDirectory({ initialMembers }: MembersDirectoryProps) {
   const [filter, setFilter] = useState<RosterFilter>("all");
@@ -37,7 +39,7 @@ export default function MembersDirectory({ initialMembers }: MembersDirectoryPro
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col gap-4 rounded-xl border border-stroke bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="px-frame flex flex-col gap-4 bg-white p-4 lg:flex-row lg:items-center lg:justify-between">
         <label className="relative block w-full sm:max-w-sm">
           <span className="sr-only">Cari anggota</span>
           <Icon name="search" className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
@@ -47,22 +49,10 @@ export default function MembersDirectory({ initialMembers }: MembersDirectoryPro
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Cari nama atau @GitHub"
             aria-label="Cari anggota"
-            className="min-h-11 w-full rounded-md border border-stroke bg-surface-alt pl-10 pr-4 text-sm text-foreground placeholder-slate-400 focus:bg-white"
+            className="min-h-11 w-full border-2 border-[#CFE2EE] bg-surface-alt pl-10 pr-4 focus:border-muara-ocean text-sm text-foreground placeholder-slate-400 focus:bg-white"
           />
         </label>
-        <div role="group" aria-label="Filter anggota" className="flex flex-wrap gap-2">
-          {filters.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              aria-pressed={filter === item.id}
-              onClick={() => setFilter(item.id)}
-              className={`min-h-11 rounded-md px-3 text-xs font-medium transition-colors ${filter === item.id ? "bg-foreground text-white" : "border border-stroke text-secondary hover:border-muara-ocean hover:text-foreground"}`}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
+        <PixelTabs tabs={filters} value={filter} onChange={setFilter} ariaLabel="Filter anggota" idPrefix="member-filter" className="min-w-0" />
       </div>
 
       <div className="flex items-center justify-between text-sm text-secondary">
@@ -70,8 +60,9 @@ export default function MembersDirectory({ initialMembers }: MembersDirectoryPro
         {search ? <button type="button" onClick={() => setSearch("")} className="min-h-11 text-muara-ocean hover:underline">Reset pencarian</button> : null}
       </div>
 
+      <TabSlide value={filter} order={FILTER_ORDER} idPrefix="member-filter">
       {filtered.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-stroke bg-surface-alt p-12 text-center">
+        <div className="border-2 border-dashed border-[#CFE2EE] bg-surface-alt p-12 text-center">
           <h2 className="font-display text-lg font-semibold text-foreground">Tidak ada anggota yang cocok</h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-secondary">Coba ubah kata kunci atau pilih filter lain.</p>
         </div>
@@ -81,7 +72,7 @@ export default function MembersDirectory({ initialMembers }: MembersDirectoryPro
             const titles = Array.from(new Set([member.role_title, ...(member.titles || [])].filter(Boolean)));
             return (
               <FadeIn key={member.id} delay={index * 0.04}>
-                <article className="flex h-full flex-col justify-between rounded-xl border border-stroke bg-white p-5 transition-colors hover:border-muara-ocean">
+                <article className="px-card px-card-hover flex h-full flex-col justify-between bg-white p-5">
                   <div>
                     <div className="flex items-center gap-3">
                       <Image
@@ -89,7 +80,7 @@ export default function MembersDirectory({ initialMembers }: MembersDirectoryPro
                         alt={member.full_name}
                         width={52}
                         height={52}
-                        className="rounded-full border border-stroke object-cover"
+                        className="px-frame object-cover [--px-line:#CFE2EE]"
                         unoptimized
                       />
                       <div className="min-w-0">
@@ -98,8 +89,8 @@ export default function MembersDirectory({ initialMembers }: MembersDirectoryPro
                       </div>
                     </div>
                     <div className="mt-5 flex flex-wrap gap-1.5">
-                      {titles.map((title) => <span key={title} className="rounded-md border border-stroke bg-surface-alt px-2 py-1 text-[11px] font-medium text-foreground">{title}</span>)}
-                      <span className="rounded-md border border-stroke px-2 py-1 text-[11px] font-medium capitalize text-secondary">{member.division}</span>
+                      {titles.map((title) => <span key={title} className="px-chip bg-surface-alt px-2 py-0.5 font-mono text-[11px] font-medium text-foreground">{title}</span>)}
+                      <span className="px-chip px-2 py-0.5 font-mono text-[11px] font-medium capitalize text-secondary">{member.division}</span>
                     </div>
                     <dl className="mt-5 space-y-2 text-xs">
                       <div className="flex justify-between gap-3"><dt className="text-secondary">Kampus</dt><dd className="text-right text-foreground">{member.campus || "UBSI Pontianak"}</dd></div>
@@ -119,6 +110,7 @@ export default function MembersDirectory({ initialMembers }: MembersDirectoryPro
           })}
         </div>
       )}
+      </TabSlide>
     </div>
   );
 }

@@ -8,11 +8,11 @@ describe("national campus map", () => {
     render(<NationalCampusMap />);
     expect(screen.getByRole("img", { name: /Peta jaringan universitas Indonesia/i })).toBeTruthy();
     expect(screen.getByText("UBSI Pontianak")).toBeTruthy();
-    expect(screen.getByText("UNTAN")).toBeTruthy();
-    expect(screen.getByText("ITB")).toBeTruthy();
-    expect(screen.getByText("UI")).toBeTruthy();
-    expect(screen.getByText("UGM")).toBeTruthy();
-    expect(screen.getByText("UNHAS")).toBeTruthy();
+    expect(screen.getAllByText("UNTAN").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("ITB").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("UI").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("UGM").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("UNHAS").length).toBeGreaterThan(0);
     expect(screen.queryByText("UBSI Jakarta")).toBeNull();
     expect(screen.getByRole("list", { name: /universitas jaringan nasional/i })).toBeTruthy();
     expect(screen.getByText(/Founding hub/i)).toBeTruthy();

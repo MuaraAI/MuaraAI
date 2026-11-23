@@ -10,6 +10,7 @@ type PortalShellProps = {
     github_username: string;
     is_active: boolean;
     registration_status?: string;
+    is_maintainer?: boolean;
   };
   children: React.ReactNode;
 };

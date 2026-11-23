@@ -108,22 +108,20 @@ body {
   }
 }
 
-.national-campus-map { --m-land: color-mix(in srgb, var(--color-accent) 14%, var(--color-surface)); --m-edge: color-mix(in srgb, var(--color-accent) 32%, transparent); --m-ctx: color-mix(in srgb, var(--color-secondary) 12%, transparent); --m-route: var(--color-accent); --m-dot: var(--color-accent); --m-chip: var(--color-surface); --m-chip-edge: var(--color-stroke); --m-hub: var(--color-primary); --m-hub-text: white; --m-muted: var(--color-secondary); position: relative; width: 100%; aspect-ratio: 640 / 290; container-type: inline-size; }
+.national-campus-map { --m-land: color-mix(in srgb, var(--color-accent) 20%, var(--color-surface)); --m-edge: color-mix(in srgb, var(--color-accent) 55%, transparent); --m-ctx: color-mix(in srgb, var(--color-secondary) 12%, transparent); --m-route: var(--color-accent); --m-dot: var(--color-accent); --m-chip: var(--color-surface); --m-chip-edge: var(--color-stroke); --m-hub: var(--color-primary); --m-hub-text: white; --m-muted: var(--color-secondary); position: relative; width: 100%; aspect-ratio: 680 / 290; container-type: inline-size; }
 .national-campus-map > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
-.national-campus-map .smap-ctx { display: none; }
+.national-campus-map .smap-ctx { stroke: none; }
 .national-campus-map .smap-land { fill: var(--m-land); stroke: var(--m-edge); stroke-width: .8; stroke-linejoin: round; }
-.national-campus-map .smap-route { fill: none; stroke: var(--m-route); stroke-width: 1.5; vector-effect: non-scaling-stroke; stroke-linecap: round; opacity: .7; stroke-dasharray: 1; stroke-dashoffset: 1; animation: smap-draw 1.1s cubic-bezier(.16,1,.3,1) forwards; animation-delay: calc(var(--i) * 140ms + .2s); }
+.national-campus-map .smap-route { fill: none; stroke: var(--m-route); stroke-width: 1.25; vector-effect: non-scaling-stroke; stroke-linecap: round; opacity: .45; stroke-dasharray: 1; stroke-dashoffset: 1; animation: smap-draw 1.1s cubic-bezier(.16,1,.3,1) forwards; animation-delay: calc(var(--i) * 140ms + .2s); }
 .national-campus-map .smap-city { fill: var(--m-chip); stroke: var(--m-dot); stroke-width: 1.8; }
 .national-campus-map .smap-regional { stroke: #D97706; }
 .national-campus-map .smap-hub { fill: var(--m-hub); stroke: var(--m-chip); stroke-width: 2; }
 .national-campus-map .smap-ring { fill: none; stroke: var(--m-hub); stroke-width: 1.5; }
 .national-campus-map .smap-parcel { fill: var(--m-route); stroke: var(--m-chip); stroke-width: 1.2; }
-.national-campus-map .smap-label { position: absolute; padding: .2em .6em; border-radius: 999px; background: var(--m-chip); box-shadow: inset 0 0 0 1px var(--m-chip-edge); color: var(--color-secondary); font-size: clamp(10px, 1.2cqw + 6px, 13px); font-weight: 600; line-height: 1.4; white-space: nowrap; pointer-events: none; }
-.national-campus-map .pos-top { transform: translate(-50%, calc(-100% - 10px)); }
-.national-campus-map .pos-b { transform: translate(-50%, 70%); }
-.national-campus-map .pos-r { transform: translate(14px, -50%); }
-.national-campus-map .pos-l { transform: translate(calc(-100% - 14px), -50%); }
-.national-campus-map .smap-hub-label { position: absolute; display: inline-flex; align-items: center; padding: .45em .85em; border-radius: 10px; background: var(--m-hub); color: var(--m-hub-text); font-size: clamp(11px, 1.4cqw + 7px, 15px); line-height: 1.2; white-space: nowrap; transform: translate(-18%, calc(-100% - 16px)); box-shadow: 0 6px 18px rgba(7,32,51,.12); pointer-events: none; }
+.national-campus-map .smap-label { position: absolute; transform: translate(-50%, -50%); padding: .22em .62em; border-radius: 0; background: var(--m-chip); box-shadow: 0 -2px 0 0 #9DBBD0, 0 2px 0 0 #9DBBD0, -2px 0 0 0 #9DBBD0, 2px 0 0 0 #9DBBD0; font-family: var(--font-mono); color: var(--color-primary); font-size: clamp(9px, 2.2cqw, 13.5px); font-weight: 700; letter-spacing: .02em; line-height: 1.35; white-space: nowrap; pointer-events: none; }
+.national-campus-map .smap-label-regional { box-shadow: 0 -2px 0 0 color-mix(in srgb, #D97706 60%, transparent), 0 2px 0 0 color-mix(in srgb, #D97706 60%, transparent), -2px 0 0 0 color-mix(in srgb, #D97706 60%, transparent), 2px 0 0 0 color-mix(in srgb, #D97706 60%, transparent); }
+.national-campus-map .smap-leader { stroke: color-mix(in srgb, var(--color-secondary) 35%, transparent); stroke-width: 1; stroke-dasharray: 2 3; vector-effect: non-scaling-stroke; }
+.national-campus-map .smap-hub-label { position: absolute; display: inline-flex; align-items: center; padding: .45em .85em; border-radius: 0; background: var(--m-hub); color: var(--m-hub-text); font-size: clamp(11px, 1.4cqw + 7px, 15px); line-height: 1.2; white-space: nowrap; transform: translate(-18%, calc(-100% - 16px)); box-shadow: 0 -2px 0 0 var(--m-hub), 0 2px 0 0 var(--m-hub), -2px 0 0 0 var(--m-hub), 2px 0 0 0 var(--m-hub), 5px 5px 0 0 #0369A1; pointer-events: none; }
 .national-campus-map .smap-hub-label b { display: block; font-weight: 600; }
 .national-campus-map .smap-hub-label small { display: block; font-family: var(--font-mono); font-size: .78em; opacity: .8; }
 .national-campus-map .smap-cap { position: absolute; left: 0; bottom: 0; font-family: var(--font-mono); font-size: clamp(10px, 1cqw + 7px, 11px); letter-spacing: .06em; text-transform: uppercase; color: var(--m-muted); }
@@ -131,6 +129,16 @@ body {
 .national-campus-map .smap-ring { transform-box: fill-box; transform-origin: center; animation: smap-ring 2.8s ease-out infinite; }
 @keyframes smap-ring { 0%,100% { opacity: .8; transform: scale(1); } 100% { opacity: 0; transform: scale(3.2); } }
 @container (max-width: 520px) { .national-campus-map .smap-hub-label { transform: translate(6px, calc(-100% - 14px)); } .national-campus-map .smap-hub-label small { display: none; } .national-campus-map .smap-cap { display: none; } }
+.campus-map-wrap { width: 100%; container-type: inline-size; }
+.smap-legend { display: none; }
+@container (max-width: 440px) {
+  .national-campus-map .smap-label, .national-campus-map .smap-leader { display: none; }
+  .smap-legend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 16px 2px 0; padding: 0; list-style: none; }
+  .smap-legend li { display: flex; flex-wrap: wrap; align-items: center; column-gap: 6px; min-width: 0; padding: 7px 9px; border-radius: 0; background: var(--color-surface); box-shadow: 0 -2px 0 0 #CFE2EE, 0 2px 0 0 #CFE2EE, -2px 0 0 0 #CFE2EE, 2px 0 0 0 #CFE2EE; font-family: var(--font-mono); color: var(--color-primary); font-size: 12px; font-weight: 600; line-height: 1.2; }
+  .smap-legend small { flex-basis: 100%; padding-left: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-secondary); font-size: 10.5px; font-weight: 400; }
+  .smap-legend-dot { width: 7px; height: 7px; flex: none; border-radius: 2px; background: var(--color-accent); }
+  .smap-legend .is-regional .smap-legend-dot { background: #D97706; }
+}
 @media (prefers-reduced-motion: reduce) { .national-campus-map .smap-route { stroke-dashoffset: 0; animation: none; } }
 
 @media (prefers-reduced-motion: reduce) {
@@ -143,3 +151,193 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Semi pixel-art primitives: stepped corners via 4 hard box-shadows (no blur), hard offset drops, smooth motion. */
+/* In @layer components: beats element resets (preflight on <button>), yet any utility on the element can still override it. */
+@layer components {
+.px-card, .px-frame, .px-chip, .px-icon, .px-btn, .px-btn-ghost {
+  --px: 2px;
+  --px-line: #163A55;
+  --px-drop: transparent;
+  --px-off: 0px;
+  box-shadow:
+    0 calc(var(--px) * -1) 0 0 var(--px-line),
+    0 var(--px) 0 0 var(--px-line),
+    calc(var(--px) * -1) 0 0 0 var(--px-line),
+    var(--px) 0 0 0 var(--px-line),
+    var(--px-off) var(--px-off) 0 0 var(--px-drop);
+  transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s cubic-bezier(.22,1,.36,1), background-color .2s ease, color .2s ease;
+}
+.px-card { --px-drop: #CFE2EE; --px-off: 6px; }
+.px-card-hover:hover, .px-card-hover:focus-within { --px-drop: #0369A1; --px-off: 8px; transform: translate(-2px, -2px); }
+.px-chip { --px-line: color-mix(in srgb, currentColor 40%, transparent); }
+.px-icon { --px-line: color-mix(in srgb, #0369A1 45%, transparent); display: inline-flex; align-items: center; justify-content: center; background: #EAF3F9; color: #0369A1; }
+.px-btn { --px-line: #072033; --px-drop: #0369A1; --px-off: 4px; background: #072033; color: #fff; }
+.px-btn:hover { --px-off: 6px; transform: translate(-2px, -2px); }
+.px-btn:active { --px-off: 1px; transform: translate(2px, 2px); }
+.px-btn-ghost { --px-line: #163A55; --px-drop: #CFE2EE; --px-off: 4px; background: #fff; color: #072033; }
+.px-btn-ghost:hover { --px-drop: #0369A1; --px-off: 6px; transform: translate(-2px, -2px); }
+.px-btn-ghost:active { --px-off: 1px; transform: translate(2px, 2px); }
+}
+.px-pixelated { image-rendering: pixelated; }
+@keyframes px-wave { to { transform: translateX(-8px); } }
+.px-water { animation: px-wave 1.6s steps(8, end) infinite; animation-play-state: paused; }
+.group:hover .px-water { animation-play-state: running; }
+@media (prefers-reduced-motion: reduce) {
+  .px-card, .px-btn, .px-btn-ghost, .px-water { transition: none; animation: none; }
+  .px-card-hover:hover, .px-btn:hover, .px-btn-ghost:hover { transform: none; }
+}
+
+/* Navbar: stepped 2px frame whose top/side edges and drop fade out as it docks (vars driven by scroll in navbar.tsx). */
+.px-nav {
+  --nav-edge: rgba(22, 58, 85, .85);
+  --nav-bottom: #163A55;
+  --nav-off: 4px;
+  --nav-bg: .62;
+  background: rgba(255, 255, 255, var(--nav-bg));
+  box-shadow:
+    0 -2px 0 0 var(--nav-edge),
+    0 2px 0 0 var(--nav-bottom),
+    -2px 0 0 0 var(--nav-edge),
+    2px 0 0 0 var(--nav-edge),
+    var(--nav-off) var(--nav-off) 0 0 #CFE2EE;
+}
+.px-nav-highlight {
+  background: #DCEBF5;
+  box-shadow:
+    0 -2px 0 0 rgba(3, 105, 161, .45),
+    0 2px 0 0 rgba(3, 105, 161, .45),
+    -2px 0 0 0 rgba(3, 105, 161, .45),
+    2px 0 0 0 rgba(3, 105, 161, .45);
+}
+/* Menu open: the bar turns into a dark glass strip that belongs to the takeover. */
+.px-nav[data-menu-open="true"] { background: rgba(7, 32, 51, .72); box-shadow: 0 -2px 0 0 #0369A1, 0 2px 0 0 #0369A1, -2px 0 0 0 #0369A1, 2px 0 0 0 #0369A1; transition: background-color .3s ease; }
+.px-nav[data-menu-open="true"] .nav-brand-text { color: #fff; }
+.px-nav[data-menu-open="true"] .nav-menu-button { background: #0B2D46; color: #fff; --px-line: #5FA3CC; }
+@keyframes px-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.px-cursor { animation: px-blink 1s steps(1, end) infinite; }
+
+/* Typing caret used by <TypeText>. */
+.type-caret { display: inline-block; width: .55ch; height: .9em; margin: 0 .04em; vertical-align: -.08em; background: currentColor; animation: px-blink 1s steps(1, end) infinite; }
+
+/* Anchor links glide, and land below the fixed navbar. */
+html { scroll-behavior: smooth; }
+section[id] { scroll-margin-top: 88px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .type-caret { animation: none; } }
+
+/* Server-rendered pages: children rise in one after another on load. */
+@keyframes stagger-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.stagger-rise > * { animation: stagger-rise .6s cubic-bezier(.16,1,.3,1) both; }
+.stagger-rise > *:nth-child(2) { animation-delay: .08s; }
+.stagger-rise > *:nth-child(3) { animation-delay: .16s; }
+.stagger-rise > *:nth-child(4) { animation-delay: .24s; }
+.stagger-rise > *:nth-child(5) { animation-delay: .32s; }
+.stagger-rise > *:nth-child(n+6) { animation-delay: .4s; }
+@media (prefers-reduced-motion: reduce) { .stagger-rise > * { animation: none; } }
+
+/* Modal entrance: backdrop fades, panel pops up a few pixels. */
+@keyframes modal-fade { from { opacity: 0; } }
+@keyframes modal-pop { from { opacity: 0; transform: translateY(12px) scale(.98); } }
+.modal-backdrop { animation: modal-fade .2s ease-out both; }
+.modal-panel { animation: modal-pop .32s cubic-bezier(.16,1,.3,1) both; }
+@media (prefers-reduced-motion: reduce) { .modal-backdrop, .modal-panel { animation: none; } }
+/* Belt and braces for iOS: slide-in offsets must never create sideways scroll. */
+html, body { overflow-x: clip; }
+
+/* Mobile menu takeover: pure CSS transitions (transform/opacity/clip-path) so it stays light on phones. */
+.px-tile { display: block; width: 100%; height: 100%; transform: scale(0); opacity: 0;
+  transition: transform .18s steps(3, end) var(--d-out, 0ms), opacity .18s steps(3, end) var(--d-out, 0ms); }
+.px-takeover[data-open="true"] .px-tile { transform: scale(1); opacity: 1; transition-delay: var(--d-in, 0ms); }
+.px-takeover-content { opacity: 0; transition: opacity .12s ease; }
+.px-takeover[data-open="true"] .px-takeover-content { opacity: 1; transition-delay: .26s; }
+.px-line { clip-path: inset(0 100% 0 0); transition: clip-path .12s ease; }
+.px-takeover[data-open="true"] .px-line { clip-path: inset(0 0 0 0); transition: clip-path .42s steps(10, end) calc(.32s + var(--i, 0) * 90ms); }
+.px-btn-ocean, .px-btn-night { box-shadow: 0 -2px 0 0 var(--l), 0 2px 0 0 var(--l), -2px 0 0 0 var(--l), 2px 0 0 0 var(--l), 4px 4px 0 0 var(--drop); transition: transform .2s ease, box-shadow .2s ease; }
+.px-btn-ocean { --l: #0369A1; --drop: #FCD34D; background: #0369A1; color: #fff; }
+.px-btn-night { --l: #5FA3CC; --drop: #0369A1; background: #0B2D46; color: #fff; }
+.px-btn-ocean:active, .px-btn-night:active { transform: translate(2px, 2px); --drop: transparent; }
+@media (prefers-reduced-motion: reduce) {
+  .px-tile, .px-takeover-content, .px-line { transition: none !important; }
+}
+
+/* Mobile rails: card groups scroll sideways with snap instead of stacking into a long column.
+   Tablet/desktop keep their grid. The next card peeks in as the swipe hint. */
+@media (max-width: 767px) {
+  .rail { display: flex !important; gap: 16px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory;
+    margin-inline: -1rem; padding: 4px 1rem 18px; scroll-padding-inline: 1rem; scrollbar-width: none; }
+  .rail::-webkit-scrollbar { display: none; }
+  .rail > * { flex: 0 0 84%; scroll-snap-align: start; }
+  .rail-wide > * { flex-basis: 88%; }
+}
+/* After the sweep, bright accent tiles settle to a deeper (still opaque) blue so the menu text stays the focus. */
+.px-takeover .px-tile[data-accent] { transition: transform .18s steps(3, end) var(--d-out, 0ms), opacity .18s steps(3, end) var(--d-out, 0ms), background-color .6s ease; }
+.px-takeover[data-open="true"] .px-tile[data-accent] { background-color: #0E3A57 !important; transition: transform .18s steps(3, end) var(--d-in, 0ms), opacity .18s steps(3, end) var(--d-in, 0ms), background-color .7s ease calc(var(--d-in, 0ms) + .45s); }
+/* Solid base under the tiles once the sweep is done, so nothing from the page can ever show through. */
+.px-takeover::before { content: ""; position: absolute; inset: 0; background: #072033; opacity: 0; transition: opacity .1s linear; }
+.px-takeover[data-open="true"]::before { opacity: 1; transition: opacity .1s linear .7s; }
+
+
+/* Action variants for the portal (approve / destructive). Same stepped frame + hard drop as .px-btn. */
+.px-btn-success, .px-btn-danger {
+  --l: currentColor;
+  box-shadow: 0 -2px 0 0 var(--l), 0 2px 0 0 var(--l), -2px 0 0 0 var(--l), 2px 0 0 0 var(--l), var(--off, 4px) var(--off, 4px) 0 0 var(--drop);
+  color: #fff;
+  transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s cubic-bezier(.22,1,.36,1), background-color .2s ease;
+}
+.px-btn-success { --l: #0F766E; --drop: #072033; background: #0F766E; }
+.px-btn-danger { --l: #BE123C; --drop: #072033; background: #BE123C; }
+.px-btn-success:hover:not(:disabled), .px-btn-danger:hover:not(:disabled) { --off: 6px; transform: translate(-2px, -2px); }
+.px-btn-success:active:not(:disabled), .px-btn-danger:active:not(:disabled) { --off: 1px; transform: translate(2px, 2px); }
+.px-btn-ghost.px-btn-ghost-danger { --px-line: #FDA4AF; --px-drop: #FFE4E6; color: #BE123C; }
+.px-btn-ghost.px-btn-ghost-danger:hover { --px-drop: #BE123C; }
+.px-btn:disabled, .px-btn-ghost:disabled, .px-btn-success:disabled, .px-btn-danger:disabled { opacity: .5; transform: none; cursor: not-allowed; }
+
+/* Custom dropdown panel: drops in a few pixels, hidden without unmounting (keeps aria refs valid). */
+.pixel-select-list { opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .16s ease, transform .2s cubic-bezier(.22,1,.36,1), visibility 0s linear .2s; }
+.pixel-select-list[data-open="true"] { opacity: 1; visibility: visible; transform: none; transition: opacity .16s ease, transform .2s cubic-bezier(.22,1,.36,1); }
+@media (prefers-reduced-motion: reduce) { .pixel-select-list { transition: none; } }
+
+/* Toasts slide in from the right and out again. */
+@keyframes toast-in { from { opacity: 0; transform: translateX(24px); } }
+.toast-pop { animation: toast-in .32s cubic-bezier(.16,1,.3,1) both; transition: opacity .35s ease, transform .35s ease; }
+.toast-pop[data-leaving="true"] { opacity: 0; transform: translateX(24px); }
+@media (prefers-reduced-motion: reduce) { .toast-pop { animation: none; transition: none; } }
+
+/* Pixelify Sans (OFL-1.1, self-hosted): Minecraft-style pixel display face for the portal. */
+@font-face { font-family: 'Pixelify Sans'; src: url('/fonts/pixelify-sans-latin-500-normal.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Pixelify Sans'; src: url('/fonts/pixelify-sans-latin-600-normal.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Pixelify Sans'; src: url('/fonts/pixelify-sans-latin-700-normal.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+
+/* Portal typography: pixel headings, and readable Inter for labels/tables that used the code font. */
+.portal-type {
+  --font-space-grotesk: 'Pixelify Sans', 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'Inter', system-ui, -apple-system, sans-serif;
+}
+.portal-type .font-display { letter-spacing: 0.01em !important; }
+.portal-type code, .portal-type kbd { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+/* Pixel scrollbars everywhere (page + inner scroll areas). Square thumb, stepped edge, smooth colour change. */
+html { scrollbar-color: #5FA3CC #EAF3F9; scrollbar-width: thin; }
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: #EAF3F9; box-shadow: inset 2px 0 0 #D9E5ED; }
+::-webkit-scrollbar-thumb {
+  background: #5FA3CC;
+  border: 3px solid #EAF3F9;          /* gap between thumb and track = pixel inset */
+  border-radius: 0;
+  box-shadow: inset -2px -2px 0 #0369A1, inset 2px 2px 0 #9CC6E0;  /* bevel, like a pixel block */
+  transition: background-color .2s ease;
+}
+::-webkit-scrollbar-thumb:hover { background: #0369A1; box-shadow: inset -2px -2px 0 #163A55, inset 2px 2px 0 #5FA3CC; }
+::-webkit-scrollbar-thumb:active { background: #163A55; box-shadow: inset -2px -2px 0 #072033, inset 2px 2px 0 #0369A1; }
+::-webkit-scrollbar-corner { background: #EAF3F9; }
+::-webkit-scrollbar-button { display: none; }
+
+/* Dark surfaces (admin sidebar, menus) get a matching dark scrollbar. */
+.scroll-dark { scrollbar-color: #5FA3CC #0B2D46; }
+.scroll-dark::-webkit-scrollbar-track { background: #0B2D46; box-shadow: none; }
+.scroll-dark::-webkit-scrollbar-thumb { background: #1F5A80; border-color: #0B2D46; box-shadow: inset -2px -2px 0 #072033, inset 2px 2px 0 #5FA3CC; }
+.scroll-dark::-webkit-scrollbar-thumb:hover { background: #0369A1; }
+
+/* Small inner areas (dropdown lists, tables) use a slimmer bar. */
+.pixel-select-list::-webkit-scrollbar, .scroll-slim::-webkit-scrollbar { width: 8px; height: 8px; }
+.pixel-select-list::-webkit-scrollbar-thumb, .scroll-slim::-webkit-scrollbar-thumb { border-width: 2px; box-shadow: none; }

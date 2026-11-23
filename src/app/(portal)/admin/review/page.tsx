@@ -2,6 +2,7 @@ import React from "react";
 import { createClient } from "@/lib/supabase/server";
 import { Member } from "@/types/database";
 import ReviewQueueClient from "./review-queue-client";
+import { PortalHeader } from "@/components/ui/section";
 
 export default async function AdminReviewPage() {
   const supabase = await createClient();
@@ -16,14 +17,9 @@ export default async function AdminReviewPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
-          Review pendaftar
-        </h1>
-        <p className="text-sm text-secondary">
+      <PortalHeader eyebrow="Maintainer workspace" title="Review pendaftar">
           Periksa identitas kampus dan Proof of Work, lalu pilih keputusan untuk setiap pendaftar.
-        </p>
-      </div>
+      </PortalHeader>
 
       <ReviewQueueClient initialMembers={members} />
     </div>

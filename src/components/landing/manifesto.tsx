@@ -1,5 +1,6 @@
 import React from "react";
-import Icon from "@/components/ui/icon";
+import FadeIn from "@/components/ui/fade-in";
+import { Section, SectionHeader } from "@/components/ui/section";
 
 export default function Manifesto() {
   const principles = [
@@ -10,22 +11,29 @@ export default function Manifesto() {
   ];
 
   return (
-    <section id="manifesto" className="border-b border-stroke bg-surface-alt/40 px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-12 max-w-2xl">
-          <p className="mb-2 text-xs font-semibold tracking-[0.16em] text-muara-ocean">CARA KAMI BERJALAN</p>
-          <h2 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Komunitas yang bergerak dari rasa ingin tahu ke karya nyata.</h2>
-        </div>
-        <div className="grid gap-px overflow-hidden rounded-xl border border-stroke bg-stroke sm:grid-cols-2">
-          {principles.map((principle) => (
-            <div key={principle.title} className="bg-white p-6 sm:p-7">
-              <Icon name="check_circle" className="h-5 w-5 text-muara-ocean" />
-              <h3 className="mt-5 font-display text-lg font-semibold text-foreground">{principle.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-secondary">{principle.description}</p>
-            </div>
+    <Section id="manifesto" tone="tint">
+      <SectionHeader eyebrow="Cara Kami Berjalan" title="Komunitas yang bergerak dari rasa ingin tahu ke karya nyata." />
+      <div className="p-[2px]">
+        <ol className="px-frame grid gap-[2px] bg-[#163A55] sm:grid-cols-2">
+          {principles.map((principle, idx) => (
+            // The cell stays put (so the grid lines never flash); only its content slides in.
+            <li key={principle.title} className="group bg-white transition-colors duration-200 hover:bg-surface-alt">
+              <FadeIn direction={idx % 2 === 0 ? "left" : "right"} distance={20} delay={idx * 0.08} className="flex gap-5 p-6 sm:p-7">
+                <span
+                  className="flex h-10 w-10 shrink-0 items-center justify-center bg-muara-ocean font-mono text-xs font-bold text-white shadow-[3px_3px_0_0_#163A55] transition-transform duration-300 ease-out group-hover:-translate-x-0.5 group-hover:-translate-y-0.5"
+                  aria-hidden="true"
+                >
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3 className="font-display text-lg font-semibold leading-snug text-foreground">{principle.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-secondary">{principle.description}</p>
+                </div>
+              </FadeIn>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
-    </section>
+    </Section>
   );
 }

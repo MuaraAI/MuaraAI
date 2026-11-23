@@ -39,7 +39,7 @@ export default function MembershipExitClient({
   if (status === "exited" || done) {
     return (
       <section className="min-h-screen bg-background px-4 py-16 text-foreground">
-        <div className="mx-auto max-w-xl rounded-[18px] border border-stroke bg-white p-8 text-center shadow-diffusion">
+        <div className="px-card mx-auto max-w-xl bg-white p-8 text-center">
           <Icon name="logout" className="mx-auto mb-4 h-12 w-12 text-secondary" />
           <h1 className="font-display text-2xl font-bold">Riwayat Member — Sudah Keluar</h1>
           <p className="mt-3 text-sm text-secondary">
@@ -58,7 +58,7 @@ export default function MembershipExitClient({
   if (status === "banned") {
     return (
       <section className="min-h-screen bg-background px-4 py-16 text-foreground">
-        <div className="mx-auto max-w-xl rounded-[18px] border border-rose-200 bg-white p-8 text-center shadow-diffusion">
+        <div className="px-frame [--px-line:#FDA4AF] mx-auto max-w-xl bg-white p-8 text-center">
           <Icon name="block" className="mx-auto mb-4 h-12 w-12 text-rose-600" />
           <h1 className="font-display text-2xl font-bold">Akses Membership Dihentikan</h1>
           <p className="mt-3 text-sm text-secondary">
@@ -70,7 +70,7 @@ export default function MembershipExitClient({
   }
 
   return (
-    <section className="rounded-[18px] border border-stroke bg-white p-6 shadow-diffusion">
+    <section className="px-card bg-white p-6">
       <div className="flex items-start gap-3">
         <Icon name="info" className="mt-0.5 h-5 w-5 text-muara-ocean" />
         <div>
@@ -82,13 +82,13 @@ export default function MembershipExitClient({
       </div>
 
       {earliest && !canExit && (
-        <p className="mt-5 rounded-[10px] border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+        <p className="px-frame [--px-line:#FCD34D] mt-5 bg-amber-50 p-3 text-xs text-amber-900">
           Anda dapat mengajukan keluar mulai {earliest.toLocaleDateString("id-ID")}.
         </p>
       )}
 
       {error && (
-        <p className="mt-5 rounded-[10px] border border-rose-200 bg-rose-50 p-3 text-xs text-rose-900">
+        <p className="px-frame [--px-line:#FDA4AF] mt-5 bg-rose-50 p-3 text-xs text-rose-900">
           {error}
         </p>
       )}
@@ -103,12 +103,12 @@ export default function MembershipExitClient({
           onChange={(event) => setReason(event.target.value)}
           rows={3}
           maxLength={500}
-          className="w-full rounded-[10px] border border-stroke bg-surface-alt p-3 text-sm text-foreground outline-none focus:border-muara-ocean"
+          className="border-2 border-[#CFE2EE] w-full bg-surface-alt p-3 text-sm text-foreground outline-none focus:border-muara-ocean"
         />
         <button
           type="submit"
           disabled={!canExit || loading}
-          className="rounded-[10px] bg-rose-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="px-btn-danger px-4 py-2.5 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ? "Memproses..." : "Ajukan Keluar"}
         </button>

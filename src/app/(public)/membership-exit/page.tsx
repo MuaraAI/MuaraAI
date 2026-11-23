@@ -10,7 +10,7 @@ export default async function MembershipExitPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/api/auth/login");
+  if (!user) redirect("/login");
 
   const { data: member } = await supabase
     .from("members")

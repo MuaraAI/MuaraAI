@@ -2,6 +2,7 @@ import React from "react";
 import { createClient } from "@/lib/supabase/server";
 import { LearningMaterial } from "@/types/database";
 import AdminLearnClient from "./admin-learn-client";
+import { PortalHeader } from "@/components/ui/section";
 
 export default async function AdminLearnPage() {
   const supabase = await createClient();
@@ -22,14 +23,9 @@ export default async function AdminLearnPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
-          Manajemen Muara Learn & Audit Pembaca
-        </h1>
-        <p className="text-xs text-secondary font-sans">
+      <PortalHeader eyebrow="Maintainer workspace" title="Manajemen Muara Learn & Audit Pembaca">
           Terbitkan materi rekayasa baru dan pantau siapa saja anggota yang telah mengakses dan membaca materi tersebut.
-        </p>
-      </div>
+      </PortalHeader>
 
       <AdminLearnClient initialMaterials={materials} initialReads={reads} />
     </div>

@@ -21,7 +21,11 @@ describe("legacy billing removal", () => {
   });
 
   it("does not claim mandatory dues or arrears in terms and admin copy", () => {
-    const files = ["src/app/(public)/terms/page.tsx", "src/app/(portal)/admin/members/page.tsx"];
+    const files = [
+      "src/app/(public)/terms/page.tsx",
+      "src/app/(public)/login/page.tsx",
+      "src/app/(portal)/admin/members/page.tsx",
+    ];
     const offenders = files.filter((file) =>
       /iuran|menunggak|tunggakan/i.test(fs.readFileSync(path.join(root, file), "utf8"))
     );

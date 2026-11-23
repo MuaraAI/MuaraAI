@@ -14,15 +14,15 @@ export default async function AdminLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/api/auth/login");
+  if (!user) redirect("/login");
 
   const { data: member } = await supabase
     .from("members")
-    .select("hierarchy, roles")
+    .select("hierarchy, roles, full_name, github_username")
     .eq("id", user.id)
     .maybeSingle();
 
   if (!isMaintainer(member)) redirect("/dashboard");
 
-  return <AdminShell>{children}</AdminShell>;
+  return <AdminShell user={member}>{children}</AdminShell>;
 }
