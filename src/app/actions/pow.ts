@@ -2,16 +2,21 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { notifyMaintainers } from "@/lib/notify";
-import { PoWInput, validatePoWSubmission } from "@/lib/validation";
+import { PoWInput, normalizeTelegram, validatePoWSubmission } from "@/lib/validation";
+import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import { canSubmitIntake } from "@/lib/membership";
 import type { MembershipIntakePolicy } from "@/types/database";
 
-export async function submitProofOfWork(data: PoWInput) {
-  const validation = validatePoWSubmission(data);
-  if (!validation.isValid) {
-    return { success: false, error: validation.error };
-  }
+const NO_INSTITUTION = "Tidak disebutkan";
+const REASON_PREVIEW_LENGTH = 300;
 
+function socialUrl(value: string | undefined, base: string): string | null {
+  const trimmed = value?.trim();
+  if (!trimmed) return null;
+  return trimmed.startsWith("http") ? trimmed : `${base}${trimmed.replace(/^@/, "")}`;
+}
+
+export async function submitProofOfWork(data: PoWInput) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -20,6 +25,21 @@ export async function submitProofOfWork(data: PoWInput) {
 
   if (authError || !user) {
     return { success: false, error: "Sesi tidak ditemukan. Silakan login kembali dengan GitHub." };
+  }
+
+  const { data: positionsSetting } = await supabase
+    .from("community_settings")
+    .select("value")
+    .eq("key", POSITIONS_SETTING_KEY)
+    .single();
+  const positions = parsePositions(positionsSetting?.value);
+  if (!positions) {
+    return { success: false, error: "Daftar posisi belum dikonfigurasi." };
+  }
+
+  const validation = validatePoWSubmission(data, positions);
+  if (!validation.isValid) {
+    return { success: false, error: validation.error };
   }
 
   const { data: setting, error: settingError } = await supabase
@@ -39,11 +59,7 @@ export async function submitProofOfWork(data: PoWInput) {
     .eq("id", user.id)
     .maybeSingle();
 
-  const intakeDecision = canSubmitIntake(
-    existing,
-    policy,
-    new Date()
-  );
+  const intakeDecision = canSubmitIntake(existing, policy, new Date());
   if (!intakeDecision.allowed) {
     return { success: false, error: intakeDecision.reason };
   }
@@ -55,6 +71,9 @@ export async function submitProofOfWork(data: PoWInput) {
     "user";
 
   const avatarUrl = user.user_metadata?.avatar_url || null;
+  const institution = data.institution?.trim() || NO_INSTITUTION;
+  const joinReason = data.joinReason.trim();
+  const telegram = normalizeTelegram(data.telegramUsername);
 
   // Insert or update pending profile in public.members
   const { error: dbError } = await supabase.from("members").upsert(
@@ -63,36 +82,26 @@ export async function submitProofOfWork(data: PoWInput) {
       email: user.email || null,
       full_name: data.fullName.trim(),
       avatar_url: avatarUrl,
-      nim: data.nim.trim(),
-      campus: data.campus.trim(),
-      prodi: data.prodi.trim(),
-      kelas: data.kelas?.trim().toUpperCase() || null,
+      campus: institution,
+      affiliation: data.affiliation,
       phone_wa: data.phoneWa.trim(),
+      telegram_username: telegram,
+      join_reason: joinReason,
       bio: data.toolchainNarrative.trim(),
       hierarchy: "member",
       sub_hierarchy: `member-${data.division}`,
       division: data.division,
-      track: data.track.trim(),
+      track: data.track,
+      secondary_division: data.secondaryDivision ?? null,
+      secondary_track: data.secondaryDivision ? data.secondaryTrack ?? null : null,
       github_username: githubUsername,
       github_url: `https://github.com/${githubUsername}`,
       portfolio_url: data.portfolioUrl.trim(),
       website_url: data.websiteUrl?.trim() || null,
       linkedin_url: data.linkedinUrl?.trim() || null,
-      instagram_url: data.instagramUrl?.trim()
-        ? data.instagramUrl.startsWith("http")
-          ? data.instagramUrl.trim()
-          : `https://instagram.com/${data.instagramUrl.replace(/^@/, "").trim()}`
-        : null,
-      threads_url: data.threadsUrl?.trim()
-        ? data.threadsUrl.startsWith("http")
-          ? data.threadsUrl.trim()
-          : `https://threads.net/@${data.threadsUrl.replace(/^@/, "").trim()}`
-        : null,
-      x_url: data.xUrl?.trim()
-        ? data.xUrl.startsWith("http")
-          ? data.xUrl.trim()
-          : `https://x.com/${data.xUrl.replace(/^@/, "").trim()}`
-        : null,
+      instagram_url: socialUrl(data.instagramUrl, "https://instagram.com/"),
+      threads_url: socialUrl(data.threadsUrl, "https://threads.net/@"),
+      x_url: socialUrl(data.xUrl, "https://x.com/"),
       registration_status: "pending",
       rejection_reason: null,
       reviewed_by: null,
@@ -107,10 +116,16 @@ export async function submitProofOfWork(data: PoWInput) {
     return { success: false, error: dbError.message };
   }
 
+  const reasonPreview =
+    joinReason.length > REASON_PREVIEW_LENGTH ? `${joinReason.slice(0, REASON_PREVIEW_LENGTH)}...` : joinReason;
+  const secondaryLine = data.secondaryDivision
+    ? `\nDivisi kedua: ${data.secondaryDivision} (${data.secondaryTrack})`
+    : "";
+
   // Multi-channel alert to maintainers
   await notifyMaintainers(
-    "Pendaftar Mahasiswa Baru",
-    `Nama: ${data.fullName}\nNIM: ${data.nim} (${data.campus} - ${data.prodi}${data.kelas?.trim() ? ` ${data.kelas.trim().toUpperCase()}` : ""})\nGitHub: @${githubUsername}\nDivisi: ${data.division} (${data.track})\nPortofolio: ${data.portfolioUrl}\n\nReview di: https://muaraai.com/admin/review`
+    "Pendaftar baru",
+    `Nama: ${data.fullName}\nStatus: ${data.affiliation}${institution !== NO_INSTITUTION ? ` (${institution})` : ""}\nGitHub: @${githubUsername}\nDivisi: ${data.division} (${data.track})${secondaryLine}\nPortofolio: ${data.portfolioUrl}\nAlasan: ${reasonPreview}\n\nReview di: https://muaraai.com/admin/review`
   );
 
   return { success: true };

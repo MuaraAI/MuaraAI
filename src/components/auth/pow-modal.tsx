@@ -1,69 +1,131 @@
 "use client";
 
-import React, { useEffect, useState } from "react"; import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { submitProofOfWork } from "@/app/actions/pow";
-import { PoWInput } from "@/lib/validation";
+import { AFFILIATIONS, MIN_JOIN_REASON_LENGTH, type Division, type PoWInput } from "@/lib/validation";
+import type { PositionsConfig } from "@/lib/positions";
 import Icon from "@/components/ui/icon";
-import campusesData from "@/data/campuses.json";
 import PixelSelect from "@/components/ui/pixel-select";
 
 type Step = 0 | 1 | 2 | 3;
 
-const steps = ["Identitas kampus", "Proof of Work", "Profil publik", "Review"];
+const steps = ["Tentang kamu", "Proof of Work", "Profil publik", "Review"];
+const DRAFT_KEY = "muaraai_onboarding_draft";
+
+const AFFILIATION_LABELS: Record<(typeof AFFILIATIONS)[number], string> = {
+  mahasiswa: "Mahasiswa",
+  pelajar: "Pelajar",
+  umum: "Umum",
+  lainnya: "Lainnya",
+};
+const DIVISION_LABELS: Record<Division, string> = { builder: "Builder", creative: "Creative" };
+const DIVISIONS: readonly Division[] = ["builder", "creative"];
+
+function buildInitial(positions: PositionsConfig, initial?: Partial<PoWInput>): PoWInput {
+  const division: Division = initial?.division === "creative" ? "creative" : "builder";
+  const track = positions[division].includes(initial?.track ?? "") ? (initial?.track as string) : positions[division][0] ?? "";
+  const secondaryDivision =
+    initial?.secondaryDivision && initial.secondaryDivision !== division ? initial.secondaryDivision : undefined;
+  const secondaryTrack = secondaryDivision
+    ? positions[secondaryDivision].includes(initial?.secondaryTrack ?? "")
+      ? initial?.secondaryTrack
+      : positions[secondaryDivision][0]
+    : undefined;
+
+  return {
+    fullName: initial?.fullName || "",
+    affiliation: AFFILIATIONS.includes(initial?.affiliation as never) ? (initial?.affiliation as PoWInput["affiliation"]) : "mahasiswa",
+    institution: initial?.institution || "",
+    phoneWa: initial?.phoneWa || "",
+    telegramUsername: initial?.telegramUsername || "",
+    division,
+    track,
+    secondaryDivision,
+    secondaryTrack,
+    joinReason: initial?.joinReason || "",
+    toolchainNarrative: initial?.toolchainNarrative || "",
+    portfolioUrl: initial?.portfolioUrl || "",
+    websiteUrl: initial?.websiteUrl || "",
+    linkedinUrl: initial?.linkedinUrl || "",
+    instagramUrl: initial?.instagramUrl || "",
+    threadsUrl: initial?.threadsUrl || "",
+    xUrl: initial?.xUrl || "",
+  };
+}
+
+function canContinue(step: Step, data: PoWInput): boolean {
+  if (step === 0) return data.fullName.trim().length >= 3 && data.phoneWa.trim().length >= 9;
+  if (step === 1) {
+    return (
+      data.portfolioUrl.startsWith("http") &&
+      data.toolchainNarrative.trim().length >= 15 &&
+      data.joinReason.trim().length >= MIN_JOIN_REASON_LENGTH &&
+      data.track.length > 0
+    );
+  }
+  return true;
+}
 
 export default function PoWForm({
   authenticated = false,
   githubUsername,
   initialData,
   rejectionReason,
+  positions,
 }: {
   authenticated?: boolean;
   githubUsername?: string;
   initialData?: Partial<PoWInput>;
   rejectionReason?: string;
+  positions: PositionsConfig;
 }) {
   const [step, setStep] = useState<Step>(0);
-  const [formData, setFormData] = useState<PoWInput>({
-    fullName: initialData?.fullName || "",
-    nim: initialData?.nim || "",
-    campus: initialData?.campus || "",
-    prodi: initialData?.prodi || "",
-    kelas: initialData?.kelas || "",
-    phoneWa: initialData?.phoneWa || "",
-    division: initialData?.division || "builder",
-    track: initialData?.track || "Full-stack Web & AI App",
-    toolchainNarrative: initialData?.toolchainNarrative || "",
-    portfolioUrl: initialData?.portfolioUrl || "",
-    websiteUrl: initialData?.websiteUrl || "",
-    linkedinUrl: initialData?.linkedinUrl || "",
-    instagramUrl: initialData?.instagramUrl || "",
-    threadsUrl: initialData?.threadsUrl || "",
-    xUrl: initialData?.xUrl || "",
-  });
+  const [formData, setFormData] = useState<PoWInput>(() => buildInitial(positions, initialData));
   const [loading, setLoading] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (!authenticated || typeof window === "undefined" || !window.localStorage) return;
-    const draft = window.localStorage.getItem("muaraai_onboarding_draft");
-    if (draft) {
-      try {
-        const parsed = JSON.parse(draft) as PoWInput;
-        setFormData(parsed);
-        if (parsed.fullName && parsed.nim && parsed.campus && parsed.portfolioUrl) {
-          setStep(3);
-          setAgreed(true);
-        }
-      } catch {
-        window.localStorage.removeItem("muaraai_onboarding_draft");
+    const draft = window.localStorage.getItem(DRAFT_KEY);
+    if (!draft) return;
+    try {
+      const parsed = JSON.parse(draft) as Partial<PoWInput>;
+      setFormData(buildInitial(positions, parsed));
+      if (parsed.fullName && parsed.joinReason && parsed.portfolioUrl) {
+        setStep(3);
+        setAgreed(true);
       }
+    } catch {
+      window.localStorage.removeItem(DRAFT_KEY);
     }
-  }, [authenticated]);
+  }, [authenticated, positions]);
 
   const update = <K extends keyof PoWInput>(key: K, value: PoWInput[K]) => {
     setFormData((current) => ({ ...current, [key]: value }));
+  };
+
+  const changeDivision = (value: string) => {
+    const division = value as Division;
+    setFormData((current) => {
+      const stillSecondary = current.secondaryDivision && current.secondaryDivision !== division;
+      return {
+        ...current,
+        division,
+        track: positions[division][0] ?? "",
+        secondaryDivision: stillSecondary ? current.secondaryDivision : undefined,
+        secondaryTrack: stillSecondary ? current.secondaryTrack : undefined,
+      };
+    });
+  };
+
+  const changeSecondaryDivision = (value: string) => {
+    setFormData((current) =>
+      value === ""
+        ? { ...current, secondaryDivision: undefined, secondaryTrack: undefined }
+        : { ...current, secondaryDivision: value as Division, secondaryTrack: positions[value as Division][0] ?? "" }
+    );
   };
 
   const next = () => setStep((current) => Math.min(3, current + 1) as Step);
@@ -77,7 +139,7 @@ export default function PoWForm({
     }
     setError(null);
     if (!authenticated) {
-      window.localStorage.setItem("muaraai_onboarding_draft", JSON.stringify(formData));
+      window.localStorage.setItem(DRAFT_KEY, JSON.stringify(formData));
       window.location.href = "/api/auth/login?next=/onboarding";
       return;
     }
@@ -86,7 +148,7 @@ export default function PoWForm({
     setLoading(false);
     if (result.success) {
       if (typeof window !== "undefined" && window.localStorage) {
-        window.localStorage.removeItem("muaraai_onboarding_draft");
+        window.localStorage.removeItem(DRAFT_KEY);
       }
       window.location.href = "/dashboard";
       return;
@@ -94,21 +156,25 @@ export default function PoWForm({
     setError(result.error || "Gagal mengirimkan Proof of Work.");
   };
 
-  if (success) {
-    return (
-      <div className="px-card bg-white p-8 text-center max-w-lg mx-auto">
-        <Icon name="check_circle" className="w-12 h-12 text-emerald-600 mx-auto mb-4" />
-        <h2 className="font-display text-2xl font-bold text-foreground mb-2">Proof of Work Terkirim!</h2>
-        <p className="text-sm text-secondary leading-relaxed mb-6">Data kamu sudah diterima dan akan ditinjau oleh Core Team MuaraAI.</p>
-        <a href="/" className="px-btn inline-flex min-h-11 items-center px-6 py-2.5 text-sm font-semibold">Kembali ke Beranda</a>
-      </div>
-    );
-  }
+  const secondaryOptions = [
+    { value: "", label: "Tidak ada" },
+    ...DIVISIONS.filter((division) => division !== formData.division).map((division) => ({
+      value: division,
+      label: DIVISION_LABELS[division],
+    })),
+  ];
+  const reasonLength = formData.joinReason.trim().length;
+  const positionSummary = [
+    `${DIVISION_LABELS[formData.division]} · ${formData.track}`,
+    formData.secondaryDivision ? `${DIVISION_LABELS[formData.secondaryDivision]} · ${formData.secondaryTrack}` : "",
+  ]
+    .filter(Boolean)
+    .join("  +  ");
 
   return (
     <div className="px-card bg-white p-6 sm:p-8 max-w-2xl mx-auto">
       <div className="mb-8">
-        <div className="text-xs font-mono uppercase tracking-[0.14em] text-muara-ocean">Pendaftaran MuaraAI 2026+</div>
+        <div className="text-xs font-mono uppercase tracking-[0.14em] text-muara-ocean">Pendaftaran MuaraAI</div>
         <h2 className="mt-2 font-display text-2xl font-bold text-foreground">Buat profil komunitasmu</h2>
         <p className="mt-2 text-sm text-secondary">Selesaikan empat langkah singkat. Draft kamu tetap tersimpan saat berpindah langkah.</p>
       </div>
@@ -122,7 +188,7 @@ export default function PoWForm({
               &quot;{rejectionReason}&quot;
             </p>
             <p className="text-amber-800 font-medium pt-1">
-              Data pendaftaran sebelumnya telah dimuat. Silakan perbaiki hal-hal yang kurang lalu kirim permohonan baru.
+              Data pendaftaran sebelumnya sudah dimuat. Perbaiki bagian yang kurang lalu kirim permohonan baru.
             </p>
           </div>
         </div>
@@ -133,10 +199,10 @@ export default function PoWForm({
           <Icon name="check_circle" className="w-5 h-5 text-muara-ocean shrink-0 mt-0.5" />
           <div className="space-y-1">
             <div className="font-bold text-sm text-foreground">
-              Akun GitHub Terhubung {githubUsername ? <span className="font-mono text-muara-ocean">(@{githubUsername})</span> : null}
+              Akun GitHub terhubung {githubUsername ? <span className="font-mono text-muara-ocean">(@{githubUsername})</span> : null}
             </div>
             <p className="text-secondary leading-relaxed">
-              Anda sudah masuk via GitHub. Silakan lengkapi data profil dan Proof of Work di bawah ini untuk mengirim permohonan ke Core Team.
+              Kamu sudah masuk lewat GitHub. Lengkapi profil dan Proof of Work di bawah ini untuk dikirim ke tim MuaraAI.
             </p>
           </div>
         </div>
@@ -155,19 +221,20 @@ export default function PoWForm({
       <form onSubmit={handleSubmit} className="space-y-5">
         {step === 0 && (
           <fieldset className="space-y-4">
-            <legend className="font-display text-xl font-semibold text-foreground">Identitas kampus</legend>
+            <legend className="font-display text-xl font-semibold text-foreground">Tentang kamu</legend>
+            <p className="text-sm text-secondary">MuaraAI terbuka untuk siapa saja, dari mana saja. Ceritakan sedikit tentang dirimu.</p>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field id="fullName" label="Nama Lengkap" value={formData.fullName} onChange={(value) => update("fullName", value)} required />
-              <Field id="phoneWa" label="WhatsApp / Kontak Aktif" value={formData.phoneWa} onChange={(value) => update("phoneWa", value)} required />
-              <Field id="nim" label="NIM mahasiswa" value={formData.nim} onChange={(value) => update("nim", value.replace(/\D/g, ""))} required maxLength={16} placeholder="Sesuai kartu tanda mahasiswa kampus Anda" />
-              <Field id="kelas" label="Kode Kelas (opsional)" value={formData.kelas || ""} onChange={(value) => update("kelas", value.toUpperCase())} placeholder="Untuk mahasiswa UBSI, misal: 15.1C.30" />
-              <Field id="campus" label="Kampus / institusi asal" value={formData.campus} onChange={(value) => update("campus", value)} required placeholder="Ketik atau pilih kampus Anda" list="campuses-list" />
-              <datalist id="campuses-list">
-                {campusesData.map((c) => (
-                  <option key={c.name} value={c.name}>{c.city}</option>
-                ))}
-              </datalist>
-              <Field id="prodi" label="Program Studi" value={formData.prodi} onChange={(value) => update("prodi", value)} required placeholder="Contoh: Informatika (S1)" />
+              <SelectField
+                id="affiliation"
+                label="Status"
+                value={formData.affiliation}
+                options={AFFILIATIONS.map((value) => ({ value, label: AFFILIATION_LABELS[value] }))}
+                onChange={(value) => update("affiliation", value as PoWInput["affiliation"])}
+              />
+              <Field id="institution" label="Institusi (opsional)" value={formData.institution || ""} onChange={(value) => update("institution", value)} placeholder="Kampus, sekolah, atau tempat kerja" />
+              <Field id="phoneWa" label="WhatsApp" value={formData.phoneWa} onChange={(value) => update("phoneWa", value)} required type="tel" placeholder="Nomor aktif, contoh: 08123456789" />
+              <Field id="telegramUsername" label="Telegram (opsional)" value={formData.telegramUsername || ""} onChange={(value) => update("telegramUsername", value)} placeholder="@username" />
             </div>
           </fieldset>
         )}
@@ -177,10 +244,43 @@ export default function PoWForm({
             <legend className="font-display text-xl font-semibold text-foreground">Proof of Work</legend>
             <Field id="portfolioUrl" label="Tautan Repositori atau Portofolio" value={formData.portfolioUrl} onChange={(value) => update("portfolioUrl", value)} required type="url" />
             <div className="grid gap-4 sm:grid-cols-2">
-              <SelectField id="division" label="Divisi Pilihan" value={formData.division} options={["builder", "creative"]} onChange={(value) => update("division", value as "builder" | "creative")} />
-              <Field id="track" label="Track Spesialisasi" value={formData.track} onChange={(value) => update("track", value)} required />
+              <SelectField
+                id="division"
+                label="Divisi utama"
+                value={formData.division}
+                options={DIVISIONS.map((value) => ({ value, label: DIVISION_LABELS[value] }))}
+                onChange={changeDivision}
+              />
+              <SelectField
+                id="track"
+                label="Posisi"
+                value={formData.track}
+                options={positions[formData.division].map((value) => ({ value, label: value }))}
+                onChange={(value) => update("track", value)}
+              />
+              <SelectField
+                id="secondaryDivision"
+                label="Divisi kedua (opsional)"
+                required={false}
+                value={formData.secondaryDivision ?? ""}
+                options={secondaryOptions}
+                onChange={changeSecondaryDivision}
+              />
+              {formData.secondaryDivision && (
+                <SelectField
+                  id="secondaryTrack"
+                  label="Posisi divisi kedua"
+                  value={formData.secondaryTrack ?? ""}
+                  options={positions[formData.secondaryDivision].map((value) => ({ value, label: value }))}
+                  onChange={(value) => update("secondaryTrack", value)}
+                />
+              )}
             </div>
             <TextAreaField id="toolchainNarrative" label="Toolchain dan workflow yang dikuasai" value={formData.toolchainNarrative} onChange={(value) => update("toolchainNarrative", value)} required />
+            <div>
+              <TextAreaField id="joinReason" label="Alasan bergabung" value={formData.joinReason} onChange={(value) => update("joinReason", value)} required />
+              <p className="mt-1 text-right font-mono text-xs text-secondary">{reasonLength}/{MIN_JOIN_REASON_LENGTH}</p>
+            </div>
           </fieldset>
         )}
 
@@ -202,11 +302,12 @@ export default function PoWForm({
             <legend className="font-display text-xl font-semibold text-foreground">Review pendaftaran</legend>
             <div className="px-frame [--px-line:#CFE2EE] divide-y divide-stroke bg-surface-alt text-sm">
               <Summary label="Nama" value={formData.fullName} />
-              <Summary label="Kampus" value={[formData.campus, formData.prodi, formData.kelas].filter(Boolean).join(" · ")} />
+              <Summary label="Status" value={[AFFILIATION_LABELS[formData.affiliation], formData.institution].filter(Boolean).join(" · ")} />
               <Summary label="Proof of Work" value={formData.portfolioUrl} />
-              <Summary label="Divisi" value={`${formData.division} · ${formData.track}`} />
+              <Summary label="Posisi" value={positionSummary} />
+              <Summary label="Alasan bergabung" value={formData.joinReason.trim()} />
             </div>
-            <p className="text-xs leading-relaxed text-secondary">Dengan mengirim formulir, kamu menyatakan data kampus dan karya yang dikirim benar serta bersedia mengikuti proses review komunitas.</p>
+            <p className="text-xs leading-relaxed text-secondary">Dengan mengirim formulir, kamu menyatakan data dan karya yang kamu kirim benar serta bersedia mengikuti proses review komunitas.</p>
           </fieldset>
         )}
 
@@ -219,7 +320,7 @@ export default function PoWForm({
         <div className="flex flex-col-reverse gap-3 border-t border-stroke pt-5 sm:flex-row sm:justify-between">
           <button type="button" onClick={previous} disabled={step === 0} className="px-btn-ghost [--px-off:3px] min-h-11 px-4 py-2.5 text-sm font-semibold text-foreground disabled:opacity-40">Kembali</button>
           {step < 3 ? (
-            <button type="button" onClick={next} className="px-btn min-h-11 px-5 py-2.5 text-sm font-semibold">Lanjut</button>
+            <button type="button" onClick={next} disabled={!canContinue(step, formData)} className="px-btn min-h-11 px-5 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50">Lanjut</button>
           ) : (
             <button type="submit" disabled={loading || !agreed} className="px-btn min-h-11 px-5 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50">{authenticated ? (loading ? "Mengirim..." : "Kirim pendaftaran") : "Lanjut ke GitHub"}</button>
           )}
@@ -229,12 +330,12 @@ export default function PoWForm({
   );
 }
 
-function Field({ id, label, value, onChange, required = false, type = "text", maxLength, placeholder, list }: { id: string; label: string; value: string; onChange: (value: string) => void; required?: boolean; type?: string; maxLength?: number; placeholder?: string; list?: string }) {
-  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><input id={id} type={type} list={list} value={value} placeholder={placeholder} required={required} maxLength={maxLength} onChange={(event) => onChange(event.target.value)} className="border-2 border-[#CFE2EE] w-full bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white" /></div>;
+function Field({ id, label, value, onChange, required = false, type = "text", maxLength, placeholder }: { id: string; label: string; value: string; onChange: (value: string) => void; required?: boolean; type?: string; maxLength?: number; placeholder?: string }) {
+  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><input id={id} type={type} value={value} placeholder={placeholder} required={required} maxLength={maxLength} onChange={(event) => onChange(event.target.value)} className="border-2 border-[#CFE2EE] w-full bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white" /></div>;
 }
 
-function SelectField({ id, label, value, options, onChange }: { id: string; label: string; value: string; options: readonly string[]; onChange: (value: string) => void }) {
-  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label} *</label><PixelSelect id={id} value={value} onChange={onChange} options={options.map((option) => ({ value: option, label: option.charAt(0).toUpperCase() + option.slice(1) }))} /></div>;
+function SelectField({ id, label, value, options, onChange, required = true }: { id: string; label: string; value: string; options: readonly { value: string; label: string }[]; onChange: (value: string) => void; required?: boolean }) {
+  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><PixelSelect id={id} value={value} onChange={onChange} options={options} /></div>;
 }
 
 function TextAreaField({ id, label, value, onChange, required }: { id: string; label: string; value: string; onChange: (value: string) => void; required?: boolean }) {

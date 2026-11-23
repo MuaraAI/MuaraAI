@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { isMaintainer } from "@/lib/guards";
 import { escapeHtml } from "@/lib/notify";
 import { fetchMemberOrgCommits } from "@/lib/github-sync";
+import { POSITIONS_SETTING_KEY, normalizePositions, type PositionsConfig } from "@/lib/positions";
 import { Resend } from "resend";
 
 async function assertMaintainer() {
@@ -198,6 +199,32 @@ export async function toggleMemberActive(memberId: string, isActive: boolean) {
 
   if (error) {
     console.error("[admin:toggleMemberActive]", error.message);
+    return { success: false, error: GENERIC_ERROR };
+  }
+  return { success: true };
+}
+
+// 9. Update the official positions per division (does not touch existing members)
+export async function updatePositions(data: PositionsConfig) {
+  const { supabase } = await assertMaintainer();
+
+  const normalized = normalizePositions(data);
+  if (!normalized) {
+    return { success: false, error: "Setiap divisi harus punya minimal satu posisi." };
+  }
+
+  const { error } = await supabase.from("community_settings").upsert(
+    {
+      key: POSITIONS_SETTING_KEY,
+      value: normalized,
+      description: "Official positions per division (editable by maintainers)",
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "key" }
+  );
+
+  if (error) {
+    console.error("[admin:updatePositions]", error.message);
     return { success: false, error: GENERIC_ERROR };
   }
   return { success: true };
