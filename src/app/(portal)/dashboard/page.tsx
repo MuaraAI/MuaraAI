@@ -11,6 +11,7 @@ import { AFFILIATION_LABELS } from "@/lib/validation";
 import { PortalHeader } from "@/components/ui/section";
 import ContributionCard from "@/components/portal/contribution-card";
 import TierBadge from "@/components/members/tier-badge";
+import SessionsSection from "@/components/portal/sessions-section";
 import { monthStart, parseRules, type ContributionRules, type MonthlyStats } from "@/lib/contributions/rules";
 
 export default async function DashboardProfilePage() {
@@ -169,6 +170,8 @@ export default async function DashboardProfilePage() {
           month={contribution.month}
         />
       )}
+
+      {contribution && <SessionsSection memberId={member.id} />}
 
       <section className="grid gap-4 sm:grid-cols-3">
         <Link href="/dashboard/learn" className="px-frame [--px-line:#CFE2EE] bg-surface-alt p-5 transition-colors">

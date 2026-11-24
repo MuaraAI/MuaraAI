@@ -29,6 +29,8 @@ const member = {
   bio: "",
 };
 
+vi.mock("@/components/portal/sessions-section", () => ({ default: () => null }));
+
 vi.mock("@/lib/supabase/server", () => ({
   createClient: async () => ({
     auth: { getUser: async () => ({ data: { user: { id: "member-1" } } }) },
