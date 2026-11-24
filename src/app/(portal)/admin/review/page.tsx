@@ -20,7 +20,7 @@ export default async function AdminReviewPage() {
   return (
     <div className="space-y-8">
       <PortalHeader eyebrow="Maintainer workspace" title="Review pendaftar">
-          Periksa identitas kampus dan Proof of Work, lalu pilih keputusan untuk setiap pendaftar.
+          Periksa profil, alasan bergabung, dan Proof of Work, lalu pilih keputusan untuk setiap pendaftar.
       </PortalHeader>
 
       <ReviewQueueClient initialMembers={members} />

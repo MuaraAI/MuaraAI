@@ -2,7 +2,7 @@
 
 > Where local craft flows global.
 
-MuaraAI adalah komunitas mahasiswa dari seluruh kampus di Indonesia yang lahir dari mahasiswa UBSI Pontianak. Komunitas ini terbuka untuk mahasiswa angkatan 2026 dan seterusnya, dengan ruang untuk belajar, membangun project, menunjukkan Proof of Work, dan berkontribusi bersama.
+MuaraAI adalah komunitas terbuka untuk siapa saja yang mau belajar, membangun project, dan berkontribusi lewat GitHub. Komunitas ini lahir di UBSI Pontianak dan kini menerima mahasiswa, pelajar, dan umum dari mana saja, dengan ruang untuk menunjukkan Proof of Work dan berkarya bersama.
 
 Website utama: https://muaraai.com/
 AI Playground: https://ai.muaraai.com/
@@ -46,21 +46,21 @@ UBSI API dikembangkan secara independen dan tidak berafiliasi, disponsori, atau 
 
 ## Komunitas
 
-MuaraAI dimulai dari mahasiswa UBSI Pontianak dan berkembang menjadi komunitas nasional lintas kampus. Pontianak adalah founding hub dan pusat utama pertemuan offline. Node jaringan pada peta landing saat ini merujuk universitas mitra lintas wilayah seperti UNTAN, ITB, UI, UGM, ITS, USU, UNAND, UNHAS, UNMUL, UNSRAT, UNIPA, dan UNCEN; label node menunjukkan jangkauan komunitas, bukan klaim chapter aktif.
+MuaraAI dimulai di UBSI Pontianak dan berkembang menjadi komunitas terbuka. Pontianak adalah founding hub dan pusat utama pertemuan offline. Node jaringan pada peta landing saat ini merujuk universitas mitra lintas wilayah seperti UNTAN, ITB, UI, UGM, ITS, USU, UNAND, UNHAS, UNMUL, UNSRAT, UNIPA, dan UNCEN; label node menunjukkan jangkauan komunitas, bukan klaim chapter aktif.
 
 Ketentuan intake saat ini:
 
-- Mahasiswa dari kampus mana pun di seluruh Indonesia.
-- Angkatan 2026 dan seterusnya.
-- Alur pendaftaran: isi form onboarding terlebih dahulu, setujui Privacy Policy, Terms of Service, dan Code of Conduct, baru login GitHub OAuth, lalu submit Proof of Work.
+- Mahasiswa, pelajar, atau umum dari mana saja. Wajib punya akun GitHub.
+- Pilih divisi (Builder atau Creative) dan posisi resmi; divisi kedua opsional.
+- Alur pendaftaran: isi form onboarding (termasuk alasan bergabung minimal 50 karakter), setujui Privacy Policy, Terms of Service, dan Code of Conduct, login GitHub OAuth, lalu submit Proof of Work.
 - Detail verifikasi, membership, dan akses tersedia setelah login.
 - Dukungan finansial bersifat sukarela lewat donasi: https://sociabuzz.com/muaraai
 
 Tim inti:
 
-- Yuken Velino | NIM 15260767 — `@Curzyori` — Founder, Maintainer, Builder
-- Muhammad Raffli Aldiansyah | NIM 15260161 — `@Seeyaa77` — Co-Founder, Maintainer, Builder
-- Verzio Yamanansyah | NIM 15260225 — `@MyKineID` — Co-Founder, Maintainer, Builder
+- Yuken Velino — `@Curzyori` — Founder, Maintainer, Builder
+- Muhammad Raffli Aldiansyah — `@Seeyaa77` — Co-Founder, Maintainer, Builder
+- Verzio Yamanansyah — `@MyKineID` — Co-Founder, Maintainer, Builder
 
 ## Struktur aplikasi
 

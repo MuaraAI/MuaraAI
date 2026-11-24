@@ -5,9 +5,10 @@ import Hero from "../src/components/landing/hero";
 import MetricsBar from "../src/components/landing/metrics-bar";
 
 describe("MuaraAI public redesign", () => {
-  it("leads with the UBSI student community purpose", () => {
+  it("leads with the open community purpose", () => {
     render(<Hero />);
-    expect(screen.getByText(/kampus di seluruh Indonesia/i)).toBeTruthy();
+    expect(screen.getByText(/Komunitas terbuka untuk siapa saja/i)).toBeTruthy();
+    expect(screen.getByText(/Mahasiswa, pelajar, atau umum/i)).toBeTruthy();
     expect(screen.getByText(/Daftar dengan GitHub/i)).toBeTruthy();
     expect(screen.queryByText(/API 99\.9% Uptime/i)).toBeNull();
     expect(screen.queryByText(/AES-256-GCM Vault Active/i)).toBeNull();

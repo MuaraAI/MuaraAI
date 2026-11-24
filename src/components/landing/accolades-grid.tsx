@@ -31,7 +31,7 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
               </span>
               <p className="font-display text-lg font-bold text-foreground">Arsip prestasi segera hadir</p>
               <p className="mt-2 max-w-md text-sm leading-relaxed text-secondary">
-                Arsip prestasi dan sertifikat kompetisi sedang dalam tahap kurasi kurikulum semester 1.
+                Arsip prestasi dan sertifikat kompetisi sedang dikurasi.
               </p>
             </div>
           </FadeIn>

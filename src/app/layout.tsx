@@ -5,15 +5,15 @@ import RouteProgress from "@/components/ui/route-progress";
 import { FeedbackProvider } from "@/components/ui/feedback";
 
 export const metadata: Metadata = {
-  title: "MuaraAI — Komunitas Mahasiswa Lintas Kampus Indonesia",
-  description: "Komunitas mahasiswa lintas kampus Indonesia untuk belajar, membangun project, dan menunjukkan Proof of Work bersama MuaraAI.",
+  title: "MuaraAI — Komunitas Terbuka untuk Builder dan Kreator",
+  description: "Komunitas terbuka untuk siapa saja yang mau belajar, membangun project, dan berkontribusi lewat GitHub bersama MuaraAI.",
   metadataBase: new URL("https://muaraai.com"),
-  keywords: ["MuaraAI", "komunitas mahasiswa Indonesia", "AI akademik", "Muara Arus 1", "Proof of Work mahasiswa"],
+  keywords: ["MuaraAI", "komunitas open source Indonesia", "komunitas AI", "Muara Arus 1", "Proof of Work", "kontribusi GitHub"],
   alternates: { canonical: "https://muaraai.com/" },
   icons: { icon: "/brand/muara-logo.png", apple: "/brand/muara-logo.png" },
   openGraph: {
-    title: "MuaraAI — Komunitas Mahasiswa Lintas Kampus Indonesia",
-    description: "Belajar, membangun, dan berkontribusi bersama mahasiswa dari kampus di seluruh Indonesia.",
+    title: "MuaraAI — Komunitas Terbuka untuk Builder dan Kreator",
+    description: "Belajar, membangun, dan berkontribusi bersama anggota dari mana saja.",
     url: "https://muaraai.com/",
     siteName: "MuaraAI",
     locale: "id_ID",
@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "MuaraAI — Komunitas Mahasiswa Lintas Kampus Indonesia",
-    description: "Komunitas mahasiswa lintas kampus Indonesia untuk belajar dan membangun project.",
+    title: "MuaraAI — Komunitas Terbuka untuk Builder dan Kreator",
+    description: "Komunitas terbuka untuk belajar dan membangun project bersama.",
     images: ["/brand/muara-logo.png"],
   },
 };

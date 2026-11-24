@@ -6,7 +6,7 @@ import NationalCampusMap from "../src/components/landing/national-campus-map";
 describe("national campus map", () => {
   it("renders the founding hub, regional hub, and accessible network description", () => {
     render(<NationalCampusMap />);
-    expect(screen.getByRole("img", { name: /Peta jaringan universitas Indonesia/i })).toBeTruthy();
+    expect(screen.getByRole("img", { name: /Peta jaringan kampus di Indonesia/i })).toBeTruthy();
     expect(screen.getByText("UBSI Pontianak")).toBeTruthy();
     expect(screen.getAllByText("UNTAN").length).toBeGreaterThan(0);
     expect(screen.getAllByText("ITB").length).toBeGreaterThan(0);

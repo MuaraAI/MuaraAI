@@ -25,7 +25,7 @@ describe("Landing Core Sections", () => {
   it("renders the community principles", () => {
     render(<Manifesto />);
     expect(screen.getByText(/Belajar dari sumber yang jelas/i)).toBeDefined();
-    expect(screen.getByText(/Berbagi antar kampus/i)).toBeDefined();
+    expect(screen.getByText(/Terbuka untuk semua/i)).toBeDefined();
   });
 
   it("renders member benefits", () => {

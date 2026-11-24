@@ -101,7 +101,7 @@ export default function Footer() {
               <span className="font-display text-base font-bold text-foreground">MuaraAI</span>
             </div>
             <p className="mt-3 max-w-xs text-[13px] leading-relaxed">
-              Where local craft flows global. Komunitas mahasiswa lintas kampus Indonesia, lahir dari UBSI Pontianak.
+              Where local craft flows global. Komunitas terbuka untuk siapa saja, lahir di UBSI Pontianak.
             </p>
             <div className="mt-4">
               <a
@@ -119,7 +119,7 @@ export default function Footer() {
         </div>
 
         <div className="mx-auto mt-8 flex max-w-[100rem] flex-wrap items-center justify-between gap-3 border-t-2 border-dashed border-[#CFE2EE] pt-4 font-mono text-[11px]">
-          <span>© 2026 MuaraAI · Komunitas mahasiswa Indonesia · Lahir di Pontianak</span>
+          <span>© 2026 MuaraAI · Komunitas terbuka · Lahir di Pontianak</span>
           <a href="#" className="group inline-flex items-center gap-1.5 font-semibold text-foreground transition-colors duration-200 hover:text-muara-ocean">
             <span className="inline-block transition-transform duration-200 ease-out group-hover:-translate-y-0.5" aria-hidden="true">▲</span>
             Ke atas

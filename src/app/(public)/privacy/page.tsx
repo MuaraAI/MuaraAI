@@ -19,7 +19,8 @@ export default function PrivacyPage() {
           </p>
           <ul className="list-disc pl-5 space-y-1 text-slate-600">
             <li>Identitas publik GitHub (username, avatar, email publik).</li>
-            <li>Nama lengkap, kontak WhatsApp, dan NIM (khusus mahasiswa).</li>
+            <li>Nama lengkap, status (mahasiswa, pelajar, umum, atau lainnya), institusi (opsional), nomor WhatsApp, dan username Telegram (opsional).</li>
+            <li>Alasan bergabung yang kamu tulis. Hanya maintainer yang bisa membacanya.</li>
             <li>Tautan portofolio dan deskripsi toolchain rekayasa.</li>
           </ul>
         </section>

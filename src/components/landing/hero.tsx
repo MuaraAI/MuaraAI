@@ -14,13 +14,13 @@ export default function Hero() {
           <FadeIn direction="none">
             <p className="px-chip mb-6 inline-flex items-center gap-2 bg-white px-2.5 py-1 font-mono text-[11px] font-semibold text-secondary [--px-line:#CFE2EE]">
               <span className="h-1.5 w-1.5 bg-[#0D9488]" aria-hidden="true" />
-              Komunitas mahasiswa lintas kampus<span className="hidden sm:inline"> · lahir di Pontianak</span>
+              Komunitas terbuka untuk siapa saja<span className="hidden sm:inline"> · lahir di Pontianak</span>
             </p>
           </FadeIn>
           <HeroHeadline />
           <FadeIn delay={0.5} distance={16}>
             <p className="mt-7 max-w-xl text-base leading-relaxed text-secondary sm:text-lg">
-              MuaraAI adalah ruang kerja mahasiswa dari kampus di seluruh Indonesia untuk belajar, membuat project, dan menunjukkan Proof of Work bersama komunitas.
+              MuaraAI adalah ruang kerja terbuka untuk belajar, membuat project, dan menunjukkan Proof of Work lewat GitHub. Mahasiswa, pelajar, atau umum, dari mana saja, semua boleh bergabung.
             </p>
           </FadeIn>
           <FadeIn delay={0.65} distance={16}>

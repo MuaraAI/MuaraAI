@@ -10,19 +10,19 @@ export default function JoinFlow() {
     {
       num: "01",
       title: "Login with GitHub",
-      desc: "Autentikasi instan menggunakan akun GitHub aktif Anda. Zero password, zero magic link.",
+      desc: "Masuk dengan akun GitHub kamu. Tanpa password, tanpa magic link.",
       icon: "login",
     },
     {
       num: "02",
       title: "Kirim Proof of Work",
-      desc: "Sertakan tautan repositori proyek open source, karya media terkurasi, dan ringkasan toolchain rekayasa Anda.",
+      desc: "Sertakan tautan repositori atau karya, pilih posisimu, dan ceritakan kenapa kamu mau bergabung.",
       icon: "upload_file",
     },
     {
       num: "03",
       title: "Undangan Otomatis Organisasi",
-      desc: "Saat disetujui maintainer, sistem otomatis mengundang akun Anda bergabung ke GitHub Org github.com/MuaraAI.",
+      desc: "Saat disetujui maintainer, akun kamu otomatis diundang ke GitHub Org github.com/MuaraAI.",
       icon: "mark_email_read",
     },
   ];
@@ -32,7 +32,7 @@ export default function JoinFlow() {
       <SectionHeader
         eyebrow="Alur Pendaftaran"
         title="3 Langkah Bergabung"
-        description="Tanpa formulir birokrasi berbelit. Kami hanya menilai kualitas artefak kode dan karya rekayasa Anda."
+        description="Terbuka untuk siapa saja. Kami menilai karya dan alasanmu bergabung, bukan latar belakangmu."
       />
 
         {/* Dashed pixel track that draws itself behind the steps on desktop */}

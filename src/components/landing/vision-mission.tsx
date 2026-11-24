@@ -4,7 +4,7 @@ import FadeIn from "@/components/ui/fade-in";
 import { Section, SectionHeader } from "@/components/ui/section";
 
 const MISSIONS = [
-  "Menghimpun mahasiswa dan praktisi yang menguasai domain AI pada tingkat produksi nyata.",
+  "Menghimpun builder dan kreator dari berbagai latar belakang yang mau berkarya di domain AI sampai tingkat produksi nyata.",
   "Menegakkan disiplin software engineering: eliminasi AI-slop, TDD mandatori, dan keamanan kredensial.",
   "Menyediakan shared cloud infrastructure (Supabase, Redis, compute) untuk akselerasi riset anggota.",
 ];
@@ -28,7 +28,7 @@ export default function VisionMission() {
               <h3 className="font-display text-xl font-bold text-foreground">Visi</h3>
             </div>
             <p className="text-[15px] leading-relaxed text-secondary">
-              Menjadi muara ekosistem praktisi dan pengembang AI rekayasa terkemuka dari Kalimantan Barat yang menghasilkan karya berstandar global: independen, berbasis <em>proof-of-work</em>, dan relevan melampaui masa perkuliahan.
+              Menjadi muara komunitas praktisi dan pengembang AI yang terbuka untuk siapa saja: tempat orang belajar, membangun, dan berkontribusi lewat karya nyata yang bisa diperiksa, dari Kalimantan Barat untuk dunia.
             </p>
           </div>
         </FadeIn>

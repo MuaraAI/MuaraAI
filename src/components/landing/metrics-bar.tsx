@@ -15,7 +15,7 @@ const current = [
   },
   {
     title: "Berkontribusi",
-    description: "Bagikan hasil, bantu anggota lain, dan ikut menguatkan ekosistem UBSI.",
+    description: "Bagikan hasil, bantu anggota lain, dan ikut menguatkan ekosistem MuaraAI.",
     icon: "hub" as IconName,
   },
 ];
