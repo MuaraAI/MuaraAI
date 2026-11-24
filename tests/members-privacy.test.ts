@@ -56,7 +56,7 @@ describe("members privacy", () => {
       expect(sql).toMatch(/registration_status = 'approved'/);
       expect(sql).toMatch(/membership_status = 'active'/);
       expect(sql).toMatch(/id = \(SELECT auth\.uid\(\)\)|id = auth\.uid\(\)/);
-      expect(sql).toContain("public.is_maintainer()");
+      expect(sql).toContain("(SELECT public.is_maintainer())");
     });
 
     it("revokes table-wide SELECT and grants only non-private columns", () => {

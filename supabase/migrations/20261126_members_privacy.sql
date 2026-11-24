@@ -17,7 +17,7 @@ CREATE POLICY "Approved profiles, own row and maintainers can be read"
   USING (
     (registration_status = 'approved' AND membership_status = 'active' AND is_active)
     OR id = (SELECT auth.uid())
-    OR public.is_maintainer()
+    OR (SELECT public.is_maintainer())
   );
 
 REVOKE SELECT ON public.members FROM anon, authenticated;

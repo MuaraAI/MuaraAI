@@ -27,6 +27,15 @@ describe("normalizePositions", () => {
     ).toEqual({ builder: ["Web", "Backend"], creative: ["Video"] });
   });
 
+  it("ignores non-string entries and rejects non-array divisions instead of throwing", () => {
+    expect(normalizePositions({ builder: "Web" as never, creative: ["Video"] })).toBeNull();
+    expect(normalizePositions({ builder: [1, "Web"] as never, creative: ["Video"] })).toEqual({
+      builder: ["Web"],
+      creative: ["Video"],
+    });
+    expect(normalizePositions(null as never)).toBeNull();
+  });
+
   it("returns null when a division ends up empty", () => {
     expect(normalizePositions({ builder: ["", "  "], creative: ["Video"] })).toBeNull();
     expect(normalizePositions({ builder: ["Web"], creative: [] })).toBeNull();

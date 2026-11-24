@@ -113,6 +113,18 @@ describe("submitProofOfWork (open intake)", () => {
     expect(row.secondary_track).toBeNull();
   });
 
+  it("stores an empty secondaryDivision as null instead of an empty string", async () => {
+    await submitProofOfWork({ ...input, secondaryDivision: "" as never });
+    expect(upsertMock.mock.calls[0][0].secondary_division).toBeNull();
+    expect(upsertMock.mock.calls[0][0].secondary_track).toBeNull();
+  });
+
+  it("hides raw database errors from the client", async () => {
+    upsertMock.mockResolvedValue({ error: { message: "violates check constraint members_join_reason_length_check" } });
+    const result = await submitProofOfWork(input);
+    expect(result).toEqual({ success: false, error: "Terjadi kesalahan pada server. Silakan coba lagi." });
+  });
+
   it("alerts maintainers without student-only wording and truncates the reason", async () => {
     await submitProofOfWork(input);
     const [title, text] = notifyMock.mock.calls[0] as [string, string];

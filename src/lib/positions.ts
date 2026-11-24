@@ -23,10 +23,12 @@ export function parsePositions(value: unknown): PositionsConfig | null {
   return builderList && creativeList ? { builder: builderList, creative: creativeList } : null;
 }
 
-function dedupe(list: string[]): string[] {
+function dedupe(list: unknown): string[] {
+  if (!Array.isArray(list)) return [];
   const seen = new Set<string>();
   const result: string[] = [];
   for (const raw of list) {
+    if (typeof raw !== "string") continue;
     const entry = raw.trim();
     const key = entry.toLowerCase();
     if (!entry || seen.has(key)) continue;
@@ -37,6 +39,7 @@ function dedupe(list: string[]): string[] {
 }
 
 export function normalizePositions(input: PositionsConfig): PositionsConfig | null {
+  if (!input || typeof input !== "object") return null;
   const builder = dedupe(input.builder);
   const creative = dedupe(input.creative);
   return builder.length > 0 && creative.length > 0 ? { builder, creative } : null;

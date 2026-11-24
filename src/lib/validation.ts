@@ -12,6 +12,8 @@ export type Division = "builder" | "creative";
 export const MIN_JOIN_REASON_LENGTH = 50;
 
 const TELEGRAM_PATTERN = /^[A-Za-z0-9_]{5,32}$/;
+const MAX_LENGTHS = { fullName: 100, institution: 150, longText: 2000, url: 500, phone: 30 } as const;
+const isOptionalText = (value: unknown) => value === undefined || value === null || typeof value === "string";
 
 export interface PoWInput {
   fullName: string;
@@ -44,14 +46,40 @@ export function validatePoWSubmission(
   data: PoWInput,
   positions: PositionsConfig
 ): { isValid: boolean; error?: string } {
-  if (!data.fullName || data.fullName.trim().length < 3) {
+  const requiredText = [data.fullName, data.joinReason, data.toolchainNarrative, data.phoneWa, data.portfolioUrl, data.track];
+  const optionalText = [
+    data.institution,
+    data.telegramUsername,
+    data.secondaryTrack,
+    data.websiteUrl,
+    data.linkedinUrl,
+    data.instagramUrl,
+    data.xUrl,
+    data.threadsUrl,
+  ];
+  if (!requiredText.every((value) => typeof value === "string") || !optionalText.every(isOptionalText)) {
+    return { isValid: false, error: "Data pendaftaran tidak valid." };
+  }
+
+  const fullName = data.fullName.trim();
+  if (fullName.length < 3) {
     return { isValid: false, error: "Nama lengkap minimal 3 karakter." };
+  }
+  if (fullName.length > MAX_LENGTHS.fullName) {
+    return { isValid: false, error: `Nama lengkap maksimal ${MAX_LENGTHS.fullName} karakter.` };
   }
   if (!AFFILIATIONS.includes(data.affiliation)) {
     return { isValid: false, error: "Pilih status kamu: mahasiswa, pelajar, umum, atau lainnya." };
   }
-  if ((data.joinReason?.trim().length ?? 0) < MIN_JOIN_REASON_LENGTH) {
+  if ((data.institution ?? "").trim().length > MAX_LENGTHS.institution) {
+    return { isValid: false, error: `Institusi maksimal ${MAX_LENGTHS.institution} karakter.` };
+  }
+  const joinReason = data.joinReason.trim();
+  if (joinReason.length < MIN_JOIN_REASON_LENGTH) {
     return { isValid: false, error: `Alasan bergabung minimal ${MIN_JOIN_REASON_LENGTH} karakter.` };
+  }
+  if (joinReason.length > MAX_LENGTHS.longText) {
+    return { isValid: false, error: `Alasan bergabung maksimal ${MAX_LENGTHS.longText} karakter.` };
   }
   if (!isDivision(data.division)) {
     return { isValid: false, error: "Divisi tidak valid." };
@@ -82,11 +110,21 @@ export function validatePoWSubmission(
   if (data.linkedinUrl && data.linkedinUrl.trim() && !data.linkedinUrl.startsWith("http")) {
     return { isValid: false, error: "Tautan LinkedIn harus diawali dengan https://" };
   }
-  if (!data.toolchainNarrative || data.toolchainNarrative.trim().length < 15) {
+  if (data.toolchainNarrative.trim().length < 15) {
     return { isValid: false, error: "Penjelasan workflow/toolchain minimal 15 karakter." };
   }
-  if (!data.phoneWa || data.phoneWa.trim().length < 9) {
+  if (data.toolchainNarrative.trim().length > MAX_LENGTHS.longText) {
+    return { isValid: false, error: `Penjelasan workflow/toolchain maksimal ${MAX_LENGTHS.longText} karakter.` };
+  }
+  const urls = [data.portfolioUrl, data.websiteUrl, data.linkedinUrl, data.instagramUrl, data.xUrl, data.threadsUrl];
+  if (urls.some((url) => (url ?? "").length > MAX_LENGTHS.url)) {
+    return { isValid: false, error: `Tautan terlalu panjang (maksimal ${MAX_LENGTHS.url} karakter).` };
+  }
+  if (data.phoneWa.trim().length < 9) {
     return { isValid: false, error: "Nomor WhatsApp aktif wajib diisi." };
+  }
+  if (data.phoneWa.trim().length > MAX_LENGTHS.phone) {
+    return { isValid: false, error: "Nomor WhatsApp terlalu panjang." };
   }
   const telegram = normalizeTelegram(data.telegramUsername);
   if (telegram && !TELEGRAM_PATTERN.test(telegram)) {

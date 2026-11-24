@@ -7,6 +7,7 @@ import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import { canSubmitIntake } from "@/lib/membership";
 import type { MembershipIntakePolicy } from "@/types/database";
 
+const GENERIC_ERROR = "Terjadi kesalahan pada server. Silakan coba lagi.";
 const NO_INSTITUTION = "Tidak disebutkan";
 const REASON_PREVIEW_LENGTH = 300;
 
@@ -92,7 +93,7 @@ export async function submitProofOfWork(data: PoWInput) {
       sub_hierarchy: `member-${data.division}`,
       division: data.division,
       track: data.track,
-      secondary_division: data.secondaryDivision ?? null,
+      secondary_division: data.secondaryDivision || null,
       secondary_track: data.secondaryDivision ? data.secondaryTrack ?? null : null,
       github_username: githubUsername,
       github_url: `https://github.com/${githubUsername}`,
@@ -113,7 +114,8 @@ export async function submitProofOfWork(data: PoWInput) {
   );
 
   if (dbError) {
-    return { success: false, error: dbError.message };
+    console.error("[pow:submitProofOfWork]", dbError.message);
+    return { success: false, error: GENERIC_ERROR };
   }
 
   const reasonPreview =

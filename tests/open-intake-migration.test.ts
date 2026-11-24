@@ -17,6 +17,11 @@ describe("open intake migration", () => {
     expect(sql).toContain("- 'allowed_cohort'");
   });
 
+  it("enforces the secondary-division and join-reason rules in the database too", () => {
+    expect(sql).toMatch(/members_secondary_division_differs_check[\s\S]*?secondary_division IS DISTINCT FROM division/);
+    expect(sql).toMatch(/members_join_reason_length_check[\s\S]*?length\(btrim\(join_reason\)\) >= 50/);
+  });
+
   it("seeds exactly the agreed positions", () => {
     const match = sql.match(/'(\{"builder":.*?\})'::jsonb/s);
     expect(match).not.toBeNull();

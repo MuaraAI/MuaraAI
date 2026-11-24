@@ -70,6 +70,22 @@ describe("validatePoWSubmission (open global intake)", () => {
     expect(check({ telegramUsername: "budi dev" }).isValid).toBe(false);
   });
 
+  it("rejects over-long text instead of storing it", () => {
+    expect(check({ fullName: "x".repeat(101) })).toEqual({ isValid: false, error: "Nama lengkap maksimal 100 karakter." });
+    expect(check({ joinReason: "x".repeat(2001) })).toEqual({ isValid: false, error: "Alasan bergabung maksimal 2000 karakter." });
+    expect(check({ institution: "x".repeat(151) }).isValid).toBe(false);
+    expect(check({ toolchainNarrative: "x".repeat(2001) }).isValid).toBe(false);
+    expect(check({ portfolioUrl: `https://github.com/${"x".repeat(500)}` }).isValid).toBe(false);
+    expect(check({ joinReason: "x".repeat(2000) }).isValid).toBe(true);
+  });
+
+  it("does not throw on non-string input", () => {
+    expect(check({ fullName: 123 as never }).isValid).toBe(false);
+    expect(check({ joinReason: null as never }).isValid).toBe(false);
+    expect(check({ phoneWa: 8123456789 as never }).isValid).toBe(false);
+    expect(check({ institution: 5 as never }).isValid).toBe(false);
+  });
+
   it("keeps the basic name, portfolio, and toolchain checks", () => {
     expect(check({ fullName: "Bu" }).isValid).toBe(false);
     expect(check({ portfolioUrl: "github.com/budi" }).isValid).toBe(false);
