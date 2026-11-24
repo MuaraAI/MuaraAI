@@ -23,6 +23,8 @@ const member = {
   division: "builder",
   track: "General",
   total_commits: 10,
+  tier: 3,
+  streak: 4,
   portfolio_url: "https://github.com/Curzyori",
   bio: "",
 };
@@ -63,6 +65,9 @@ describe("member workspace dashboard", () => {
     expect(screen.queryByText("15260767")).toBeNull();
     expect(screen.getByText("Institusi")).toBeTruthy();
     expect(screen.getByText("Status")).toBeTruthy();
+    expect(screen.getByText("Pasang")).toBeTruthy();
+    expect(screen.queryByText(/10 commits/i)).toBeNull();
+    expect(screen.queryByText("Total Commits")).toBeNull();
     expect(screen.getByText("Kontribusi bulan ini")).toBeTruthy();
     expect(screen.getByText(/Belum ada data kontribusi/i)).toBeTruthy();
   });

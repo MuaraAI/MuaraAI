@@ -18,6 +18,8 @@ const members = [
     prodi: "Informatika (S1)",
     kelas: "15.1C.30",
     total_commits: 42,
+    tier: 4,
+    streak: 3,
     github_url: "https://github.com/Curzyori",
     avatar_url: null,
   },
@@ -35,6 +37,14 @@ describe("public member directory v3", () => {
     expect(screen.queryByText("Informatika (S1)")).toBeNull();
     expect(screen.queryByText(/Bio marketing/i)).toBeNull();
     expect(screen.queryByText(/AI Gateway & Systems Architecture/i)).toBeNull();
+  });
+
+  it("shows the tier and streak instead of a raw contribution count", () => {
+    render(<MembersDirectory initialMembers={members} />);
+    expect(screen.getByText("Samudra")).toBeTruthy();
+    expect(screen.getByText(/3 bulan berturut-turut/)).toBeTruthy();
+    expect(screen.queryByText(/kontribusi/i)).toBeNull();
+    expect(screen.queryByText(/42/)).toBeNull();
   });
 
   it("shows the position and a secondary division badge when present", () => {
