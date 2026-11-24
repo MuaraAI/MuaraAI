@@ -17,11 +17,13 @@ export default async function MembersPage() {
     ? await supabase
     .from("members")
     .select(
-      "id, full_name, avatar_url, github_username, hierarchy, sub_hierarchy, roles, titles, division, track, secondary_division, secondary_track, campus, total_commits, website_url, github_url, linkedin_url, portfolio_url, bio, role_title"
+      "id, full_name, avatar_url, github_username, hierarchy, sub_hierarchy, roles, titles, division, track, secondary_division, secondary_track, campus, tier, streak, website_url, github_url, linkedin_url, portfolio_url, bio, role_title"
     )
     .eq("registration_status", "approved")
     .eq("is_active", true)
-    .order("total_commits", { ascending: false })
+    .order("tier", { ascending: false })
+    .order("streak", { ascending: false })
+    .order("full_name", { ascending: true })
     : { data: null };
 
   const members = (membersData || []) as unknown as Member[];

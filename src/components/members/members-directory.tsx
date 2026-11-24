@@ -25,7 +25,7 @@ const filters: { id: RosterFilter; label: string }[] = [
   { id: "maintainer", label: "Maintainer" },
   { id: "builder", label: "Builder" },
   { id: "creative", label: "Creative" },
-  { id: "top-commits", label: "Kontributor aktif" },
+  { id: "top-tier", label: "Peringkat tier" },
 ];
 const FILTER_ORDER = filters.map((f) => f.id);
 
