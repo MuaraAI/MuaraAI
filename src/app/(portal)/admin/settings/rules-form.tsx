@@ -34,6 +34,9 @@ export default function RulesForm({ initial }: { initial: ContributionRules }) {
   const setCreative = (key: keyof ContributionRules["creative"], value: string) =>
     setRules((current) => ({ ...current, creative: { ...current.creative, [key]: toNumber(value) } }));
 
+  const setTier = (key: keyof ContributionRules["tierMultipliers"], value: string) =>
+    setRules((current) => ({ ...current, tierMultipliers: { ...current.tierMultipliers, [key]: toNumber(value) } }));
+
   const save = async (event: React.FormEvent) => {
     event.preventDefault();
     setSaving(true);
@@ -108,6 +111,30 @@ export default function RulesForm({ initial }: { initial: ContributionRules }) {
           <NumberField id="creative-externalPrs" label="Creative: PR di repo orang lain" value={rules.creative.externalPrs} onChange={(value) => setCreative("externalPrs", value)} />
           <NumberField id="creative-newWorks" label="Creative: karya baru" value={rules.creative.newWorks} onChange={(value) => setCreative("newWorks", value)} />
         </div>
+      </fieldset>
+
+      <fieldset className="space-y-3">
+        <legend className="text-sm font-semibold text-foreground">Tier (pengali dari target)</legend>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {(["arus", "pasang", "samudra"] as const).map((key) => (
+            <div key={key}>
+              <label htmlFor={`tier-${key}`} className="mb-1.5 block text-sm font-medium text-foreground">
+                Pengali {key.charAt(0).toUpperCase() + key.slice(1)}
+              </label>
+              <input
+                id={`tier-${key}`}
+                type="number"
+                min={1}
+                max={10}
+                step={0.1}
+                value={rules.tierMultipliers[key]}
+                onChange={(event) => setTier(key, event.target.value)}
+                className={inputClass}
+              />
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-secondary">Harus naik berurutan, lebih dari 1 dan maksimal 10. Berlaku untuk PR dan commit; repo baru dan karya baru cukup target dasar.</p>
       </fieldset>
 
       {message && (

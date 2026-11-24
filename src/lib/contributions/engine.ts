@@ -10,6 +10,7 @@ import {
   type MonthlyStats,
   type Standing,
 } from "./rules";
+import { tierFor, type Tier } from "./tiers";
 import type { fetchMergedPrs, fetchOrgReposCreatedInMonth, fetchRepoCreator } from "./github";
 
 export interface EngineMember {
@@ -20,6 +21,8 @@ export interface EngineMember {
   division: Division;
   membershipStartedAt: string | null;
   standing: Standing;
+  /** Consecutive evaluated months in which the target was met (as of the last evaluation). */
+  streak: number;
 }
 
 type EvaluationAction = "none" | "warn" | "kick" | "recover";
@@ -39,6 +42,7 @@ export interface EngineDeps {
   saveEvaluation(row: { memberId: string; month: string; met: boolean; action: EvaluationAction; enforced: boolean }): Promise<boolean>;
   /** "missing" = GitHub confirms the account does not exist, "error" = could not tell. */
   verifyLogin(login: string): Promise<"ok" | "missing" | "error">;
+  saveTier(memberId: string, tier: Tier, streak: number): Promise<void>;
   setStanding(memberId: string, standing: Standing): Promise<void>;
   kickMember(memberId: string, reason: string): Promise<void>;
   sendWarning(member: EngineMember, month: string, stats: MonthlyStats): Promise<void>;
@@ -196,6 +200,14 @@ export async function runContributionSync(
       const inserted = await deps.saveEvaluation({ memberId: member.id, month: lastMonth, met, action, enforced });
       if (!inserted) continue;
       summary.evaluated += 1;
+
+      // Recognition is harmless to record in every mode (including dry_run), and must never block
+      // enforcement: the evaluation is already saved, so a skipped warning or kick could not be retried.
+      try {
+        await deps.saveTier(member.id, met ? tierFor(member.division, previous.stats, rules) : 0, met ? member.streak + 1 : 0);
+      } catch (error) {
+        console.error("[contributions] tier write failed", member.id, error instanceof Error ? error.message : "unknown");
+      }
       if (rules.enforcement === "dry_run") continue;
 
       if (action === "warn") {

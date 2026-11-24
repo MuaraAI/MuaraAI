@@ -6,7 +6,7 @@ import { isMaintainer } from "@/lib/guards";
 import { escapeHtml } from "@/lib/notify";
 import { fetchMemberOrgCommits } from "@/lib/github-sync";
 import { POSITIONS_SETTING_KEY, normalizePositions, type PositionsConfig } from "@/lib/positions";
-import { serializeRules, type ContributionRules } from "@/lib/contributions/rules";
+import { isValidTierMultipliers, serializeRules, type ContributionRules } from "@/lib/contributions/rules";
 import { runContributionSync } from "@/lib/contributions/engine";
 import { buildSupabaseDeps } from "@/lib/contributions/supabase-deps";
 import { Resend } from "resend";
@@ -252,7 +252,8 @@ function validateContributionRules(data: ContributionRules): string | null {
     data.creative?.externalPrs,
     data.creative?.newWorks,
   ];
-  return numbers.every(isRuleCount) ? null : `Nilai target harus bilangan bulat 0–${RULE_LIMIT}.`;
+  if (!numbers.every(isRuleCount)) return `Nilai target harus bilangan bulat 0–${RULE_LIMIT}.`;
+  return isValidTierMultipliers(data.tierMultipliers) ? null : "Pengali tier harus naik berurutan (lebih dari 1, maksimal 10).";
 }
 
 // 9b. Update the monthly contribution quota and enforcement mode

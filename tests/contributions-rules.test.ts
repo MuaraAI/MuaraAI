@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   DEFAULT_RULES,
   isGraceMonth,
+  isValidTierMultipliers,
   meetsTarget,
   monthStart,
   nextMonth,
@@ -63,6 +64,27 @@ describe("parseRules / serializeRules", () => {
     const rules = { ...DEFAULT_RULES, enforcement: "warn_only" as const, builder: { ...DEFAULT_RULES.builder, mergedPrs: 8 } };
     expect(parseRules(serializeRules(rules))).toEqual(rules);
     expect(serializeRules(rules)).toMatchObject({ new_work_label: "karya-baru", builder: { merged_prs: 8 } });
+  });
+});
+
+describe("tier multipliers", () => {
+  it("reads tier_multipliers from the setting and writes them back", () => {
+    const rules = parseRules({ tier_multipliers: { arus: 2, pasang: 3, samudra: 5 } });
+    expect(rules.tierMultipliers).toEqual({ arus: 2, pasang: 3, samudra: 5 });
+    expect(serializeRules(rules)).toMatchObject({ tier_multipliers: { arus: 2, pasang: 3, samudra: 5 } });
+  });
+
+  it("falls back to 1.5 / 2 / 3 when missing, not numbers, or not strictly increasing", () => {
+    for (const bad of [undefined, { arus: "x", pasang: 2, samudra: 3 }, { arus: 3, pasang: 2, samudra: 4 }, { arus: 1, pasang: 2, samudra: 3 }, { arus: 2, pasang: 3, samudra: 11 }]) {
+      expect(parseRules({ tier_multipliers: bad }).tierMultipliers).toEqual({ arus: 1.5, pasang: 2, samudra: 3 });
+    }
+  });
+
+  it("validates strictly increasing multipliers above 1 and up to 10", () => {
+    expect(isValidTierMultipliers({ arus: 1.5, pasang: 2, samudra: 3 })).toBe(true);
+    expect(isValidTierMultipliers({ arus: 1.5, pasang: 1.5, samudra: 3 })).toBe(false);
+    expect(isValidTierMultipliers({ arus: 1.5, pasang: 2, samudra: 10.5 })).toBe(false);
+    expect(isValidTierMultipliers({ arus: NaN, pasang: 2, samudra: 3 })).toBe(false);
   });
 });
 

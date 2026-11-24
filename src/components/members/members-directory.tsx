@@ -9,6 +9,7 @@ import Icon from "@/components/ui/icon";
 import FadeIn from "@/components/ui/fade-in";
 import { filterMembers, RosterFilter } from "@/components/landing/syndicate-roster";
 import { PixelTabs, TabSlide } from "@/components/ui/pixel-tabs";
+import TierBadge from "@/components/members/tier-badge";
 
 interface MembersDirectoryProps {
   initialMembers: Member[];
@@ -24,7 +25,7 @@ const filters: { id: RosterFilter; label: string }[] = [
   { id: "maintainer", label: "Maintainer" },
   { id: "builder", label: "Builder" },
   { id: "creative", label: "Creative" },
-  { id: "top-commits", label: "Kontributor aktif" },
+  { id: "top-tier", label: "Peringkat tier" },
 ];
 const FILTER_ORDER = filters.map((f) => f.id);
 
@@ -110,7 +111,7 @@ export default function MembersDirectory({ initialMembers, positions }: MembersD
                     ) : null}
                   </div>
                   <div className="mt-5 flex items-center justify-between border-t border-stroke pt-4">
-                    <span className="text-xs text-secondary">{member.total_commits || 0} kontribusi</span>
+                    <TierBadge tier={member.tier} streak={member.streak} />
                     <Link href={member.github_url || `https://github.com/${member.github_username}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1 text-xs font-semibold text-muara-ocean hover:underline">
                       GitHub <Icon name="open_in_new" className="h-3.5 w-3.5" />
                     </Link>

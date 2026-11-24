@@ -15,12 +15,14 @@ export type RosterFilter =
   | "head"
   | "creative"
   | "builder"
-  | "top-commits"
+  | "top-tier"
   | "all";
 
 export function filterMembers(members: Member[], filter: RosterFilter): Member[] {
-  if (filter === "top-commits") {
-    return [...members].sort((a, b) => (b.total_commits || 0) - (a.total_commits || 0));
+  if (filter === "top-tier") {
+    return members
+      .filter((m) => (m.tier || 0) > 0)
+      .sort((a, b) => (b.tier || 0) - (a.tier || 0) || (b.streak || 0) - (a.streak || 0) || a.full_name.localeCompare(b.full_name));
   }
   if (filter === "maintainer") {
     return members.filter(

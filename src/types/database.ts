@@ -55,6 +55,8 @@ export interface Member {
   secondary_track: string | null;
   telegram_username: string | null;
   contribution_standing?: "good" | "warned";
+  tier?: number;
+  streak?: number;
   total_commits: number;
   reviewed_by: string | null;
   reviewed_at: string | null;

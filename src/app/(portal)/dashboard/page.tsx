@@ -10,6 +10,7 @@ import type { Affiliation, MembershipIntakePolicy } from "@/types/database";
 import { AFFILIATION_LABELS } from "@/lib/validation";
 import { PortalHeader } from "@/components/ui/section";
 import ContributionCard from "@/components/portal/contribution-card";
+import TierBadge from "@/components/members/tier-badge";
 import { monthStart, parseRules, type ContributionRules, type MonthlyStats } from "@/lib/contributions/rules";
 
 export default async function DashboardProfilePage() {
@@ -264,8 +265,10 @@ export default async function DashboardProfilePage() {
             </div>
           </div>
           <div>
-            <div className="text-secondary uppercase font-mono mb-1">Total Commits</div>
-            <div className="text-foreground font-mono">{member.total_commits || 0} commits</div>
+            <div className="text-secondary uppercase font-mono mb-1">Tier</div>
+            <div className="text-foreground font-mono">
+              {member.tier ? <TierBadge tier={member.tier} streak={member.streak} /> : "Belum ada tier"}
+            </div>
           </div>
           <div>
             <div className="text-secondary uppercase font-mono mb-1">Status Keaktifan</div>

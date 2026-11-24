@@ -8,6 +8,8 @@ export interface ContributionRules {
   newWorkLabel: string;
   builder: { mergedPrs: number; externalPrs: number; commits: number; newRepos: number };
   creative: { mergedPrs: number; externalPrs: number; newWorks: number };
+  /** Multipliers of the base target needed for tiers Arus, Pasang and Samudra. */
+  tierMultipliers: { arus: number; pasang: number; samudra: number };
 }
 
 export interface PullRequestFact {
@@ -33,7 +35,17 @@ export const DEFAULT_RULES: ContributionRules = {
   newWorkLabel: "karya-baru",
   builder: { mergedPrs: 10, externalPrs: 5, commits: 50, newRepos: 1 },
   creative: { mergedPrs: 10, externalPrs: 5, newWorks: 1 },
+  tierMultipliers: { arus: 1.5, pasang: 2, samudra: 3 },
 };
+
+/** Strictly increasing, above 1 and at most 10. */
+export const isValidTierMultipliers = (m: ContributionRules["tierMultipliers"] | undefined): boolean =>
+  !!m &&
+  [m.arus, m.pasang, m.samudra].every((value) => typeof value === "number" && Number.isFinite(value)) &&
+  m.arus > 1 &&
+  m.arus < m.pasang &&
+  m.pasang < m.samudra &&
+  m.samudra <= 10;
 
 const ENFORCEMENTS: readonly Enforcement[] = ["dry_run", "warn_only", "full"];
 
@@ -50,8 +62,11 @@ export function parseRules(value: unknown): ContributionRules {
   const builder = isRecord(root.builder) ? root.builder : {};
   const creative = isRecord(root.creative) ? root.creative : {};
   const d = DEFAULT_RULES;
+  const rawTiers = isRecord(root.tier_multipliers) ? root.tier_multipliers : {};
+  const parsedTiers = { arus: rawTiers.arus, pasang: rawTiers.pasang, samudra: rawTiers.samudra } as ContributionRules["tierMultipliers"];
 
   return {
+    tierMultipliers: isValidTierMultipliers(parsedTiers) ? parsedTiers : d.tierMultipliers,
     enforcement: ENFORCEMENTS.includes(root.enforcement as Enforcement) ? (root.enforcement as Enforcement) : "dry_run",
     org: text(root.org, d.org),
     newWorkLabel: text(root.new_work_label, d.newWorkLabel),
@@ -86,6 +101,7 @@ export function serializeRules(rules: ContributionRules): Record<string, unknown
       external_prs: rules.creative.externalPrs,
       new_works: rules.creative.newWorks,
     },
+    tier_multipliers: { ...rules.tierMultipliers },
   };
 }
 

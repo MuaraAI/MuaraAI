@@ -4,16 +4,25 @@ import { Member } from "../src/types/database";
 
 describe("Syndicate Roster Filtering", () => {
   const mockMembers: Partial<Member>[] = [
-    { id: "1", full_name: "Yuken", hierarchy: "maintainer", division: "builder", total_commits: 150 },
-    { id: "2", full_name: "Greeezzz", hierarchy: "member", division: "creative", total_commits: 20 },
-    { id: "3", full_name: "Raffli", hierarchy: "maintainer", division: "builder", total_commits: 200 },
+    { id: "1", full_name: "Yuken", hierarchy: "maintainer", division: "builder", tier: 3, streak: 2 },
+    { id: "2", full_name: "Greeezzz", hierarchy: "member", division: "creative", tier: 0, streak: 0 },
+    { id: "3", full_name: "Raffli", hierarchy: "maintainer", division: "builder", tier: 3, streak: 5 },
   ];
 
-  it("sorts by total_commits descending when filter is 'top-commits'", () => {
-    const result = filterMembers(mockMembers as Member[], "top-commits");
-    expect(result[0].full_name).toBe("Raffli");
-    expect(result[1].full_name).toBe("Yuken");
-    expect(result[2].full_name).toBe("Greeezzz");
+  it("ranks by tier, then streak, then name when filter is 'top-tier'", () => {
+    const members = [
+      ...mockMembers,
+      { id: "4", full_name: "Anya", hierarchy: "member", division: "creative", tier: 3, streak: 5 },
+      { id: "5", full_name: "Zed", hierarchy: "member", division: "builder", tier: 4, streak: 1 },
+    ];
+    const result = filterMembers(members as Member[], "top-tier");
+    expect(result.map((m) => m.full_name)).toEqual(["Zed", "Anya", "Raffli", "Yuken"]);
+  });
+
+  it("leaves members without a tier out of 'top-tier' and survives an empty result", () => {
+    expect(filterMembers(mockMembers as Member[], "top-tier").some((m) => m.full_name === "Greeezzz")).toBe(false);
+    expect(filterMembers([{ id: "9", full_name: "Nol", tier: 0 }] as Member[], "top-tier")).toEqual([]);
+    expect(filterMembers([{ id: "9", full_name: "Tanpa" }] as Member[], "top-tier")).toEqual([]);
   });
 
   it("filters correctly by division", () => {
