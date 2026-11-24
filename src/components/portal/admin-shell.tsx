@@ -16,6 +16,7 @@ const adminItems: AdminNavItem[] = [
   { href: "/admin/members", label: "Anggota", icon: "group" },
   { href: "/admin/learn", label: "Materi", icon: "school" },
   { href: "/admin/achievements", label: "Prestasi", icon: "workspace_premium" },
+  { href: "/admin/settings", label: "Pengaturan", icon: "badge" },
 ];
 
 export default function AdminShell({ children, user }: AdminShellProps) {

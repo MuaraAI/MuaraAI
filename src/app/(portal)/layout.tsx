@@ -19,7 +19,7 @@ export default async function PortalLayout({
 
   const { data: memberData } = await supabase
     .from("members")
-    .select("*")
+    .select("id, full_name, github_username, is_active, registration_status, membership_status, reapply_blocked, hierarchy, roles")
     .eq("id", user.id)
     .maybeSingle();
 

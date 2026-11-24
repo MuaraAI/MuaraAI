@@ -30,9 +30,18 @@ describe("public member directory v3", () => {
     expect(screen.getByText("Yuken Velino")).toBeTruthy();
     expect(screen.getByText("@Curzyori")).toBeTruthy();
     expect(screen.getByText("UBSI Pontianak")).toBeTruthy();
-    expect(screen.getByText("15.1C.30")).toBeTruthy();
+    expect(screen.getByText("Institusi")).toBeTruthy();
+    expect(screen.queryByText("15.1C.30")).toBeNull();
+    expect(screen.queryByText("Informatika (S1)")).toBeNull();
     expect(screen.queryByText(/Bio marketing/i)).toBeNull();
     expect(screen.queryByText(/AI Gateway & Systems Architecture/i)).toBeNull();
+  });
+
+  it("shows the position and a secondary division badge when present", () => {
+    const withSecondary = [{ ...members[0], track: "Backend", secondary_division: "creative", secondary_track: "Video" }] as unknown as Member[];
+    render(<MembersDirectory initialMembers={withSecondary} positions={{ builder: ["Backend"], creative: ["Video"] }} />);
+    expect(screen.getByText("Backend")).toBeTruthy();
+    expect(screen.getByText("+ Creative · Video")).toBeTruthy();
   });
 
   it("filters members through the real search control", () => {

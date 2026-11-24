@@ -1,11 +1,13 @@
 import React from "react";
 import { createClient } from "@/lib/supabase/server";
+import { createPrivilegedClient } from "@/lib/supabase/admin";
 import { Member } from "@/types/database";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import Icon from "@/components/ui/icon";
 import { getEarliestExitDate } from "@/lib/membership";
-import type { MembershipIntakePolicy } from "@/types/database";
+import type { Affiliation, MembershipIntakePolicy } from "@/types/database";
+import { AFFILIATION_LABELS } from "@/lib/validation";
 import { PortalHeader } from "@/components/ui/section";
 
 export default async function DashboardProfilePage() {
@@ -14,11 +16,9 @@ export default async function DashboardProfilePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: memberData } = await supabase
-    .from("members")
-    .select("*")
-    .eq("id", user?.id)
-    .maybeSingle();
+  const { data: memberData } = user
+    ? await (await createPrivilegedClient()).from("members").select("*").eq("id", user.id).maybeSingle()
+    : { data: null };
 
   if (!memberData) {
     redirect("/onboarding");
@@ -204,23 +204,22 @@ export default async function DashboardProfilePage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-xs">
           <div>
-            <div className="text-secondary uppercase font-mono mb-1">Kampus & Kelas</div>
-            <div className="text-foreground font-mono font-bold">
-              {member.campus || "UBSI Pontianak"} {member.kelas ? `(${member.kelas})` : ""}
-            </div>
+            <div className="text-secondary uppercase font-mono mb-1">Institusi</div>
+            <div className="text-foreground font-mono font-bold">{member.campus || "-"}</div>
           </div>
           <div>
-            <div className="text-secondary uppercase font-mono mb-1">NIM Mahasiswa</div>
-            <div className="text-foreground font-mono">{member.nim || "-"}</div>
+            <div className="text-secondary uppercase font-mono mb-1">Status</div>
+            <div className="text-foreground font-mono">{AFFILIATION_LABELS[member.affiliation as Affiliation] ?? "-"}</div>
           </div>
           <div>
             <div className="text-secondary uppercase font-mono mb-1">GitHub Account</div>
             <div className="text-foreground font-mono">@{member.github_username}</div>
           </div>
           <div>
-            <div className="text-secondary uppercase font-mono mb-1">Divisi & Track</div>
+            <div className="text-secondary uppercase font-mono mb-1">Divisi & Posisi</div>
             <div className="text-foreground font-mono capitalize">
-              {member.division} ({member.track || "General"})
+              {member.division} ({member.track || "-"})
+              {member.secondary_division ? ` + ${member.secondary_division} (${member.secondary_track || "-"})` : ""}
             </div>
           </div>
           <div>

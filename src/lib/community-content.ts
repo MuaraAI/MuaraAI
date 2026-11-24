@@ -12,10 +12,6 @@ export const communityContent = {
     ollama: "https://ollama.com/MuaraAI",
     email: "mailto:admin@muaraai.com",
   },
-  cohortPolicy: {
-    minimumCohort: 2026,
-    summary: "Mahasiswa dari seluruh kampus UBSI di Indonesia, mulai angkatan 2026 dan seterusnya.",
-  },
   muaraArusOne: {
     name: "Muara Arus 1",
     modelId: "muara-arus-1",
@@ -39,9 +35,9 @@ export const communityContent = {
     repository: "https://github.com/MuaraAI/UBSI-API",
   },
   coreMaintainers: [
-    { name: "Yuken Velino", github: "Curzyori", nim: "15260767", title: "Founder", roles: ["Maintainer", "Builder", "AI Engineer"], division: "Builder" },
-    { name: "Muhammad Raffli Aldiansyah", github: "Seeyaa77", nim: "15260161", title: "Co-Founder", roles: ["Maintainer", "Builder", "Backend"], division: "Builder" },
-    { name: "Verzio Yamanansyah", github: "MyKineID", nim: "15260225", title: "Co-Founder", roles: ["Maintainer", "Desainer"], division: "Builder" },
+    { name: "Yuken Velino", github: "Curzyori", title: "Founder", roles: ["Maintainer", "Builder", "AI Engineer"], division: "Builder" },
+    { name: "Muhammad Raffli Aldiansyah", github: "Seeyaa77", title: "Co-Founder", roles: ["Maintainer", "Builder", "Backend"], division: "Builder" },
+    { name: "Verzio Yamanansyah", github: "MyKineID", title: "Co-Founder", roles: ["Maintainer", "Desainer"], division: "Builder" },
   ],
   campusNodes: [
     { id: "pontianak", label: "UBSI Pontianak", city: "Pontianak", region: "Kalimantan Barat", role: "founding-hub" as CampusNodeRole, offlineGathering: true, verified: true },

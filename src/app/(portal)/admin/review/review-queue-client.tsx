@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Member } from "@/types/database";
 import { approveApplicant, rejectApplicant } from "@/app/actions/admin";
 import { useFeedback } from "@/components/ui/feedback";
+import { AFFILIATION_LABELS } from "@/lib/validation";
 
 interface ReviewQueueClientProps {
   initialMembers: Member[];
@@ -64,7 +65,8 @@ export default function ReviewQueueClient({ initialMembers }: ReviewQueueClientP
             <div>
               <div className="font-display font-bold text-base text-foreground">{m.full_name}</div>
               <div className="text-xs font-mono text-slate-500 mt-0.5">
-                @{m.github_username} • {m.division.toUpperCase()} ({m.track || "General"})
+                @{m.github_username} • {m.division.toUpperCase()} ({m.track || "-"})
+                {m.secondary_division ? ` + ${m.secondary_division.toUpperCase()} (${m.secondary_track || "-"})` : ""}
               </div>
             </div>
             <div className="text-xs font-mono text-slate-400">
@@ -74,20 +76,20 @@ export default function ReviewQueueClient({ initialMembers }: ReviewQueueClientP
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-mono">
             <div>
-              <span className="text-slate-500 block mb-1">Kampus Asal:</span>
+              <span className="text-slate-500 block mb-1">Status:</span>
+              <span className="text-foreground font-bold">{AFFILIATION_LABELS[m.affiliation] ?? "-"}</span>
+            </div>
+            <div>
+              <span className="text-slate-500 block mb-1">Institusi:</span>
               <span className="text-foreground font-bold">{m.campus || "-"}</span>
             </div>
-            <div>
-              <span className="text-slate-500 block mb-1">NIM:</span>
-              <span className="text-foreground font-bold">{m.nim || "-"}</span>
+            <div className="sm:col-span-2">
+              <span className="text-slate-500 block mb-1">Telegram:</span>
+              <span className="text-foreground">{m.telegram_username ? `@${m.telegram_username}` : "-"}</span>
             </div>
-            <div>
-              <span className="text-slate-500 block mb-1">Program Studi:</span>
-              <span className="text-foreground">{m.prodi || "-"}</span>
-            </div>
-            <div>
-              <span className="text-slate-500 block mb-1">Kode Kelas:</span>
-              <span className="text-foreground uppercase font-bold">{m.kelas || "-"}</span>
+            <div className="sm:col-span-2 lg:col-span-4">
+              <span className="text-slate-500 block mb-1">Alasan bergabung:</span>
+              <p className="text-slate-700 whitespace-pre-wrap">{m.join_reason || "Belum diisi"}</p>
             </div>
 
             <div className="sm:col-span-2">

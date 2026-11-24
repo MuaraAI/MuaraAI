@@ -15,9 +15,6 @@ const exitRpcPath = path.resolve(
 const policy = {
   policy_version: "national-2026-s1",
   effective_at: "2026-10-17T00:00:00.000Z",
-  allowed_university: "Mahasiswa dari kampus di seluruh Indonesia",
-  allowed_cohort: 2026,
-  allowed_semester: 1,
   minimum_active_days_before_exit: 30,
   block_reapply_after_exit: true,
 };

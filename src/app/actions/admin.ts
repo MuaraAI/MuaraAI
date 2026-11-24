@@ -1,9 +1,11 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createPrivilegedClient } from "@/lib/supabase/admin";
 import { isMaintainer } from "@/lib/guards";
 import { escapeHtml } from "@/lib/notify";
 import { fetchMemberOrgCommits } from "@/lib/github-sync";
+import { POSITIONS_SETTING_KEY, normalizePositions, type PositionsConfig } from "@/lib/positions";
 import { Resend } from "resend";
 
 async function assertMaintainer() {
@@ -34,7 +36,9 @@ const GENERIC_ERROR = "Terjadi kesalahan pada server. Silakan coba lagi.";
 export async function approveApplicant(memberId: string) {
   const { supabase, user } = await assertMaintainer();
 
-  const { data: member, error: fetchErr } = await supabase
+  // email is a private column: read it with the service-role client (caller already verified as maintainer).
+  const privileged = await createPrivilegedClient();
+  const { data: member, error: fetchErr } = await privileged
     .from("members")
     .select("id, github_username, email, full_name, registration_status, membership_status, reapply_blocked, membership_started_at")
     .eq("id", memberId)
@@ -198,6 +202,32 @@ export async function toggleMemberActive(memberId: string, isActive: boolean) {
 
   if (error) {
     console.error("[admin:toggleMemberActive]", error.message);
+    return { success: false, error: GENERIC_ERROR };
+  }
+  return { success: true };
+}
+
+// 9. Update the official positions per division (does not touch existing members)
+export async function updatePositions(data: PositionsConfig) {
+  const { supabase } = await assertMaintainer();
+
+  const normalized = normalizePositions(data);
+  if (!normalized) {
+    return { success: false, error: "Setiap divisi harus punya minimal satu posisi." };
+  }
+
+  const { error } = await supabase.from("community_settings").upsert(
+    {
+      key: POSITIONS_SETTING_KEY,
+      value: normalized,
+      description: "Official positions per division (editable by maintainers)",
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "key" }
+  );
+
+  if (error) {
+    console.error("[admin:updatePositions]", error.message);
     return { success: false, error: GENERIC_ERROR };
   }
   return { success: true };

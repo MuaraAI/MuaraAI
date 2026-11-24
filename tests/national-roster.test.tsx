@@ -4,10 +4,11 @@ import React from "react";
 import SyndicateRoster from "../src/components/landing/syndicate-roster";
 
 describe("national maintainer roster", () => {
-  it("renders corrected names, NIMs, order, and roles", () => {
+  it("renders corrected names, order, and roles without student ids", () => {
     render(<SyndicateRoster initialMembers={[]} />);
     const text = document.body.textContent || "";
-    for (const nim of ["15260767", "15260161", "15260225"]) expect(text).toContain(`NIM ${nim}`);
+    expect(text).not.toMatch(/NIM/);
+    for (const nim of ["15260767", "15260161", "15260225"]) expect(text).not.toContain(nim);
     expect(text.indexOf("Yuken Velino")).toBeLessThan(text.indexOf("Muhammad Raffli Aldiansyah"));
     expect(text.indexOf("Muhammad Raffli Aldiansyah")).toBeLessThan(text.indexOf("Verzio Yamanansyah"));
     const roles = (name: string) => screen.getByRole("list", { name: `Peran ${name}` }).textContent;

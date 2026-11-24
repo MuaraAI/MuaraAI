@@ -1,13 +1,15 @@
 import React from "react";
-import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import { getMaintainerClient } from "@/lib/supabase/admin";
 import { Member } from "@/types/database";
 import ReviewQueueClient from "./review-queue-client";
 import { PortalHeader } from "@/components/ui/section";
 
 export default async function AdminReviewPage() {
-  const supabase = await createClient();
+  const admin = await getMaintainerClient();
+  if (!admin) redirect("/dashboard");
 
-  const { data: pendingMembers } = await supabase
+  const { data: pendingMembers } = await admin
     .from("members")
     .select("*")
     .eq("registration_status", "pending")

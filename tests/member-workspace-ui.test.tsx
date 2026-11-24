@@ -12,6 +12,7 @@ const member = {
   membership_started_at: "2026-01-01T00:00:00.000Z",
   reapply_blocked: false,
   is_active: true,
+  affiliation: "mahasiswa",
   campus: "UBSI Pontianak",
   kelas: "15.1C.30",
   nim: "15260767",
@@ -40,6 +41,13 @@ vi.mock("@/lib/supabase/server", () => ({
   }),
 }));
 
+// The dashboard reads the signed-in user's own row (private columns) through the privileged client;
+// in tests that client is the same mock as the regular server client.
+vi.mock("@/lib/supabase/admin", async () => {
+  const server = await import("@/lib/supabase/server");
+  return { createPrivilegedClient: () => server.createClient() };
+});
+
 describe("member workspace dashboard", () => {
   it("leads with status and next action instead of a raw profile heading", async () => {
     render(await DashboardProfilePage());
@@ -48,6 +56,10 @@ describe("member workspace dashboard", () => {
     expect(screen.getByText(/Aktif sejak/i)).toBeTruthy();
     expect(screen.getByRole("link", { name: "Ajukan Keluar" })).toBeTruthy();
     expect(screen.getByText(/Profil lengkap/i)).toBeTruthy();
+    expect(screen.queryByText(/\bNIM\b/i)).toBeNull();
+    expect(screen.queryByText("15260767")).toBeNull();
+    expect(screen.getByText("Institusi")).toBeTruthy();
+    expect(screen.getByText("Status")).toBeTruthy();
   });
 
   it("renders pending review banner and badge when applicant is waiting for review", async () => {
@@ -64,7 +76,7 @@ describe("member workspace dashboard", () => {
 
     // Render directly with mock return
     const viClient = await import("@/lib/supabase/server");
-    vi.spyOn(viClient, "createClient").mockResolvedValueOnce({
+    vi.spyOn(viClient, "createClient").mockResolvedValue({
       auth: { getUser: async () => ({ data: { user: { id: "member-1" } } }) },
       from: (table: string) => ({
         select: () => ({
