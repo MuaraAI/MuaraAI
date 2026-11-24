@@ -56,6 +56,26 @@ describe("updateContributionRules", () => {
     expect(upsertMock).not.toHaveBeenCalled();
   });
 
+  it("rejects tier multipliers that are not strictly increasing, above 1, and at most 10", async () => {
+    for (const tierMultipliers of [
+      { arus: 3, pasang: 2, samudra: 4 },
+      { arus: 1, pasang: 2, samudra: 3 },
+      { arus: 1.5, pasang: 2, samudra: 11 },
+      { arus: Number.NaN, pasang: 2, samudra: 3 },
+      { arus: "2" as unknown as number, pasang: 3, samudra: 4 },
+    ]) {
+      const result = await updateContributionRules(rules({ tierMultipliers }));
+      expect(result).toEqual({ success: false, error: "Pengali tier harus naik berurutan (lebih dari 1, maksimal 10)." });
+    }
+    expect(upsertMock).not.toHaveBeenCalled();
+  });
+
+  it("saves valid multipliers in the setting", async () => {
+    const tierMultipliers = { arus: 2, pasang: 3, samudra: 5 };
+    expect(await updateContributionRules(rules({ tierMultipliers }))).toEqual({ success: true });
+    expect(upsertMock.mock.calls[0][0].value.tier_multipliers).toEqual(tierMultipliers);
+  });
+
   it("hides raw database errors", async () => {
     upsertMock.mockResolvedValue({ error: { message: "relation x does not exist" } });
     const result = await updateContributionRules(rules());

@@ -39,6 +39,19 @@ describe("RulesForm", () => {
     expect(await screen.findByText("Aturan tersimpan.")).toBeTruthy();
   });
 
+  it("shows and saves the tier multipliers as numbers", async () => {
+    render(<RulesForm initial={DEFAULT_RULES} />);
+    expect((screen.getByLabelText(/Pengali Arus/i) as HTMLInputElement).value).toBe("1.5");
+    expect((screen.getByLabelText(/Pengali Pasang/i) as HTMLInputElement).value).toBe("2");
+    expect((screen.getByLabelText(/Pengali Samudra/i) as HTMLInputElement).value).toBe("3");
+
+    fireEvent.change(screen.getByLabelText(/Pengali Samudra/i), { target: { value: "4" } });
+    fireEvent.click(screen.getByRole("button", { name: /Simpan aturan/i }));
+
+    await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
+    expect(updateMock.mock.calls[0][0].tierMultipliers).toEqual({ arus: 1.5, pasang: 2, samudra: 4 });
+  });
+
   it("warns that full mode removes members automatically", () => {
     render(<RulesForm initial={DEFAULT_RULES} />);
     expect(screen.queryByText(/otomatis mengeluarkan anggota/i)).toBeNull();
