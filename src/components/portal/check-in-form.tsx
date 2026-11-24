@@ -16,14 +16,18 @@ export default function CheckInForm() {
 
     setSending(true);
     setMessage(null);
-    const result = await checkInToSession(code);
-    setSending(false);
-
-    if (result.success) {
-      setCode("");
-      setMessage({ tone: "success", text: `Berhasil check-in: ${result.title ?? "sesi"}` });
-    } else {
-      setMessage({ tone: "error", text: result.error ?? "Check-in gagal." });
+    try {
+      const result = await checkInToSession(code);
+      if (result.success) {
+        setCode("");
+        setMessage({ tone: "success", text: `Berhasil check-in: ${result.title ?? "sesi"}` });
+      } else {
+        setMessage({ tone: "error", text: result.error ?? "Check-in gagal." });
+      }
+    } catch {
+      setMessage({ tone: "error", text: "Check-in gagal. Coba lagi." });
+    } finally {
+      setSending(false);
     }
   };
 

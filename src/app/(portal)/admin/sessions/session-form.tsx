@@ -51,13 +51,23 @@ export default function SessionForm({ initial, onDone }: { initial?: AdminSessio
     }
 
     const payload = { title, type, materi, startsAt, endsAt, discordUrl };
-    const result = initial ? await updateSession(initial.id, payload) : await createSession(payload);
-    setSaving(false);
-
-    if (result.success) {
-      onDone();
-    } else {
-      setError(result.error);
+    try {
+      const result = initial ? await updateSession(initial.id, payload) : await createSession(payload);
+      if (result.success) {
+        if (!initial) {
+          // Start the next new session from a clean form so a second click cannot duplicate this one.
+          setTitle("");
+          setMateri("");
+          setDiscordUrl("");
+        }
+        onDone();
+      } else {
+        setError(result.error);
+      }
+    } catch {
+      setError("Gagal menyimpan sesi. Coba lagi.");
+    } finally {
+      setSaving(false);
     }
   };
 

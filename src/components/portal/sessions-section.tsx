@@ -9,6 +9,8 @@ import {
 } from "@/lib/sessions/sessions";
 import CheckInForm from "./check-in-form";
 
+const CHECKIN_PREVIEW_MS = 24 * 3_600_000;
+
 interface SessionRow {
   id: string;
   title: string;
@@ -62,7 +64,12 @@ export default async function SessionsSection({ memberId }: { memberId: string }
           >
             Buka Discord
           </a>
-          {isSessionOpen({ startsAt: next.starts_at, endsAt: next.ends_at }, now) ? <CheckInForm /> : null}
+          {/* Shown from a day ahead so it is already on the page when someone opens the dashboard early;
+              the server decides whether the code is valid right now. */}
+          {isSessionOpen({ startsAt: next.starts_at, endsAt: next.ends_at }, now) ||
+          Date.parse(next.starts_at) - now.getTime() <= CHECKIN_PREVIEW_MS ? (
+            <CheckInForm />
+          ) : null}
         </div>
       ) : (
         <p className="text-sm text-secondary">Belum ada sesi dijadwalkan.</p>

@@ -43,6 +43,16 @@ describe("CheckInForm", () => {
     expect((screen.getByRole("button") as HTMLButtonElement).disabled).toBe(false);
   });
 
+  it("unlocks the button and shows an error when the server action throws", async () => {
+    checkInMock.mockRejectedValue(new Error("network down"));
+    render(<CheckInForm />);
+    fireEvent.change(screen.getByLabelText(/Kode check-in/i), { target: { value: "ABCD23" } });
+    fireEvent.click(screen.getByRole("button", { name: /Check-in/i }));
+
+    expect((await screen.findByRole("alert")).textContent).toContain("Check-in gagal");
+    expect((screen.getByRole("button") as HTMLButtonElement).disabled).toBe(false);
+  });
+
   it("does not call the server for an empty code", () => {
     render(<CheckInForm />);
     fireEvent.click(screen.getByRole("button", { name: /Check-in/i }));

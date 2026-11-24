@@ -71,6 +71,25 @@ describe("SessionForm", () => {
     expect((screen.getByLabelText(/Judul/i) as HTMLInputElement).disabled).toBe(false);
   });
 
+  it("unlocks the form and shows an error when the server action throws", async () => {
+    createMock.mockRejectedValue(new Error("network down"));
+    render(<SessionForm onDone={() => {}} />);
+    fireEvent.click(screen.getByRole("button", { name: /Simpan sesi/i }));
+
+    expect((await screen.findByRole("alert")).textContent).toContain("Gagal menyimpan");
+    expect((screen.getByRole("button", { name: /Simpan sesi/i }) as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it("clears a new session form after it was saved, so a second click cannot duplicate it", async () => {
+    render(<SessionForm onDone={() => {}} />);
+    fireEvent.change(screen.getByLabelText(/Judul/i), { target: { value: "Sharing PR pertama" } });
+    fireEvent.change(screen.getByLabelText(/Link Discord/i), { target: { value: "https://discord.gg/muaraai" } });
+    fireEvent.click(screen.getByRole("button", { name: /Simpan sesi/i }));
+
+    await waitFor(() => expect((screen.getByLabelText(/Judul/i) as HTMLInputElement).value).toBe(""));
+    expect((screen.getByLabelText(/Link Discord/i) as HTMLInputElement).value).toBe("");
+  });
+
   it("edits an existing session with its current values and calls updateSession", async () => {
     render(<SessionForm initial={row} onDone={() => {}} />);
     expect((screen.getByLabelText(/Judul/i) as HTMLInputElement).value).toBe("Diskusi PR");

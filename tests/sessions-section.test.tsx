@@ -69,12 +69,17 @@ describe("SessionsSection", () => {
     expect(link.getAttribute("rel")).toContain("noopener");
   });
 
-  it("shows the check-in form only while the session is open", async () => {
+  it("shows the check-in form from 24 hours before the session, so it is there when the page was opened early", async () => {
     const { unmount } = await render_();
     expect(screen.getByLabelText(/Kode check-in/i)).toBeTruthy();
     unmount();
 
-    vi.setSystemTime(new Date("2026-12-04T12:00:00Z")); // 30 minutes before the start
+    vi.setSystemTime(new Date("2026-12-04T12:00:00Z")); // 30 minutes before the start, not open yet
+    const early = await render_();
+    expect(screen.getByLabelText(/Kode check-in/i)).toBeTruthy();
+    early.unmount();
+
+    vi.setSystemTime(new Date("2026-12-02T12:00:00Z")); // two days before
     await render_();
     expect(screen.queryByLabelText(/Kode check-in/i)).toBeNull();
   });
