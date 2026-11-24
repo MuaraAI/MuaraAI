@@ -6,7 +6,7 @@ export default function Manifesto() {
   const principles = [
     { title: "Belajar dari sumber yang jelas", description: "Kami mulai dari materi, konteks, dan pertanyaan yang bisa ditelusuri." },
     { title: "Membuat sesuatu yang bisa dilihat", description: "Ide menjadi project dan Proof of Work, bukan berhenti di wacana." },
-    { title: "Berbagi antar kampus", description: "Anggota dari seluruh Indonesia saling membuka jalur belajar dan kontribusi." },
+    { title: "Terbuka untuk semua", description: "Mahasiswa, pelajar, atau umum, dari mana saja, saling membuka jalur belajar dan kontribusi." },
     { title: "Menjaga kualitas bersama", description: "Review, tanggung jawab, dan kontribusi nyata menjadi dasar komunitas." },
   ];
 

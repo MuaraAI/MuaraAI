@@ -35,7 +35,7 @@ export default function NationalCampusMap() {
   useEffect(() => { if (!reducedMotion) setMotionReady(true); }, [reducedMotion]);
   return (
     <div className="campus-map-wrap">
-    <figure className="national-campus-map" role="img" aria-label="Peta jaringan universitas Indonesia yang terhubung ke MuaraAI. Komunitas lahir dari UBSI Pontianak dan terbuka untuk mahasiswa dari kampus di seluruh Indonesia.">
+    <figure className="national-campus-map" role="img" aria-label="Peta jaringan kampus di Indonesia yang terhubung ke MuaraAI. Komunitas lahir di UBSI Pontianak dan terbuka untuk siapa saja.">
       <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} aria-hidden="true"><defs><linearGradient id="smap-ctx-fade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2={VIEW_W} y2="0"><stop offset="0" stopColor="#3B5A70" stopOpacity="0.13" /><stop offset={(632 / VIEW_W).toFixed(3)} stopColor="#3B5A70" stopOpacity="0.13" /><stop offset="1" stopColor="#3B5A70" stopOpacity="0" /></linearGradient></defs><path className="smap-ctx" d={NEIGHBOURS_PATH} fill="url(#smap-ctx-fade)" /><path className="smap-land" d={INDONESIA_PATH} />
         {UNIVERSITIES.map((node) => <line key={node.id} className="smap-leader" x1={node.x} y1={node.y} x2={node.lx} y2={node.ly} />)}
         {routes.map((route, index) => <path key={route.id} className="smap-route" data-route d={route.path} pathLength={1} style={{ ["--i" as string]: index }} />)}

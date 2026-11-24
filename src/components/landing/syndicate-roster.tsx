@@ -159,7 +159,7 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
       <SectionHeader
         eyebrow="Dewan Pengarah & Inisiator"
         title="Tim inti MuaraAI"
-        description="Founder dan maintainer yang memulai MuaraAI dari UBSI Pontianak dan membangun komunitasnya bersama mahasiswa UBSI."
+        description="Founder dan maintainer yang memulai MuaraAI di Pontianak dan membangun komunitasnya bersama anggota dari berbagai latar belakang."
       />
 
         {/* Core team cards: pixel-art edition */}

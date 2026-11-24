@@ -103,8 +103,8 @@ export async function approveApplicant(memberId: string) {
       await resend.emails.send({
         from: "Muara AI <admin@muaraai.com>",
         to: member.email,
-        subject: "Selamat! Proof of Work Anda Diterima di Muara AI",
-        html: `<p>Halo ${escapeHtml(member.full_name ?? "")},</p><p>Karya Anda telah disetujui oleh Core Team. Undangan bergabung ke GitHub Org MuaraAI telah dikirimkan ke akun @${escapeHtml(member.github_username ?? "")}. Silakan cek email/notifikasi GitHub Anda dan kunjungi <a href="https://muaraai.com/dashboard">Dashboard Muara AI</a>.</p>`,
+        subject: "Kamu resmi bagian dari MuaraAI",
+        html: `<p>Halo ${escapeHtml(member.full_name ?? "")},</p><p>Karya kamu sudah kami review dan kami senang kamu bergabung. Tiga langkah awalnya:</p><ol><li>Terima undangan GitHub org MuaraAI (cek email atau notifikasi GitHub @${escapeHtml(member.github_username ?? "")}).</li><li>Buka dashboard: <a href="https://muaraai.com/dashboard">muaraai.com/dashboard</a></li><li>Pilih repo yang sudah ada, bikin branch baru, lalu buka Pull Request pertamamu.</li></ol><p>Semua kontribusi lewat PR dan direview anggota lain. Kalau bingung mulai dari mana, tanya saja di sesi Discord mingguan.</p><p>Salam,<br/>Tim MuaraAI</p>`,
       });
     } catch (e) {
       console.error("Resend email failed:", e);

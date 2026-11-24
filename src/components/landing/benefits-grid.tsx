@@ -31,7 +31,7 @@ export default function BenefitsGrid() {
     {
       icon: "trophy",
       title: "Dukungan Kompetisi & Lomba",
-      desc: "Biaya registrasi hackathon, Gemastik, dan ajang teknologi nasional didukung penuh oleh kas komunitas.",
+      desc: "Biaya registrasi hackathon dan ajang teknologi dibantu dari donasi komunitas, sesuai ketersediaan dana.",
     },
     {
       icon: "badge",
