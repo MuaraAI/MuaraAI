@@ -24,9 +24,10 @@ function fakeClient(responses: Record<string, unknown> = {}) {
       return builder;
     };
     for (const op of ["select", "eq", "update"]) builder[op] = record(op);
-    builder.upsert = async (...args: unknown[]) => {
+    builder.upsert = (...args: unknown[]) => {
       ops.push({ table, op: "upsert", args });
-      return { error: null };
+      const result = { error: null, data: responses[`${table}.upserted`] ?? [] };
+      return { then: (resolve: (value: unknown) => unknown) => resolve(result), select: async () => result };
     };
     builder.maybeSingle = async () => ({ data: responses[`${table}.one`] ?? null, error: null });
     builder.then = (resolve: (value: unknown) => unknown) => resolve({ data: responses[`${table}.list`] ?? [], error: null });
@@ -109,6 +110,14 @@ describe("buildSupabaseDeps", () => {
     const upsert = ops.find((op) => op.table === "contribution_evaluations" && op.op === "upsert")!;
     expect(upsert.args[0]).toMatchObject({ member_id: "m1", month: "2026-11-01", met: false, action: "warn", enforced: true });
     expect(upsert.args[1]).toEqual({ onConflict: "member_id,month", ignoreDuplicates: true });
+  });
+
+  it("reports whether this call really inserted the evaluation", async () => {
+    const row = { memberId: "m1", month: "2026-11-01", met: false, action: "warn" as const, enforced: true };
+    const inserted = fakeClient({ "contribution_evaluations.upserted": [{ member_id: "m1" }] });
+    expect(await buildSupabaseDeps(inserted.client, github).saveEvaluation(row)).toBe(true);
+    const duplicate = fakeClient({ "contribution_evaluations.upserted": [] });
+    expect(await buildSupabaseDeps(duplicate.client, github).saveEvaluation(row)).toBe(false);
   });
 
   it("kicks by closing the membership, not by deleting the member", async () => {

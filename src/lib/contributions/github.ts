@@ -66,7 +66,7 @@ const SEARCH_QUERY = `query($q: String!, $after: String) {
         repository { name }
         commits { totalCount }
         labels(first: 20) { nodes { name } }
-        reviews(first: 50) { nodes { state author { login } } }
+        reviews(states: APPROVED, first: 50) { nodes { state author { login } } }
       }
     }
   }
@@ -123,6 +123,27 @@ export async function fetchMergedPrs(
   }
 
   return { prs, complete: false };
+}
+
+/** "missing" only when GitHub itself says the account does not exist; any other failure is "error". */
+export async function verifyGithubLogin(login: string, deps: GithubDeps): Promise<"ok" | "missing" | "error"> {
+  if (!NAME_PATTERN.test(login)) return "missing";
+  if (!deps.token) return "error";
+  try {
+    const response = await (deps.fetchImpl ?? fetch)(`${API}/graphql`, {
+      method: "POST",
+      headers: headers(deps.token),
+      body: JSON.stringify({ query: "query($login: String!) { user(login: $login) { login } }", variables: { login } }),
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+    if (!response.ok) return "error";
+    const body = (await response.json()) as { data?: { user?: { login?: string } | null }; errors?: { type?: string }[] };
+    if (body.data?.user?.login) return "ok";
+    if (body.errors?.length && body.errors.every((error) => error.type === "NOT_FOUND")) return "missing";
+    return "error";
+  } catch {
+    return "error";
+  }
 }
 
 /** The first commit's author is treated as the repo creator (cached by the caller). */

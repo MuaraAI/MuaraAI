@@ -2,7 +2,7 @@ import type { PrivilegedClient } from "@/lib/supabase/admin";
 import { notifyMaintainers } from "@/lib/notify";
 import type { EngineDeps, EngineMember } from "./engine";
 import { renderKickEmail, renderWarningEmail, sendContributionEmail } from "./emails";
-import { fetchMergedPrs, fetchOrgReposCreatedInMonth, fetchRepoCreator, type GithubDeps } from "./github";
+import { fetchMergedPrs, fetchOrgReposCreatedInMonth, fetchRepoCreator, verifyGithubLogin, type GithubDeps } from "./github";
 import { DEFAULT_RULES, parseRules, type ContributionRules } from "./rules";
 
 const fail = (what: string): never => {
@@ -88,19 +88,26 @@ export function buildSupabaseDeps(client: PrivilegedClient, github: GithubDeps):
     },
 
     async saveEvaluation(row) {
-      const { error } = await client.from("contribution_evaluations").upsert(
-        {
-          member_id: row.memberId,
-          month: row.month,
-          met: row.met,
-          action: row.action,
-          enforced: row.enforced,
-          evaluated_at: new Date().toISOString(),
-        },
-        { onConflict: "member_id,month", ignoreDuplicates: true }
-      );
+      const { data, error } = await client
+        .from("contribution_evaluations")
+        .upsert(
+          {
+            member_id: row.memberId,
+            month: row.month,
+            met: row.met,
+            action: row.action,
+            enforced: row.enforced,
+            evaluated_at: new Date().toISOString(),
+          },
+          { onConflict: "member_id,month", ignoreDuplicates: true }
+        )
+        .select("member_id");
       if (error) fail("saving an evaluation");
+      // ignoreDuplicates returns no row when a concurrent run already inserted it.
+      return (data ?? []).length === 1;
     },
+
+    verifyLogin: (login) => verifyGithubLogin(login, github),
 
     async setStanding(memberId, standing) {
       const { error } = await client
@@ -120,8 +127,16 @@ export function buildSupabaseDeps(client: PrivilegedClient, github: GithubDeps):
     },
 
     async sendWarning(member, month, stats) {
-      if (!member.email) return;
-      await sendContributionEmail(member.email, renderWarningEmail({ name: member.fullName, month, stats, division: member.division, rules }));
+      const sent = member.email
+        ? await sendContributionEmail(member.email, renderWarningEmail({ name: member.fullName, month, stats, division: member.division, rules }))
+        : false;
+      // A warned member who never got the email must not be kicked blindly next month.
+      if (!sent) {
+        await notifyMaintainers(
+          "Email peringatan kontribusi tidak terkirim",
+          `@${member.githubUsername} berstatus warned tapi emailnya tidak terkirim. Beri tahu manual.`
+        );
+      }
     },
 
     async sendKick(member, month) {

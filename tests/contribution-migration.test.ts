@@ -33,7 +33,7 @@ describe("contribution engine migration", () => {
 
   it("lets service-role updates through the privileged-columns trigger but protects the new columns", () => {
     const fn = sql.slice(sql.indexOf("CREATE OR REPLACE FUNCTION public.protect_member_privileged_columns"));
-    expect(fn).toContain("auth.uid() IS NOT NULL AND NOT public.is_maintainer()");
+    expect(fn).toContain("COALESCE(auth.role(), '') IN ('anon', 'authenticated') AND NOT public.is_maintainer()");
     for (const clause of [
       "OLD.hierarchy IS DISTINCT FROM NEW.hierarchy",
       "OLD.roles IS DISTINCT FROM NEW.roles",

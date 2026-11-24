@@ -35,7 +35,10 @@ export interface EngineDeps {
   fetchOrgReposCreatedInMonth(org: string, month: string): ReturnType<typeof fetchOrgReposCreatedInMonth>;
   saveStats(memberId: string, month: string, stats: MonthlyStats): Promise<void>;
   hasEvaluation(memberId: string, month: string): Promise<boolean>;
-  saveEvaluation(row: { memberId: string; month: string; met: boolean; action: EvaluationAction; enforced: boolean }): Promise<void>;
+  /** Resolves true only when this call inserted the row (false when a concurrent run already did). */
+  saveEvaluation(row: { memberId: string; month: string; met: boolean; action: EvaluationAction; enforced: boolean }): Promise<boolean>;
+  /** "missing" = GitHub confirms the account does not exist, "error" = could not tell. */
+  verifyLogin(login: string): Promise<"ok" | "missing" | "error">;
   setStanding(memberId: string, standing: Standing): Promise<void>;
   kickMember(memberId: string, reason: string): Promise<void>;
   sendWarning(member: EngineMember, month: string, stats: MonthlyStats): Promise<void>;
@@ -52,7 +55,11 @@ export interface SyncSummary {
   kicked: number;
   deferred: number;
   dryRun: boolean;
+  /** True when the time budget ran out before every member was processed. */
+  partial: boolean;
 }
+
+const DEFAULT_BUDGET_MS = 45_000;
 
 /**
  * Syncs this month's and last month's statistics for every active member and, unless turned off,
@@ -62,11 +69,13 @@ export interface SyncSummary {
  */
 export async function runContributionSync(
   deps: EngineDeps,
-  options: { evaluate?: boolean } = {}
+  options: { evaluate?: boolean; budgetMs?: number } = {}
 ): Promise<SyncSummary> {
   const rules = await deps.loadRules();
   const members = await deps.loadMembers();
-  const currentMonth = monthStart(deps.now());
+  const startedAt = deps.now();
+  const budgetMs = options.budgetMs ?? DEFAULT_BUDGET_MS;
+  const currentMonth = monthStart(startedAt);
   const lastMonth = previousMonth(currentMonth);
   const summary: SyncSummary = {
     month: currentMonth,
@@ -77,24 +86,26 @@ export async function runContributionSync(
     kicked: 0,
     deferred: 0,
     dryRun: rules.enforcement === "dry_run",
+    partial: false,
   };
 
-  const creatorCache = new Map<string, string | null>();
-  const creatorOf = async (repo: string): Promise<string | null> => {
-    if (creatorCache.has(repo)) return creatorCache.get(repo) ?? null;
-    let creator: string | null = null;
+  const creatorCache = new Map<string, { creator: string | null; ok: boolean }>();
+  const creatorOf = async (repo: string): Promise<{ creator: string | null; ok: boolean }> => {
+    const known = creatorCache.get(repo);
+    if (known) return known;
+    let result: { creator: string | null; ok: boolean } = { creator: null, ok: false };
     const cached = await deps.loadRepoCreator(repo);
     if (cached) {
-      creator = cached.creator;
+      result = { creator: cached.creator, ok: true };
     } else {
       const fetched = await deps.fetchRepoCreator(repo, rules.org);
       if (fetched.ok) {
         await deps.saveRepoCreator(repo, fetched.creator, fetched.createdAt);
-        creator = fetched.creator;
+        result = { creator: fetched.creator, ok: true };
       }
     }
-    creatorCache.set(repo, creator);
-    return creator;
+    creatorCache.set(repo, result);
+    return result;
   };
 
   const orgRepos = new Map<string, ReturnType<typeof fetchOrgReposCreatedInMonth>>();
@@ -107,7 +118,8 @@ export async function runContributionSync(
     const { prs, complete } = await deps.fetchPrs(member.githubUsername, month, rules.org);
 
     const repoCreators: Record<string, string | null> = {};
-    for (const repo of new Set(prs.map((pr) => pr.repo))) repoCreators[repo] = await creatorOf(repo);
+    // An unknown creator of a repo someone merged into counts as "external" (never hurts the member).
+    for (const repo of new Set(prs.map((pr) => pr.repo))) repoCreators[repo] = (await creatorOf(repo)).creator;
 
     let owned = 0;
     let reposComplete = true;
@@ -115,7 +127,9 @@ export async function runContributionSync(
       const created = await reposCreatedIn(month);
       reposComplete = created.ok;
       for (const repo of created.repos) {
-        const creator = await creatorOf(repo.name);
+        // An unknown creator of a NEW repo would undercount "repos created", so the data is incomplete.
+        const { creator, ok } = await creatorOf(repo.name);
+        if (!ok) reposComplete = false;
         if (creator && creator.toLowerCase() === member.githubUsername.toLowerCase()) owned += 1;
       }
     }
@@ -132,13 +146,30 @@ export async function runContributionSync(
     };
   };
 
-  for (const member of members) {
+  // Rotate the starting member by day so a budget cut never starves the same members every run.
+  const offset = members.length > 0 ? startedAt.getUTCDate() % members.length : 0;
+  const ordered = [...members.slice(offset), ...members.slice(0, offset)];
+  const missingLogins: string[] = [];
+
+  for (const [index, member] of ordered.entries()) {
+    if (index > 0 && deps.now().getTime() - startedAt.getTime() > budgetMs) {
+      summary.partial = true;
+      break;
+    }
     if (!member.githubUsername) {
       summary.skipped += 1;
       continue;
     }
 
     try {
+      // A wrong or renamed username would look like "0 PRs": confirm the account exists first.
+      const login = await deps.verifyLogin(member.githubUsername);
+      if (login !== "ok") {
+        if (login === "missing") missingLogins.push(member.githubUsername);
+        summary.deferred += 1;
+        continue;
+      }
+
       const current = await computeStats(member, currentMonth);
       if (current.complete) {
         await deps.saveStats(member.id, currentMonth, current.stats);
@@ -158,11 +189,14 @@ export async function runContributionSync(
 
       const met = meetsTarget(member.division, previous.stats, rules);
       const { action } = nextStanding(member.standing, met);
-      const enforced = rules.enforcement !== "dry_run";
+      // warn_only never removes anyone, so a would-be kick is recorded as not enforced.
+      const enforced = rules.enforcement === "full" || (rules.enforcement === "warn_only" && action !== "kick");
 
-      await deps.saveEvaluation({ memberId: member.id, month: lastMonth, met, action, enforced });
+      // Only the run that actually inserted the row may act (a concurrent run must not double-send).
+      const inserted = await deps.saveEvaluation({ memberId: member.id, month: lastMonth, met, action, enforced });
+      if (!inserted) continue;
       summary.evaluated += 1;
-      if (!enforced) continue;
+      if (rules.enforcement === "dry_run") continue;
 
       if (action === "warn") {
         await deps.setStanding(member.id, "warned");
@@ -171,7 +205,8 @@ export async function runContributionSync(
       } else if (action === "recover") {
         await deps.setStanding(member.id, "good");
       } else if (action === "kick") {
-        const name = `${member.fullName} (@${member.githubUsername})`;
+        // Maintainer alerts may reach a shared channel: identify by public username only.
+        const name = `@${member.githubUsername}`;
         if (rules.enforcement === "full") {
           await deps.kickMember(
             member.id,
@@ -194,6 +229,13 @@ export async function runContributionSync(
       console.error("[contributions] member failed", member.id, error instanceof Error ? error.message : "unknown");
       summary.deferred += 1;
     }
+  }
+
+  if (missingLogins.length > 0) {
+    await deps.alertMaintainers(
+      "Username GitHub tidak ditemukan",
+      `Periksa username anggota berikut, evaluasi mereka ditunda: ${missingLogins.map((login) => `@${login}`).join(", ")}.`
+    );
   }
 
   return summary;

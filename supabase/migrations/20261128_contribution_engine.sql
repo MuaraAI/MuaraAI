@@ -90,7 +90,7 @@ SECURITY DEFINER
 SET search_path TO 'public'
 AS $$
 BEGIN
-  IF auth.uid() IS NOT NULL AND NOT public.is_maintainer() THEN
+  IF COALESCE(auth.role(), '') IN ('anon', 'authenticated') AND NOT public.is_maintainer() THEN
     IF (OLD.hierarchy IS DISTINCT FROM NEW.hierarchy OR
         OLD.roles IS DISTINCT FROM NEW.roles OR
         OLD.registration_status IS DISTINCT FROM NEW.registration_status OR

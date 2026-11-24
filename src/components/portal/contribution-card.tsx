@@ -72,7 +72,7 @@ export default function ContributionCard({
       )}
 
       <p className="text-xs text-secondary">
-        Hanya PR yang sudah di-merge dan di-approve anggota lain yang dihitung.
+        Hanya PR yang sudah di-merge dan di-approve anggota lain yang dihitung. Batas bulan memakai UTC (pukul 07.00 WIB).
       </p>
     </section>
   );

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { fetchMergedPrs, fetchOrgReposCreatedInMonth, fetchRepoCreator } from "../src/lib/contributions/github";
+import { fetchMergedPrs, fetchOrgReposCreatedInMonth, fetchRepoCreator, verifyGithubLogin } from "../src/lib/contributions/github";
 
 function response(body: unknown, init: { status?: number; headers?: Record<string, string> } = {}) {
   const status = init.status ?? 200;
@@ -61,6 +61,13 @@ describe("fetchMergedPrs", () => {
     expect(variables.q).toBe("org:MuaraAI is:pr is:merged author:budi merged:2026-11-01..2026-11-30");
   });
 
+  it("asks only for APPROVED reviews so bot and comment reviews cannot push an approval out of the window", async () => {
+    const fetchImpl = vi.fn(async () => response(page([])));
+    await fetchMergedPrs("budi", "2026-11-01", "MuaraAI", { token: "tok", fetchImpl });
+    const { query } = JSON.parse((fetchImpl.mock.calls[0] as unknown as [string, RequestInit])[1].body as string);
+    expect(query).toContain("reviews(states: APPROVED");
+  });
+
   it("follows pagination and merges the pages", async () => {
     const fetchImpl = vi
       .fn()
@@ -101,6 +108,34 @@ describe("fetchMergedPrs", () => {
     expect((await fetchMergedPrs("budi", "2026-11-15", "MuaraAI", { token: "tok", fetchImpl })).complete).toBe(false);
     expect((await fetchMergedPrs("budi", "2026-11-01", "Mu/ara", { token: "tok", fetchImpl })).complete).toBe(false);
     expect(fetchImpl).not.toHaveBeenCalled();
+  });
+});
+
+describe("verifyGithubLogin", () => {
+  it("confirms an existing account", async () => {
+    const fetchImpl = vi.fn(async () => response({ data: { user: { login: "budi" } } }));
+    expect(await verifyGithubLogin("budi", { token: "tok", fetchImpl })).toBe("ok");
+    expect(JSON.parse((fetchImpl.mock.calls[0] as unknown as [string, RequestInit])[1].body as string).variables.login).toBe("budi");
+  });
+
+  it("reports an account GitHub says does not exist", async () => {
+    const fetchImpl = vi.fn(async () => response({ data: { user: null }, errors: [{ type: "NOT_FOUND" }] }));
+    expect(await verifyGithubLogin("ghost", { token: "tok", fetchImpl })).toBe("missing");
+  });
+
+  it("treats a malformed username as missing without calling the API", async () => {
+    const fetchImpl = vi.fn();
+    expect(await verifyGithubLogin("bu di", { token: "tok", fetchImpl })).toBe("missing");
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("returns error (not missing) when GitHub cannot answer", async () => {
+    expect(await verifyGithubLogin("budi", { token: "tok", fetchImpl: vi.fn(async () => response({}, { status: 502 })) })).toBe("error");
+    expect(await verifyGithubLogin("budi", { token: "tok", fetchImpl: vi.fn(async () => { throw new Error("down"); }) })).toBe("error");
+    expect(await verifyGithubLogin("budi", { token: "tok", fetchImpl: vi.fn(async () => response({ errors: [{ type: "RATE_LIMITED" }] })) })).toBe("error");
+    const noToken = vi.fn();
+    expect(await verifyGithubLogin("budi", { token: undefined, fetchImpl: noToken })).toBe("error");
+    expect(noToken).not.toHaveBeenCalled();
   });
 });
 

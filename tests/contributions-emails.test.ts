@@ -1,8 +1,44 @@
-import { describe, expect, it } from "vitest";
-import { renderKickEmail, renderWarningEmail } from "../src/lib/contributions/emails";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+const { sendMock } = vi.hoisted(() => ({ sendMock: vi.fn() }));
+vi.mock("resend", () => ({
+  Resend: class {
+    emails = { send: sendMock };
+  },
+}));
+
+import { renderKickEmail, renderWarningEmail, sendContributionEmail } from "../src/lib/contributions/emails";
 import { DEFAULT_RULES } from "../src/lib/contributions/rules";
 
 const stats = { mergedPrs: 4, externalPrs: 2, commits: 20, newRepos: 0, newWorks: 0 };
+
+describe("sendContributionEmail", () => {
+  afterEach(() => {
+    sendMock.mockReset();
+    delete process.env.RESEND_API_KEY;
+  });
+  const mail = { subject: "s", html: "<p>h</p>" };
+
+  it("reports false without an API key and never calls Resend", async () => {
+    expect(await sendContributionEmail("b@example.com", mail)).toBe(false);
+    expect(sendMock).not.toHaveBeenCalled();
+  });
+
+  it("reports false when Resend answers with an error object or throws", async () => {
+    process.env.RESEND_API_KEY = "key";
+    sendMock.mockResolvedValueOnce({ data: null, error: { message: "bad" } });
+    expect(await sendContributionEmail("b@example.com", mail)).toBe(false);
+    sendMock.mockRejectedValueOnce(new Error("network"));
+    expect(await sendContributionEmail("b@example.com", mail)).toBe(false);
+  });
+
+  it("reports true when the email was accepted", async () => {
+    process.env.RESEND_API_KEY = "key";
+    sendMock.mockResolvedValueOnce({ data: { id: "1" }, error: null });
+    expect(await sendContributionEmail("b@example.com", mail)).toBe(true);
+    expect(sendMock).toHaveBeenCalledWith(expect.objectContaining({ to: "b@example.com", subject: "s" }));
+  });
+});
 
 describe("contribution emails", () => {
   it("shows a builder the month, each metric against its target, and the consequence", () => {

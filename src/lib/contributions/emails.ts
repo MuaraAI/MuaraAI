@@ -55,9 +55,14 @@ export function renderKickEmail(input: { name: string; month: string }): { subje
   };
 }
 
-/** Sends through Resend; silently does nothing when RESEND_API_KEY is not configured. */
-export async function sendContributionEmail(to: string, mail: { subject: string; html: string }): Promise<void> {
+/** Sends through Resend. Resolves true only when Resend accepted the email (false without a key, on error, or on throw). */
+export async function sendContributionEmail(to: string, mail: { subject: string; html: string }): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) return;
-  await new Resend(apiKey).emails.send({ from: "Muara AI <admin@muaraai.com>", to, subject: mail.subject, html: mail.html });
+  if (!apiKey) return false;
+  try {
+    const { error } = await new Resend(apiKey).emails.send({ from: "Muara AI <admin@muaraai.com>", to, subject: mail.subject, html: mail.html });
+    return !error;
+  } catch {
+    return false;
+  }
 }
