@@ -1,13 +1,8 @@
 import { Resend } from "resend";
 import { escapeHtml } from "@/lib/notify";
-import type { ContributionRules, Division, MonthlyStats } from "./rules";
+import { monthLabel, type ContributionRules, type Division, type MonthlyStats } from "./rules";
 
 const DASHBOARD_URL = "https://muaraai.com/dashboard";
-
-/** "2026-11-01" -> "November 2026" (UTC, Indonesian). */
-export function monthLabel(month: string): string {
-  return new Date(`${month}T00:00:00Z`).toLocaleDateString("id-ID", { month: "long", year: "numeric", timeZone: "UTC" });
-}
 
 const progress = (label: string, value: number, target: number) =>
   `<li>${label}: <strong>${value}/${target}</strong></li>`;

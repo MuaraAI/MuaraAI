@@ -104,6 +104,11 @@ function shiftMonth(month: string, delta: number): string {
 export const previousMonth = (month: string): string => shiftMonth(month, -1);
 export const nextMonth = (month: string): string => shiftMonth(month, 1);
 
+/** "2026-11-01" -> "November 2026" (UTC, Indonesian). */
+export function monthLabel(month: string): string {
+  return new Date(`${month}T00:00:00Z`).toLocaleDateString("id-ID", { month: "long", year: "numeric", timeZone: "UTC" });
+}
+
 /** A member is not evaluated for the month they were approved in, nor before it. */
 export function isGraceMonth(month: string, membershipStartedAt: string | null): boolean {
   if (!membershipStartedAt) return true;

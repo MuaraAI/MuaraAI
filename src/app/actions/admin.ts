@@ -6,6 +6,9 @@ import { isMaintainer } from "@/lib/guards";
 import { escapeHtml } from "@/lib/notify";
 import { fetchMemberOrgCommits } from "@/lib/github-sync";
 import { POSITIONS_SETTING_KEY, normalizePositions, type PositionsConfig } from "@/lib/positions";
+import { serializeRules, type ContributionRules } from "@/lib/contributions/rules";
+import { runContributionSync } from "@/lib/contributions/engine";
+import { buildSupabaseDeps } from "@/lib/contributions/supabase-deps";
 import { Resend } from "resend";
 
 async function assertMaintainer() {
@@ -231,6 +234,63 @@ export async function updatePositions(data: PositionsConfig) {
     return { success: false, error: GENERIC_ERROR };
   }
   return { success: true };
+}
+
+const RULE_LIMIT = 1000;
+const isRuleCount = (value: unknown) => typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= RULE_LIMIT;
+
+function validateContributionRules(data: ContributionRules): string | null {
+  if (!data || !["dry_run", "warn_only", "full"].includes(data.enforcement)) return "Mode penegakan tidak valid.";
+  if (typeof data.org !== "string" || !/^[A-Za-z0-9-]{1,39}$/.test(data.org)) return "Nama org tidak valid.";
+  if (typeof data.newWorkLabel !== "string" || !/^[A-Za-z0-9 _-]{1,50}$/.test(data.newWorkLabel.trim())) return "Label karya tidak valid.";
+  const numbers = [
+    data.builder?.mergedPrs,
+    data.builder?.externalPrs,
+    data.builder?.commits,
+    data.builder?.newRepos,
+    data.creative?.mergedPrs,
+    data.creative?.externalPrs,
+    data.creative?.newWorks,
+  ];
+  return numbers.every(isRuleCount) ? null : `Nilai target harus bilangan bulat 0–${RULE_LIMIT}.`;
+}
+
+// 9b. Update the monthly contribution quota and enforcement mode
+export async function updateContributionRules(data: ContributionRules) {
+  const { supabase } = await assertMaintainer();
+
+  const problem = validateContributionRules(data);
+  if (problem) return { success: false, error: problem };
+
+  const { error } = await supabase.from("community_settings").upsert(
+    {
+      key: "contribution_rules",
+      value: serializeRules({ ...data, newWorkLabel: data.newWorkLabel.trim() }),
+      description: "Monthly contribution quota and enforcement mode (editable by maintainers)",
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "key" }
+  );
+
+  if (error) {
+    console.error("[admin:updateContributionRules]", error.message);
+    return { success: false, error: GENERIC_ERROR };
+  }
+  return { success: true };
+}
+
+// 9c. Refresh contribution statistics now. Never evaluates, warns, or removes anyone.
+export async function syncContributionsNow() {
+  await assertMaintainer();
+
+  try {
+    const client = await createPrivilegedClient();
+    const summary = await runContributionSync(buildSupabaseDeps(client, { token: process.env.GITHUB_ORG_TOKEN }), { evaluate: false });
+    return { success: true, summary: { synced: summary.synced, skipped: summary.skipped } };
+  } catch (error) {
+    console.error("[admin:syncContributionsNow]", error instanceof Error ? error.message : "unknown error");
+    return { success: false, error: GENERIC_ERROR };
+  }
 }
 
 // 8. Synchronize GitHub commits across all repos in org:MuaraAI

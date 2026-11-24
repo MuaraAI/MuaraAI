@@ -16,6 +16,7 @@ const adminItems: AdminNavItem[] = [
   { href: "/admin/members", label: "Anggota", icon: "group" },
   { href: "/admin/learn", label: "Materi", icon: "school" },
   { href: "/admin/achievements", label: "Prestasi", icon: "workspace_premium" },
+  { href: "/admin/contributions", label: "Kontribusi", icon: "rocket_launch" },
   { href: "/admin/settings", label: "Pengaturan", icon: "badge" },
 ];
 
