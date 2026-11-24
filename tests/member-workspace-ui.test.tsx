@@ -30,14 +30,17 @@ const member = {
 vi.mock("@/lib/supabase/server", () => ({
   createClient: async () => ({
     auth: { getUser: async () => ({ data: { user: { id: "member-1" } } }) },
-    from: (table: string) => ({
-      select: () => ({
-        eq: () => ({
-          single: async () => ({ data: table === "members" ? member : { value: { minimum_active_days_before_exit: 30 } } }),
-          maybeSingle: async () => ({ data: table === "members" ? member : { value: { minimum_active_days_before_exit: 30 } } }),
-        }),
-      }),
-    }),
+    from: (table: string) => {
+      const result = async () => ({
+        data: table === "members" ? member : table === "monthly_contributions" ? null : { value: { minimum_active_days_before_exit: 30 } },
+      });
+      const chain: { single: typeof result; maybeSingle: typeof result; eq: () => typeof chain } = {
+        single: result,
+        maybeSingle: result,
+        eq: () => chain,
+      };
+      return { select: () => chain };
+    },
   }),
 }));
 
@@ -60,6 +63,8 @@ describe("member workspace dashboard", () => {
     expect(screen.queryByText("15260767")).toBeNull();
     expect(screen.getByText("Institusi")).toBeTruthy();
     expect(screen.getByText("Status")).toBeTruthy();
+    expect(screen.getByText("Kontribusi bulan ini")).toBeTruthy();
+    expect(screen.getByText(/Belum ada data kontribusi/i)).toBeTruthy();
   });
 
   it("renders pending review banner and badge when applicant is waiting for review", async () => {

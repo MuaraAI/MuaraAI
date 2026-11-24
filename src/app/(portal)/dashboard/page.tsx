@@ -9,6 +9,8 @@ import { getEarliestExitDate } from "@/lib/membership";
 import type { Affiliation, MembershipIntakePolicy } from "@/types/database";
 import { AFFILIATION_LABELS } from "@/lib/validation";
 import { PortalHeader } from "@/components/ui/section";
+import ContributionCard from "@/components/portal/contribution-card";
+import { monthStart, parseRules, type ContributionRules, type MonthlyStats } from "@/lib/contributions/rules";
 
 export default async function DashboardProfilePage() {
   const supabase = await createClient();
@@ -34,6 +36,35 @@ export default async function DashboardProfilePage() {
   const earliestExitAt = intakePolicy
     ? getEarliestExitDate(member.membership_started_at, intakePolicy.minimum_active_days_before_exit)
     : null;
+
+  let contribution: { stats: MonthlyStats | null; rules: ContributionRules; month: string } | null = null;
+  if (member.registration_status === "approved" && member.membership_status === "active") {
+    const month = monthStart(new Date());
+    const { data: statsRow } = await (await createPrivilegedClient())
+      .from("monthly_contributions")
+      .select("merged_prs, external_prs, commits, new_repos, new_works")
+      .eq("member_id", member.id)
+      .eq("month", month)
+      .maybeSingle();
+    const { data: rulesSetting } = await supabase
+      .from("community_settings")
+      .select("value")
+      .eq("key", "contribution_rules")
+      .maybeSingle();
+    contribution = {
+      month,
+      rules: parseRules(rulesSetting?.value),
+      stats: statsRow
+        ? {
+            mergedPrs: statsRow.merged_prs,
+            externalPrs: statsRow.external_prs,
+            commits: statsRow.commits,
+            newRepos: statsRow.new_repos,
+            newWorks: statsRow.new_works,
+          }
+        : null,
+    };
+  }
 
   const rawRejectionTime = member.reviewed_at || member.updated_at || member.created_at;
   const rejectionTimestamp = rawRejectionTime ? new Date(rawRejectionTime).getTime() : 0;
@@ -126,6 +157,16 @@ export default async function DashboardProfilePage() {
             </Link>
           </div>
         </section>
+      )}
+
+      {contribution && (
+        <ContributionCard
+          division={member.division}
+          stats={contribution.stats}
+          rules={contribution.rules}
+          standing={member.contribution_standing ?? "good"}
+          month={contribution.month}
+        />
       )}
 
       <section className="grid gap-4 sm:grid-cols-3">
