@@ -26,7 +26,7 @@ export function buildSupabaseDeps(client: PrivilegedClient, github: GithubDeps):
     async loadMembers() {
       const { data, error } = await client
         .from("members")
-        .select("id, github_username, full_name, email, division, membership_started_at, contribution_standing")
+        .select("id, github_username, full_name, email, division, membership_started_at, contribution_standing, streak")
         .eq("registration_status", "approved")
         .eq("membership_status", "active")
         .eq("is_active", true);
@@ -40,6 +40,7 @@ export function buildSupabaseDeps(client: PrivilegedClient, github: GithubDeps):
           division: row.division === "creative" ? "creative" : "builder",
           membershipStartedAt: row.membership_started_at ?? null,
           standing: row.contribution_standing === "warned" ? "warned" : "good",
+          streak: typeof row.streak === "number" && row.streak > 0 ? row.streak : 0,
         })
       );
     },
@@ -108,6 +109,11 @@ export function buildSupabaseDeps(client: PrivilegedClient, github: GithubDeps):
     },
 
     verifyLogin: (login) => verifyGithubLogin(login, github),
+
+    async saveTier(memberId, tier, streak) {
+      const { error } = await client.from("members").update({ tier, streak, updated_at: new Date().toISOString() }).eq("id", memberId);
+      if (error) fail("saving a tier");
+    },
 
     async setStanding(memberId, standing) {
       const { error } = await client

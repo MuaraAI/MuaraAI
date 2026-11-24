@@ -50,6 +50,7 @@ describe("buildSupabaseDeps", () => {
           division: "creative",
           membership_started_at: "2026-09-10T00:00:00Z",
           contribution_standing: "warned",
+          streak: 3,
         },
       ],
     });
@@ -64,6 +65,7 @@ describe("buildSupabaseDeps", () => {
         division: "creative",
         membershipStartedAt: "2026-09-10T00:00:00Z",
         standing: "warned",
+        streak: 3,
       },
     ]);
     const filters = ops.filter((op) => op.op === "eq").map((op) => op.args);
@@ -118,6 +120,15 @@ describe("buildSupabaseDeps", () => {
     expect(await buildSupabaseDeps(inserted.client, github).saveEvaluation(row)).toBe(true);
     const duplicate = fakeClient({ "contribution_evaluations.upserted": [] });
     expect(await buildSupabaseDeps(duplicate.client, github).saveEvaluation(row)).toBe(false);
+  });
+
+  it("saveTier updates only tier and streak of that member", async () => {
+    const { client, ops } = fakeClient();
+    await buildSupabaseDeps(client, github).saveTier("m1", 3, 5);
+    const update = ops.find((op) => op.table === "members" && op.op === "update")!;
+    expect(update.args[0]).toMatchObject({ tier: 3, streak: 5 });
+    expect(Object.keys(update.args[0] as object).sort()).toEqual(["streak", "tier", "updated_at"]);
+    expect(ops.some((op) => op.op === "eq" && op.args[0] === "id" && op.args[1] === "m1")).toBe(true);
   });
 
   it("kicks by closing the membership, not by deleting the member", async () => {

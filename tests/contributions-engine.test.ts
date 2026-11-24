@@ -13,6 +13,7 @@ const member = (over: Partial<EngineMember> = {}): EngineMember => ({
   division: "builder",
   membershipStartedAt: "2026-09-10T00:00:00Z",
   standing: "good",
+  streak: 0,
   ...over,
 });
 
@@ -42,8 +43,10 @@ function env(options: {
   errorLogins?: string[];
   duplicate?: boolean;
   lateAfterFirstCall?: boolean;
+  failTier?: boolean;
 }) {
   const calls: string[] = [];
+  const tiers: { memberId: string; tier: number; streak: number }[] = [];
   let nowCalls = 0;
   const saved: { stats: { memberId: string; month: string }[]; evaluations: { memberId: string; month: string; met: boolean; action: string; enforced: boolean }[] } = {
     stats: [],
@@ -79,13 +82,18 @@ function env(options: {
       saved.evaluations.push(row);
       return true;
     },
+    saveTier: async (memberId, tier, streak) => {
+      if (options.failTier) throw new Error("tier write failed");
+      calls.push("saveTier");
+      tiers.push({ memberId, tier, streak });
+    },
     setStanding: async (id, standing) => void calls.push(`setStanding:${id}:${standing}`),
     kickMember: async (id) => void calls.push(`kickMember:${id}`),
     sendWarning: async (m) => void calls.push(`sendWarning:${m.id}`),
     sendKick: async (m) => void calls.push(`sendKick:${m.id}`),
     alertMaintainers: async (title) => void calls.push(`alert:${title}`),
   };
-  return { deps, calls, saved };
+  return { deps, calls, saved, tiers };
 }
 
 describe("runContributionSync", () => {
@@ -95,7 +103,7 @@ describe("runContributionSync", () => {
 
     expect(summary).toMatchObject({ month: "2026-12-01", dryRun: true, evaluated: 1, warned: 0, kicked: 0 });
     expect(saved.evaluations).toEqual([{ memberId: "m1", month: MONTH, met: false, action: "warn", enforced: false }]);
-    expect(calls.filter((call) => !call.startsWith("saveEvaluation") && !call.startsWith("saveRepoCreator"))).toEqual([]);
+    expect(calls.filter((call) => !call.startsWith("saveEvaluation") && !call.startsWith("saveRepoCreator") && call !== "saveTier")).toEqual([]);
   });
 
   it("warns a good member who missed the target (full mode) and saves the evaluation first", async () => {
@@ -134,6 +142,36 @@ describe("runContributionSync", () => {
     expect(calls).not.toContain("kickMember:m1");
     expect(calls).not.toContain("sendKick:m1");
     expect(calls.some((call) => call.startsWith("alert:"))).toBe(true);
+  });
+
+  it("writes tier and streak+1 for a member who met the target, even in dry-run", async () => {
+    const { deps, tiers } = env({ members: [member({ streak: 2 })], prs: { budi: goodBuilderPrs() } });
+    await runContributionSync(deps);
+    expect(tiers).toEqual([{ memberId: "m1", tier: 1, streak: 3 }]);
+  });
+
+  it("resets tier and streak to 0 when the target was missed", async () => {
+    const { deps, tiers } = env({ members: [member({ streak: 4 })], rules: { enforcement: "full" }, prs: { budi: [] } });
+    await runContributionSync(deps);
+    expect(tiers).toEqual([{ memberId: "m1", tier: 0, streak: 0 }]);
+  });
+
+  it("does not write a tier when the evaluation was deferred or already recorded", async () => {
+    const incomplete = env({ members: [member()], incomplete: ["budi"] });
+    await runContributionSync(incomplete.deps);
+    const concurrent = env({ members: [member()], prs: { budi: goodBuilderPrs() }, duplicate: true });
+    await runContributionSync(concurrent.deps);
+    expect(incomplete.tiers).toEqual([]);
+    expect(concurrent.tiers).toEqual([]);
+  });
+
+  it("defers the member without any warning or kick when writing the tier fails", async () => {
+    const { deps, calls, saved } = env({ members: [member()], rules: { enforcement: "full" }, prs: { budi: [] }, failTier: true });
+    const summary = await runContributionSync(deps);
+    expect(summary.deferred).toBe(1);
+    expect(saved.evaluations).toHaveLength(1);
+    expect(calls).not.toContain("setStanding:m1:warned");
+    expect(calls).not.toContain("sendWarning:m1");
   });
 
   it("does not evaluate the same member and month twice", async () => {
