@@ -201,8 +201,13 @@ export async function runContributionSync(
       if (!inserted) continue;
       summary.evaluated += 1;
 
-      // Recognition is harmless to record in every mode (including dry_run).
-      await deps.saveTier(member.id, met ? tierFor(member.division, previous.stats, rules) : 0, met ? member.streak + 1 : 0);
+      // Recognition is harmless to record in every mode (including dry_run), and must never block
+      // enforcement: the evaluation is already saved, so a skipped warning or kick could not be retried.
+      try {
+        await deps.saveTier(member.id, met ? tierFor(member.division, previous.stats, rules) : 0, met ? member.streak + 1 : 0);
+      } catch (error) {
+        console.error("[contributions] tier write failed", member.id, error instanceof Error ? error.message : "unknown");
+      }
       if (rules.enforcement === "dry_run") continue;
 
       if (action === "warn") {

@@ -165,13 +165,13 @@ describe("runContributionSync", () => {
     expect(concurrent.tiers).toEqual([]);
   });
 
-  it("defers the member without any warning or kick when writing the tier fails", async () => {
+  it("still warns and counts the member as evaluated when writing the tier fails (recognition never blocks enforcement)", async () => {
     const { deps, calls, saved } = env({ members: [member()], rules: { enforcement: "full" }, prs: { budi: [] }, failTier: true });
     const summary = await runContributionSync(deps);
-    expect(summary.deferred).toBe(1);
+    expect(summary).toMatchObject({ evaluated: 1, warned: 1, deferred: 0 });
     expect(saved.evaluations).toHaveLength(1);
-    expect(calls).not.toContain("setStanding:m1:warned");
-    expect(calls).not.toContain("sendWarning:m1");
+    expect(calls).toContain("setStanding:m1:warned");
+    expect(calls).toContain("sendWarning:m1");
   });
 
   it("does not evaluate the same member and month twice", async () => {
