@@ -3,11 +3,14 @@ import { createClient } from "./server";
 import { isDevMockEnabled } from "../dev-mock";
 import { isMaintainer } from "../guards";
 
+/** A Supabase client that bypasses RLS and column grants (service role). */
+export type PrivilegedClient = SupabaseClient;
+
 /**
  * Service-role client. It bypasses RLS and column grants, so call it ONLY after authorizing
  * the caller in code (own row, or a verified maintainer), and never from a client component.
  */
-export async function createPrivilegedClient(): Promise<SupabaseClient> {
+export async function createPrivilegedClient(): Promise<PrivilegedClient> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 

@@ -83,6 +83,7 @@ describe("navigation shells", () => {
     expect(screen.getByText("Anggota")).toBeTruthy();
     expect(screen.getByText("Materi")).toBeTruthy();
     expect(screen.getByRole("link", { name: "Pengaturan" }).getAttribute("href")).toBe("/admin/settings");
+    expect(screen.getByRole("link", { name: "Kontribusi" }).getAttribute("href")).toBe("/admin/contributions");
     expect(screen.queryByText("Pesan")).toBeNull();
     expect(screen.getByText("Prestasi")).toBeTruthy();
     expect(screen.getByText("Operations content")).toBeTruthy();

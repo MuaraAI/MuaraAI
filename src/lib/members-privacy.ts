@@ -20,6 +20,7 @@ export const PRIVATE_MEMBER_COLUMNS = [
   "city",
   "discord_username",
   "toolchain_narrative",
+  "contribution_standing",
 ] as const;
 
 export type PrivateMemberColumn = (typeof PRIVATE_MEMBER_COLUMNS)[number];
