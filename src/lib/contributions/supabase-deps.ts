@@ -1,4 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { PrivilegedClient } from "@/lib/supabase/admin";
 import { notifyMaintainers } from "@/lib/notify";
 import type { EngineDeps, EngineMember } from "./engine";
 import { renderKickEmail, renderWarningEmail, sendContributionEmail } from "./emails";
@@ -11,7 +11,7 @@ const fail = (what: string): never => {
 };
 
 /** Wires the engine to Supabase. The client must be the service-role client: it bypasses RLS. */
-export function buildSupabaseDeps(client: SupabaseClient, github: GithubDeps): EngineDeps {
+export function buildSupabaseDeps(client: PrivilegedClient, github: GithubDeps): EngineDeps {
   let rules: ContributionRules = DEFAULT_RULES;
 
   return {
