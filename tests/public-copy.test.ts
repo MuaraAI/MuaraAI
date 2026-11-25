@@ -16,7 +16,6 @@ const COPY_FILES = [
   "src/components/landing/footer.tsx",
   "src/components/landing/syndicate-roster.tsx",
   "src/components/landing/accolades-grid.tsx",
-  "src/components/landing/national-campus-map.tsx",
   "src/app/(public)/privacy/page.tsx",
   "src/app/(portal)/admin/review/page.tsx",
   "src/app/actions/admin.ts",

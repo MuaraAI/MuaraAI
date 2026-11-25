@@ -6,7 +6,7 @@ import TypeText from "@/components/ui/type-text";
 import { isDevMockEnabled } from "@/lib/dev-mock";
 import { isSupabaseConfigured } from "@/lib/supabase/server";
 
-export const metadata = { title: "Masuk — MuaraAI" };
+export const metadata = { title: "Masuk | MuaraAI" };
 
 const ERRORS: Record<string, string> = {
   oauth_failed: "Login GitHub gagal. Coba lagi beberapa saat lagi.",
