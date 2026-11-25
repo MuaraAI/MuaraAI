@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GITHUB_ORG_URL } from "@/lib/constants";
 import Icon from "@/components/ui/icon";
 
@@ -27,11 +27,17 @@ const linkClass = (active: boolean) =>
 export default function Navbar({ user }: NavbarProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => setOpen(false), [pathname]);
   useEffect(() => {
     if (!open) return;
-    const onKey = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      // The focused link disappears with the panel, so hand focus back to the button.
+      buttonRef.current?.focus();
+    };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
@@ -71,11 +77,12 @@ export default function Navbar({ user }: NavbarProps) {
         </div>
 
         <button
+          ref={buttonRef}
           type="button"
           onClick={() => setOpen((value) => !value)}
           aria-label={open ? "Tutup menu" : "Buka menu"}
           aria-expanded={open}
-          aria-controls="mobile-menu"
+          aria-controls={open ? "mobile-menu" : undefined}
           className="flex h-11 w-11 items-center justify-center text-foreground md:hidden"
         >
           <Icon name={open ? "close" : "menu"} className="h-5 w-5" />

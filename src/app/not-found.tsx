@@ -5,7 +5,7 @@ import Footer from "@/components/landing/footer";
 import StatusScene from "@/components/ui/status-scene";
 
 const SUGGESTIONS = [
-  { href: "/#projects", label: "Project komunitas" },
+  { href: "/projects", label: "Project komunitas" },
   { href: "/members", label: "Direktori anggota" },
   { href: "/onboarding", label: "Daftar anggota" },
   { href: "/code-of-conduct", label: "Code of Conduct" },

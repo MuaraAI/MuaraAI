@@ -54,6 +54,25 @@ describe("Public navigation", () => {
     expect(button.getAttribute("aria-expanded")).toBe("false");
   });
 
+  it("returns focus to the menu button when Escape closes the panel", () => {
+    render(<Navbar user={null} />);
+    const button = screen.getByRole("button", { name: /menu/i });
+    fireEvent.click(button);
+    within(screen.getByRole("navigation", { name: "Menu mobile" })).getByRole("link", { name: "Anggota" }).focus();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(document.activeElement).toBe(button);
+  });
+
+  it("only points aria-controls at the panel while it exists", () => {
+    render(<Navbar user={null} />);
+    const button = screen.getByRole("button", { name: /menu/i });
+    expect(button.getAttribute("aria-controls")).toBeNull();
+    fireEvent.click(button);
+    expect(button.getAttribute("aria-controls")).toBe("mobile-menu");
+    expect(document.getElementById("mobile-menu")).toBeTruthy();
+  });
+
   it("closes the mobile menu after choosing a link", () => {
     render(<Navbar user={null} />);
     fireEvent.click(screen.getByRole("button", { name: /menu/i }));
