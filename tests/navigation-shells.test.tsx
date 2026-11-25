@@ -78,6 +78,9 @@ describe("navigation shells", () => {
     );
 
     expect(screen.queryByText("Overview")).toBeNull();
+    const sessionLinks = screen.getAllByRole("link", { name: "Sesi" });
+    expect(sessionLinks.length).toBeGreaterThan(0);
+    expect(sessionLinks[0].getAttribute("href")).toBe("/admin/sessions");
     expect(screen.queryByRole("link", { name: "Overview" })).toBeNull();
     expect(screen.getByText("Review pendaftar")).toBeTruthy();
     expect(screen.getByText("Anggota")).toBeTruthy();

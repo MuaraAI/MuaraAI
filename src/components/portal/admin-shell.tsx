@@ -17,6 +17,7 @@ const adminItems: AdminNavItem[] = [
   { href: "/admin/learn", label: "Materi", icon: "school" },
   { href: "/admin/achievements", label: "Prestasi", icon: "workspace_premium" },
   { href: "/admin/contributions", label: "Kontribusi", icon: "rocket_launch" },
+  { href: "/admin/sessions", label: "Sesi", icon: "schedule" },
   { href: "/admin/settings", label: "Pengaturan", icon: "badge" },
 ];
 
