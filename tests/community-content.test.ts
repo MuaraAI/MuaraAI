@@ -37,13 +37,4 @@ describe("national community content", () => {
     }
   });
 
-  it("marks Pontianak as founding hub and Jakarta as regional hub", () => {
-    expect(communityContent.campusNodes.find((node) => node.city === "Pontianak")).toMatchObject({
-      role: "founding-hub",
-      offlineGathering: true,
-    });
-    expect(communityContent.campusNodes.find((node) => node.city === "Jakarta")).toMatchObject({
-      role: "regional-hub",
-    });
-  });
 });

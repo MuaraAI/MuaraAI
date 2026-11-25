@@ -41,7 +41,7 @@ export default function MembershipExitClient({
       <section className="min-h-screen bg-background px-4 py-16 text-foreground">
         <div className="px-card mx-auto max-w-xl bg-white p-8 text-center">
           <Icon name="logout" className="mx-auto mb-4 h-12 w-12 text-secondary" />
-          <h1 className="font-display text-2xl font-bold">Riwayat Member — Sudah Keluar</h1>
+          <h1 className="font-display text-2xl font-bold">Riwayat Member: Sudah Keluar</h1>
           <p className="mt-3 text-sm text-secondary">
             Membership Anda sudah ditutup. Riwayat tetap disimpan dan akun ini tidak dapat mendaftar ulang.
           </p>

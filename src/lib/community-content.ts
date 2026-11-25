@@ -1,5 +1,3 @@
-export type CampusNodeRole = "founding-hub" | "regional-hub" | "network-node";
-
 export const communityContent = {
   officialLinks: {
     website: "https://muaraai.com/",
@@ -38,13 +36,5 @@ export const communityContent = {
     { name: "Yuken Velino", github: "Curzyori", title: "Founder", roles: ["Maintainer", "Builder", "AI Engineer"], division: "Builder" },
     { name: "Muhammad Raffli Aldiansyah", github: "Seeyaa77", title: "Co-Founder", roles: ["Maintainer", "Builder", "Backend"], division: "Builder" },
     { name: "Verzio Yamanansyah", github: "MyKineID", title: "Co-Founder", roles: ["Maintainer", "Desainer"], division: "Builder" },
-  ],
-  campusNodes: [
-    { id: "pontianak", label: "UBSI Pontianak", city: "Pontianak", region: "Kalimantan Barat", role: "founding-hub" as CampusNodeRole, offlineGathering: true, verified: true },
-    { id: "jakarta", label: "UBSI Jakarta", city: "Jakarta", region: "DKI Jakarta", role: "regional-hub" as CampusNodeRole, offlineGathering: false, verified: true },
-    { id: "jakarta-pusat", label: "UBSI Jakarta Pusat", city: "Jakarta", region: "DKI Jakarta", role: "network-node" as CampusNodeRole, offlineGathering: false, verified: true },
-    { id: "jakarta-selatan", label: "UBSI Jakarta Selatan", city: "Jakarta", region: "DKI Jakarta", role: "network-node" as CampusNodeRole, offlineGathering: false, verified: true },
-    { id: "depok", label: "UBSI Depok", city: "Depok", region: "Jawa Barat", role: "network-node" as CampusNodeRole, offlineGathering: false, verified: true },
-    { id: "yogyakarta", label: "UBSI Yogyakarta", city: "Yogyakarta", region: "DI Yogyakarta", role: "network-node" as CampusNodeRole, offlineGathering: false, verified: true },
   ],
 } as const;

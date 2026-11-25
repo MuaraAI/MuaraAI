@@ -11,7 +11,7 @@ export default function ProjectsGrid() {
     {
       title: "Muara Arus 1",
       badge: "AI LOKAL",
-      description: "AI akademik dan coding buatan MuaraAI untuk membantu mahasiswa FTI UBSI dari prodi SI, SIA, dan IF belajar dari materi yang tersedia.",
+      description: "AI lokal untuk akademik dan coding buatan MuaraAI, bisa dijalankan tanpa internet.",
       tags: ["muara-arus-1", "1.5B parameter", "Offline", "SI · SIA · IF"],
       liveUrl: communityContent.muaraArusOne.playground,
       repoUrl: communityContent.muaraArusOne.github,
@@ -19,7 +19,7 @@ export default function ProjectsGrid() {
     {
       title: "UBSI API",
       badge: "UNOFFICIAL PROJECT",
-      description: "REST API tidak resmi yang menyatukan enam layanan digital UBSI. Mahasiswa login dengan akun mereka sendiri untuk mengakses layanan yang tersedia secara lebih terstruktur.",
+      description: "REST API tidak resmi yang menyatukan enam layanan digital UBSI, untuk mahasiswa UBSI yang login dengan akun mereka sendiri.",
       tags: ["StudentV2", "MyBest", "Elibrary", "EJournal", "Repository", "News"],
       liveUrl: communityContent.ubsiApi.liveUrl,
       repoUrl: communityContent.ubsiApi.repository,

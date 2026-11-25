@@ -101,7 +101,7 @@ export default function Footer() {
               <span className="font-display text-base font-bold text-foreground">MuaraAI</span>
             </div>
             <p className="mt-3 max-w-xs text-[13px] leading-relaxed">
-              Where local craft flows global. Komunitas terbuka untuk siapa saja, lahir di UBSI Pontianak.
+              Where local craft flows global. Komunitas terbuka untuk siapa saja, lahir di Pontianak.
             </p>
             <div className="mt-4">
               <a

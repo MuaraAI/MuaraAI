@@ -1,12 +1,13 @@
 import React from "react";
 import Hero from "@/components/landing/hero";
 import MetricsBar from "@/components/landing/metrics-bar";
-import NationalCampusMap from "@/components/landing/national-campus-map";
 import VisionMission from "@/components/landing/vision-mission";
 import ProjectsGrid from "@/components/landing/projects-grid";
 import AccoladesGrid from "@/components/landing/accolades-grid";
 import Manifesto from "@/components/landing/manifesto";
 import SyndicateRoster from "@/components/landing/syndicate-roster";
+import CommunityStructure from "@/components/landing/community-structure";
+import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import BenefitsGrid from "@/components/landing/benefits-grid";
 import DonateCta from "@/components/landing/donate-cta";
 import JoinFlow from "@/components/landing/join-flow";
@@ -65,6 +66,11 @@ export default async function LandingPage({
 
   const achievements: Achievement[] = achievementsData || [];
 
+  const { data: positionsSetting } = supabase
+    ? await supabase.from("community_settings").select("value").eq("key", POSITIONS_SETTING_KEY).maybeSingle()
+    : { data: null };
+  const positions = parsePositions(positionsSetting?.value);
+
   return (
     <div className="flex flex-col">
       <Hero />
@@ -73,6 +79,7 @@ export default async function LandingPage({
       <ProjectsGrid />
       <AccoladesGrid initialAchievements={achievements} />
       <Manifesto />
+      <CommunityStructure positions={positions} />
       <SyndicateRoster initialMembers={members} />
       <BenefitsGrid />
       <DonateCta />

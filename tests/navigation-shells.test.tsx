@@ -49,6 +49,7 @@ describe("navigation shells", () => {
 
     expect(screen.getByText("Beranda")).toBeTruthy();
     expect(screen.getByText("Belajar")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Anggota" }).getAttribute("href")).toBe("/members");
     expect(screen.queryByText("Project")).toBeNull();
     expect(screen.queryByText("Akun")).toBeNull();
     expect(screen.getAllByRole("link", { name: "Beranda" }).length).toBe(1);
