@@ -10,6 +10,7 @@ const COPY = {
   id: {
     tagline: "Where local craft flows global. Komunitas terbuka untuk siapa saja, lahir di Pontianak.",
     partnership: "Hubungi kemitraan",
+    partnershipSubject: "Tawaran Kemitraan MuaraAI",
     products: "Produk",
     productsLabel: "Produk MuaraAI",
     community: "Komunitas",
@@ -22,6 +23,7 @@ const COPY = {
   en: {
     tagline: "Where local craft flows global. An open community for anyone, born in Pontianak.",
     partnership: "Partnership enquiries",
+    partnershipSubject: "Partnership enquiry MuaraAI",
     products: "Products",
     productsLabel: "MuaraAI products",
     community: "Community",
@@ -135,7 +137,7 @@ export default function Footer({ locale = "id" }: { locale?: Locale }) {
             </p>
             <div className="mt-4">
               <a
-                href="mailto:admin@muaraai.com?subject=Tawaran%20Kemitraan%20MuaraAI"
+                href={`mailto:admin@muaraai.com?subject=${encodeURIComponent(copy.partnershipSubject)}`}
                 className="px-btn-ghost inline-flex items-center gap-2 px-3 py-1.5 font-mono text-xs font-semibold [--px-off:3px]"
               >
                 <Icon name="mail" className="h-4 w-4 text-muara-ocean" />

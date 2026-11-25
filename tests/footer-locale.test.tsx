@@ -13,6 +13,18 @@ describe("Footer language", () => {
     expect(screen.getByRole("link", { name: "English" }).getAttribute("aria-current")).toBeNull();
   });
 
+  it("writes the partnership email in the reader's language", () => {
+    const { unmount } = render(<Footer />);
+    const indonesian = screen.getByRole("link", { name: /Hubungi kemitraan/ }).getAttribute("href") ?? "";
+    expect(decodeURIComponent(indonesian)).toContain("Tawaran Kemitraan");
+    unmount();
+
+    render(<Footer locale="en" />);
+    const english = decodeURIComponent(screen.getByRole("link", { name: /Partnership enquiries/ }).getAttribute("href") ?? "");
+    expect(english).toContain("subject=Partnership enquiry");
+    expect(english).not.toContain("Tawaran");
+  });
+
   it("speaks English on the English site and marks English as current", () => {
     render(<Footer locale="en" />);
     expect(screen.getByText("Back to top")).toBeTruthy();

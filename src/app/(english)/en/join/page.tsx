@@ -37,6 +37,7 @@ export default async function EnglishJoinPage() {
     <div className="mx-auto max-w-[100rem] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <PageHeader
         eyebrow="Join"
+        home={{ label: "Home", href: "/en" }}
         title="Join MuaraAI"
         description="Membership is open to anyone with a GitHub account. This is what happens, step by step."
         actions={

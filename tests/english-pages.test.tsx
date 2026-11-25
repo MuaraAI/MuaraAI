@@ -87,6 +87,12 @@ describe("English join page", () => {
     expect(screen.getByRole("link", { name: /Code of Conduct/i }).getAttribute("href")).toBe("/code-of-conduct");
   });
 
+  it("keeps the breadcrumb in English and inside the English site", async () => {
+    render(await EnglishJoinPage());
+    expect(screen.getByRole("link", { name: /Home/ }).getAttribute("href")).toBe("/en");
+    expect(screen.queryByText(/Beranda/)).toBeNull();
+  });
+
   it("says plainly that the form and the rules are still Indonesian", async () => {
     render(await EnglishJoinPage());
     expect(document.body.textContent).toMatch(/registration form is only available in Indonesian/i);

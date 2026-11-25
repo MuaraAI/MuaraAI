@@ -5,6 +5,11 @@ import Hero from "../src/components/landing/hero";
 import MetricsBar from "../src/components/landing/metrics-bar";
 
 describe("MuaraAI public redesign", () => {
+  it("reads its headline as one sentence, with spaces between the lines", () => {
+    render(<Hero />);
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Belajar, membangun, berkontribusi.");
+  });
+
   it("leads with the open community purpose", () => {
     render(<Hero />);
     expect(screen.getByText(/Komunitas terbuka untuk siapa saja/i)).toBeTruthy();
