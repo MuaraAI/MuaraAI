@@ -24,11 +24,6 @@ export default function BenefitsGrid() {
       desc: "Akses materi riset eksklusif, prompt harnesses, system design decks, dan panduan rekayasa internal.",
     },
     {
-      icon: "hub",
-      title: "Shared Compute & API Keys",
-      desc: "Subsidi kuota compute, akses AI API gateway, dan infrastruktur cloud bersama untuk riset mandiri.",
-    },
-    {
       icon: "trophy",
       title: "Dukungan Kompetisi & Lomba",
       desc: "Biaya registrasi hackathon dan ajang teknologi dibantu dari donasi komunitas, sesuai ketersediaan dana.",

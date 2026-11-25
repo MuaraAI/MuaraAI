@@ -6,7 +6,6 @@ import { Section, SectionHeader } from "@/components/ui/section";
 const MISSIONS = [
   "Menghimpun builder dan kreator dari berbagai latar belakang yang mau berkarya di domain AI sampai tingkat produksi nyata.",
   "Menegakkan disiplin software engineering: eliminasi AI-slop, TDD mandatori, dan keamanan kredensial.",
-  "Menyediakan shared cloud infrastructure (Supabase, Redis, compute) untuk akselerasi riset anggota.",
 ];
 
 export default function VisionMission() {
