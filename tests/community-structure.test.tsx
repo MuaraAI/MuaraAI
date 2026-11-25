@@ -31,4 +31,16 @@ describe("CommunityStructure", () => {
     expect(container.querySelector("#struktur")).toBeTruthy();
     expect(screen.getByText(/tanpa hak istimewa/i)).toBeTruthy();
   });
+
+  it("reads in English when asked, with the same data", () => {
+    render(<CommunityStructure positions={positions} locale="en" />);
+    expect(screen.getByRole("heading", { name: "Builder" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Creative" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Roles" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Tiers" })).toBeTruthy();
+    expect(screen.getByText(/Recognition only/i)).toBeTruthy();
+    expect(screen.queryByText(/tanpa hak istimewa/i)).toBeNull();
+    expect(screen.queryByText(/Peran/)).toBeNull();
+    for (const position of [...positions.builder, ...positions.creative]) expect(screen.getByText(position)).toBeTruthy();
+  });
 });

@@ -80,3 +80,33 @@ describe("Public navigation", () => {
     expect(screen.queryByRole("navigation", { name: "Menu mobile" })).toBeNull();
   });
 });
+
+describe("English navigation", () => {
+  it("uses English labels and sends people to the English join page", () => {
+    render(<Navbar user={null} locale="en" />);
+    const links = Object.fromEntries(screen.getAllByRole("link").map((link) => [link.textContent?.trim(), link.getAttribute("href")]));
+
+    expect(links["Projects"]).toBe("/projects");
+    expect(links["Members"]).toBe("/members");
+    expect(links["Rules"]).toBe("/code-of-conduct");
+    expect(links["Log in"]).toBe("/login");
+    expect(screen.getByRole("link", { name: "Join" }).getAttribute("href")).toBe("/en/join");
+    expect(screen.getByRole("link", { name: /Muara AI/ }).getAttribute("href")).toBe("/en");
+    expect(screen.queryByText("Daftar")).toBeNull();
+    expect(screen.queryByText("Masuk")).toBeNull();
+  });
+
+  it("names the menu button and panel in English", () => {
+    render(<Navbar user={null} locale="en" />);
+    const button = screen.getByRole("button", { name: "Open menu" });
+    fireEvent.click(button);
+    expect(screen.getByRole("button", { name: "Close menu" })).toBeTruthy();
+    expect(screen.getByRole("navigation", { name: "Mobile menu" })).toBeTruthy();
+  });
+
+  it("shows the dashboard when logged in", () => {
+    render(<Navbar user={{ id: "u1" }} locale="en" />);
+    expect(screen.getByRole("link", { name: "Dashboard" }).getAttribute("href")).toBe("/dashboard");
+    expect(screen.queryByRole("link", { name: "Join" })).toBeNull();
+  });
+});
