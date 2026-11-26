@@ -1,4 +1,5 @@
 import type { MembershipIntakePolicy, MembershipStatus, RegistrationStatus } from "@/types/database";
+import { normalizeLocale, type Locale } from "@/lib/locale";
 
 interface MembershipSnapshot {
   registration_status: RegistrationStatus;
@@ -25,24 +26,41 @@ export function getEarliestExitDate(startedAt: string | null | undefined, minimu
   return date;
 }
 
+const INTAKE_REASONS: Record<Locale, { closed: string; exited: string; approved: string; cooldown(hours: number): string }> = {
+  id: {
+    closed: "Pendaftaran anggota baru belum dibuka. Silakan coba lagi setelah jadwal pendaftaran dimulai.",
+    exited: "Akun ini sudah pernah keluar dan tidak dapat mendaftar ulang.",
+    approved: "Akun Anda sudah berstatus anggota resmi aktif.",
+    cooldown: (hours) => `Pendaftaran ulang baru dapat diajukan setelah cooldown 24 jam (sisa ~${hours} jam).`,
+  },
+  en: {
+    closed: "New member registration is not open yet. Please try again after registration starts.",
+    exited: "This account has already left and cannot register again.",
+    approved: "Your account is already an active member.",
+    cooldown: (hours) => `You can reapply after the 24-hour cooldown (about ${hours} hours left).`,
+  },
+};
+
 export function canSubmitIntake(
   member: MembershipSnapshot | null,
   policy: MembershipIntakePolicy,
-  now: Date
+  now: Date,
+  locale: Locale = "id"
 ): PolicyDecision {
+  const reasons = INTAKE_REASONS[normalizeLocale(locale)];
   if (!member) return { allowed: true };
   const effectiveAt = new Date(policy.effective_at);
   if (!Number.isNaN(effectiveAt.getTime()) && now < effectiveAt) {
     return {
       allowed: false,
-      reason: "Pendaftaran anggota baru belum dibuka. Silakan coba lagi setelah jadwal pendaftaran dimulai.",
+      reason: reasons.closed,
     };
   }
   if (member.reapply_blocked || member.membership_status === "exited") {
-    return { allowed: false, reason: "Akun ini sudah pernah keluar dan tidak dapat mendaftar ulang." };
+    return { allowed: false, reason: reasons.exited };
   }
   if (member.registration_status === "approved") {
-    return { allowed: false, reason: "Akun Anda sudah berstatus anggota resmi aktif." };
+    return { allowed: false, reason: reasons.approved };
   }
   if (member.registration_status === "rejected") {
     const rawTime = member.reviewed_at || member.updated_at || member.created_at;
@@ -53,7 +71,7 @@ export function canSubmitIntake(
         const remainingHours = Math.max(1, Math.ceil((rejectionTimestamp + cooldownMs - now.getTime()) / (60 * 60 * 1000)));
         return {
           allowed: false,
-          reason: `Pendaftaran ulang baru dapat diajukan setelah cooldown 24 jam (sisa ~${remainingHours} jam).`,
+          reason: reasons.cooldown(remainingHours),
         };
       }
     }

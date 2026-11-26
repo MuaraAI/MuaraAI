@@ -3,7 +3,7 @@ export type Locale = "id" | "en";
 /** Request header the middleware sets for server components (a visitor-supplied value is always overwritten). */
 export const LOCALE_HEADER = "x-locale";
 
-const ENGLISH_PATHS = new Set(["/en", "/en/join"]);
+const ENGLISH_PATHS = new Set(["/en", "/en/join", "/en/onboarding"]);
 
 /**
  * English only on the pages that really are English. An unknown /en/... path renders the Indonesian 404,
@@ -14,6 +14,11 @@ export function localeFor(pathname: string): Locale {
   return ENGLISH_PATHS.has(path) ? "en" : "id";
 }
 
-export function localeFromHeader(value: string | null): Locale {
+/** Anything other than exactly "en" is Indonesian, so a value from outside (or an inherited key like "constructor") can never pick a table entry. */
+export function normalizeLocale(value: unknown): Locale {
   return value === "en" ? "en" : "id";
+}
+
+export function localeFromHeader(value: string | null): Locale {
+  return normalizeLocale(value);
 }

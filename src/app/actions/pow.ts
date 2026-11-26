@@ -3,11 +3,25 @@
 import { createClient } from "@/lib/supabase/server";
 import { notifyMaintainers } from "@/lib/notify";
 import { PoWInput, normalizeTelegram, validatePoWSubmission } from "@/lib/validation";
+import { normalizeLocale } from "@/lib/locale";
 import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import { canSubmitIntake } from "@/lib/membership";
 import type { MembershipIntakePolicy } from "@/types/database";
 
-const GENERIC_ERROR = "Terjadi kesalahan pada server. Silakan coba lagi.";
+const MESSAGES: Record<"id" | "en", { noSession: string; noPositions: string; noIntake: string; generic: string }> = {
+  id: {
+    noSession: "Sesi tidak ditemukan. Silakan login kembali dengan GitHub.",
+    noPositions: "Daftar posisi belum dikonfigurasi.",
+    noIntake: "Konfigurasi pendaftaran sedang tidak tersedia.",
+    generic: "Terjadi kesalahan pada server. Silakan coba lagi.",
+  },
+  en: {
+    noSession: "No session found. Please sign in with GitHub again.",
+    noPositions: "The position list has not been configured.",
+    noIntake: "Registration is currently unavailable.",
+    generic: "Something went wrong on the server. Please try again.",
+  },
+};
 const NO_INSTITUTION = "Tidak disebutkan";
 const REASON_PREVIEW_LENGTH = 300;
 
@@ -17,7 +31,10 @@ function socialUrl(value: string | undefined, base: string): string | null {
   return trimmed.startsWith("http") ? trimmed : `${base}${trimmed.replace(/^@/, "")}`;
 }
 
-export async function submitProofOfWork(data: PoWInput) {
+/** `language` comes from the client, so anything other than "en" means Indonesian. */
+export async function submitProofOfWork(data: PoWInput, language?: unknown) {
+  const locale = normalizeLocale(language);
+  const text = MESSAGES[locale];
   const supabase = await createClient();
   const {
     data: { user },
@@ -25,7 +42,7 @@ export async function submitProofOfWork(data: PoWInput) {
   } = await supabase.auth.getUser();
 
   if (authError || !user) {
-    return { success: false, error: "Sesi tidak ditemukan. Silakan login kembali dengan GitHub." };
+    return { success: false, error: text.noSession };
   }
 
   const { data: positionsSetting } = await supabase
@@ -35,10 +52,10 @@ export async function submitProofOfWork(data: PoWInput) {
     .single();
   const positions = parsePositions(positionsSetting?.value);
   if (!positions) {
-    return { success: false, error: "Daftar posisi belum dikonfigurasi." };
+    return { success: false, error: text.noPositions };
   }
 
-  const validation = validatePoWSubmission(data, positions);
+  const validation = validatePoWSubmission(data, positions, locale);
   if (!validation.isValid) {
     return { success: false, error: validation.error };
   }
@@ -50,7 +67,7 @@ export async function submitProofOfWork(data: PoWInput) {
     .single();
 
   if (settingError || !setting?.value) {
-    return { success: false, error: "Konfigurasi pendaftaran sedang tidak tersedia." };
+    return { success: false, error: text.noIntake };
   }
 
   const policy = setting.value as MembershipIntakePolicy;
@@ -60,7 +77,7 @@ export async function submitProofOfWork(data: PoWInput) {
     .eq("id", user.id)
     .maybeSingle();
 
-  const intakeDecision = canSubmitIntake(existing, policy, new Date());
+  const intakeDecision = canSubmitIntake(existing, policy, new Date(), locale);
   if (!intakeDecision.allowed) {
     return { success: false, error: intakeDecision.reason };
   }
@@ -115,7 +132,7 @@ export async function submitProofOfWork(data: PoWInput) {
 
   if (dbError) {
     console.error("[pow:submitProofOfWork]", dbError.message);
-    return { success: false, error: GENERIC_ERROR };
+    return { success: false, error: text.generic };
   }
 
   const reasonPreview =
