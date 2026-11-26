@@ -3,7 +3,7 @@ import { LOCALE_HEADER, localeFor } from "../src/lib/locale";
 
 describe("localeFor", () => {
   it("is English only on the pages that really are English", () => {
-    for (const path of ["/en", "/en/", "/en/join", "/en/join/", "/en/onboarding"]) expect(localeFor(path)).toBe("en");
+    for (const path of ["/en", "/en/", "/en/join", "/en/join/", "/en/onboarding", "/en/terms", "/en/privacy", "/en/code-of-conduct"]) expect(localeFor(path)).toBe("en");
   });
 
   it("stays Indonesian everywhere else, including unknown /en paths that show the Indonesian 404", () => {

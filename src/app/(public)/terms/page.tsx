@@ -1,6 +1,16 @@
 import React from "react";
 import { PageHeader } from "@/components/ui/section";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "https://muaraai.com/terms",
+    languages: { id: "https://muaraai.com/terms", en: "https://muaraai.com/en/terms", "x-default": "https://muaraai.com/terms" },
+  },
+};
+
+
 export default function TermsPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
@@ -24,7 +34,7 @@ export default function TermsPage() {
           <h2 className="text-base font-semibold text-foreground">2. Dukungan Sukarela</h2>
           <p>
             Keanggotaan tidak dipungut biaya. Dukungan finansial bersifat sukarela melalui donasi dan digunakan untuk pembiayaan
-            sewa server VPS, domain, kuota API compute, dan registrasi kompetisi.
+            sewa server VPS, domain, dan registrasi kompetisi.
           </p>
         </section>
 

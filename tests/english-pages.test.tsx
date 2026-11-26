@@ -106,7 +106,7 @@ describe("English join page", () => {
     render(await EnglishJoinPage());
     expect(screen.getByRole("heading", { level: 1 }).textContent).toContain("Join MuaraAI");
     expect(screen.getByRole("link", { name: /Continue with GitHub/i }).getAttribute("href")).toBe("/api/auth/login?next=/en/onboarding");
-    expect(screen.getByRole("link", { name: /Code of Conduct/i }).getAttribute("href")).toBe("/code-of-conduct");
+    expect(screen.getByRole("link", { name: /Code of Conduct/i }).getAttribute("href")).toBe("/en/code-of-conduct");
   });
 
   it("keeps the breadcrumb in English and inside the English site", async () => {
@@ -119,7 +119,8 @@ describe("English join page", () => {
     render(await EnglishJoinPage());
     const text = document.body.textContent ?? "";
     expect(text).not.toMatch(/registration form is only available in Indonesian/i);
-    expect(text).toMatch(/Privacy Policy, Terms of Service and Code of Conduct.*only available in Indonesian/i);
+    expect(text).toMatch(/English translations of the Indonesian originals/i);
+    expect(text).not.toMatch(/only available in Indonesian/i);
   });
 
   it("has English metadata that links back to the Indonesian page", () => {

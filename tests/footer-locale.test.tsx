@@ -25,6 +25,18 @@ describe("Footer language", () => {
     expect(english).not.toContain("Tawaran");
   });
 
+  it("links the legal pages in the visitor's language", () => {
+    const { unmount } = render(<Footer />);
+    expect(screen.getByRole("link", { name: "Terms" }).getAttribute("href")).toBe("/terms");
+    expect(screen.getByRole("link", { name: "Privacy" }).getAttribute("href")).toBe("/privacy");
+    expect(screen.getByRole("link", { name: "Code of Conduct" }).getAttribute("href")).toBe("/code-of-conduct");
+    unmount();
+    render(<Footer locale="en" />);
+    expect(screen.getByRole("link", { name: "Terms" }).getAttribute("href")).toBe("/en/terms");
+    expect(screen.getByRole("link", { name: "Privacy" }).getAttribute("href")).toBe("/en/privacy");
+    expect(screen.getByRole("link", { name: "Code of Conduct" }).getAttribute("href")).toBe("/en/code-of-conduct");
+  });
+
   it("speaks English on the English site and marks English as current", () => {
     render(<Footer locale="en" />);
     expect(screen.getByText("Back to top")).toBeTruthy();

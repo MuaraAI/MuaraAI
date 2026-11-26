@@ -40,7 +40,7 @@ const COPY = {
     links: [
       { href: "/projects", label: "Projects" },
       { href: "/members", label: "Members" },
-      { href: "/code-of-conduct", label: "Rules" },
+      { href: "/en/code-of-conduct", label: "Rules" },
     ],
     logIn: "Log in",
     signUp: "Join",

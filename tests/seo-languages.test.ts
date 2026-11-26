@@ -11,6 +11,10 @@ describe("language alternates", () => {
     expect(urls).toContain("https://muaraai.com/en");
     expect(urls).toContain("https://muaraai.com/en/join");
     expect(urls).toContain("https://muaraai.com/en/onboarding");
+    for (const page of ["terms", "privacy", "code-of-conduct"]) {
+      expect(urls).toContain(`https://muaraai.com/${page}`);
+      expect(urls).toContain(`https://muaraai.com/en/${page}`);
+    }
     expect(new Set(urls).size).toBe(urls.length);
   });
 
