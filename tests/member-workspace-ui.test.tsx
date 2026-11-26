@@ -29,6 +29,8 @@ const member = {
   bio: "",
 };
 
+let requestLocale: "id" | "en" = "id";
+vi.mock("@/lib/locale-server", () => ({ currentLocale: async () => requestLocale }));
 vi.mock("@/components/portal/sessions-section", () => ({ default: () => null }));
 
 vi.mock("@/lib/supabase/server", () => ({
@@ -76,6 +78,22 @@ describe("member workspace dashboard", () => {
 
   it("renders pending review banner and badge when applicant is waiting for review", async () => {
     // Verified by component conditional rendering
+  });
+
+  it("renders the whole dashboard in English, with English dates and links that stay on the English site", async () => {
+    requestLocale = "en";
+    try {
+      const { container } = render(await DashboardProfilePage());
+      expect(screen.getByText("Membership status")).toBeTruthy();
+      expect(screen.getByText(/Active since/)).toBeTruthy();
+      expect(screen.getByRole("link", { name: "Request to Leave" })).toBeTruthy();
+      expect(screen.getByText("Full profile")).toBeTruthy();
+      expect(screen.getByText("This month's contribution")).toBeTruthy();
+      expect(screen.getByText("University student")).toBeTruthy();
+      expect(container.textContent).not.toMatch(/\b(Aktif|Profil lengkap|Beranda|Lanjut belajar|Institusi|Berikutnya)\b/);
+    } finally {
+      requestLocale = "id";
+    }
   });
 
   it("renders rejection notice, reason, and cooldown state for rejected applicants", async () => {

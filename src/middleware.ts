@@ -1,11 +1,11 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { COOKIE_NAME, COOKIE_DOMAIN } from "@/lib/constants";
-import { LOCALE_HEADER, localeFor } from "@/lib/locale";
+import { LOCALE_COOKIE, LOCALE_HEADER, localeFor } from "@/lib/locale";
 
 export async function middleware(request: NextRequest) {
   // Server components read the document language from this header; it is always set here, never trusted from the client.
-  const locale = localeFor(request.nextUrl.pathname);
+  const locale = localeFor(request.nextUrl.pathname, request.cookies.get(LOCALE_COOKIE)?.value);
   const forward = () => {
     const headers = new Headers(request.headers);
     headers.set(LOCALE_HEADER, locale);

@@ -6,6 +6,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { usePathname } from "next/navigation";
 import Icon from "@/components/ui/icon";
+import { normalizeLocale, type Locale } from "@/lib/locale";
+import { PORTAL_COPY } from "@/lib/portal-copy";
 
 export type PortalUser = { full_name?: string | null; github_username?: string | null };
 
@@ -19,6 +21,7 @@ export default function PortalFrame({
   user,
   currentLabel,
   order = [],
+  locale = "id",
   children,
 }: {
   variant: "member" | "admin";
@@ -27,8 +30,10 @@ export default function PortalFrame({
   sidebar: React.ReactNode;
   user?: PortalUser | null;
   currentLabel?: string;
+  locale?: Locale;
   children: React.ReactNode;
 }) {
+  const t = PORTAL_COPY[normalizeLocale(locale)];
   const pathname = usePathname();
   const reducedMotion = useReducedMotion();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -48,7 +53,7 @@ export default function PortalFrame({
     };
   }, [drawerOpen]);
 
-  const workspace = dark ? "Maintainer" : "Anggota";
+  const workspace = dark ? "Maintainer" : t.frame.workspace;
 
   // Which sidebar item owns this route (longest matching href), and which way we moved.
   const routeIndex = order.reduce((best, href, i) => (pathname?.startsWith(href) && href.length > (order[best]?.length ?? -1) ? i : best), -1);
@@ -91,7 +96,7 @@ export default function PortalFrame({
           <button
             type="button"
             onClick={() => setDrawerOpen(true)}
-            aria-label="Buka menu portal"
+            aria-label={t.frame.openMenu}
             aria-controls="portal-sidebar"
             aria-expanded={drawerOpen}
             className="px-frame flex h-9 w-9 shrink-0 items-center justify-center bg-white text-secondary [--px-line:#CFE2EE] hover:text-foreground md:hidden"
@@ -106,11 +111,11 @@ export default function PortalFrame({
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <Link
-              href="/"
+              href={t.siteHref}
               className="hidden items-center gap-1.5 px-2.5 py-1.5 font-mono text-xs font-semibold text-secondary transition-colors hover:bg-surface-alt hover:text-foreground sm:inline-flex"
             >
               <Icon name="public" className="h-4 w-4" />
-              Lihat situs
+              {t.frame.viewSite}
             </Link>
             {handle && (
               <span className="px-chip hidden items-center gap-2 bg-white py-1 pl-1 pr-2.5 text-xs font-semibold text-foreground [--px-line:#CFE2EE] sm:inline-flex">
@@ -120,8 +125,8 @@ export default function PortalFrame({
             )}
             <a
               href="/api/auth/logout"
-              aria-label="Keluar"
-              title="Keluar"
+              aria-label={t.frame.logout}
+              title={t.frame.logout}
               className="px-frame flex h-9 w-9 items-center justify-center bg-white text-rose-700 transition-colors [--px-line:#FDA4AF] hover:bg-rose-50"
             >
               <Icon name="logout" className="h-4 w-4" />

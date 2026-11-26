@@ -3,9 +3,17 @@
 import { createClient } from "@/lib/supabase/server";
 import { notifyMaintainers } from "@/lib/notify";
 import { canRequestExit } from "@/lib/membership";
+import { currentLocale } from "@/lib/locale-server";
 import type { MembershipIntakePolicy } from "@/types/database";
 
+const EXIT_ERRORS = {
+  id: { profile: "Profil member tidak ditemukan.", config: "Konfigurasi membership sedang tidak tersedia.", update: "Gagal memperbarui status membership." },
+  en: { profile: "Member profile not found.", config: "The membership configuration is not available right now.", update: "Could not update the membership status." },
+} as const;
+
 export async function requestMembershipExit(reason?: string) {
+  const locale = await currentLocale();
+  const errors = EXIT_ERRORS[locale];
   const supabase = await createClient();
   const {
     data: { user },
@@ -20,7 +28,7 @@ export async function requestMembershipExit(reason?: string) {
     .maybeSingle();
 
   if (memberError || !member) {
-    return { success: false, error: "Profil member tidak ditemukan." };
+    return { success: false, error: errors.profile };
   }
 
   const { data: setting, error: settingError } = await supabase
@@ -30,13 +38,14 @@ export async function requestMembershipExit(reason?: string) {
     .single();
 
   if (settingError || !setting?.value) {
-    return { success: false, error: "Konfigurasi membership sedang tidak tersedia." };
+    return { success: false, error: errors.config };
   }
 
   const decision = canRequestExit(
     member,
     new Date(),
-    setting.value as MembershipIntakePolicy
+    setting.value as MembershipIntakePolicy,
+    locale
   );
 
   if (!decision.allowed) {
@@ -52,7 +61,7 @@ export async function requestMembershipExit(reason?: string) {
   });
 
   if (rpcError) {
-    return { success: false, error: "Gagal memperbarui status membership." };
+    return { success: false, error: errors.update };
   }
 
   const exitedAt = String(data?.exited_at || new Date().toISOString());

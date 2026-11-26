@@ -6,6 +6,9 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import Icon, { type IconName } from "@/components/ui/icon";
 import PortalFrame, { type PortalUser } from "@/components/portal/portal-frame";
+import LanguageToggle from "@/components/portal/language-toggle";
+import { normalizeLocale, type Locale } from "@/lib/locale";
+import { PORTAL_COPY } from "@/lib/portal-copy";
 
 type MemberShellProps = {
   member: {
@@ -15,23 +18,28 @@ type MemberShellProps = {
     registration_status?: string;
     is_maintainer?: boolean;
   };
+  locale?: Locale;
   children: React.ReactNode;
 };
 
 type NavItem = { href: string; label: string; icon: IconName };
 
-const navItems: NavItem[] = [
-  { href: "/dashboard", label: "Beranda", icon: "dashboard" },
-  { href: "/dashboard/learn", label: "Belajar", icon: "school" },
-  { href: "/members", label: "Anggota", icon: "group" },
+const navHrefs: { href: string; key: "home" | "learn" | "members"; icon: IconName }[] = [
+  { href: "/dashboard", key: "home", icon: "dashboard" },
+  { href: "/dashboard/learn", key: "learn", icon: "school" },
+  { href: "/members", key: "members", icon: "group" },
 ];
 
-export default function MemberShell({ member, children }: MemberShellProps) {
+export default function MemberShell({ member, locale = "id", children }: MemberShellProps) {
   const pathname = usePathname();
+  const lang = normalizeLocale(locale);
+  const t = PORTAL_COPY[lang].shell;
+  const navItems: NavItem[] = navHrefs.map(({ href, key, icon }) => ({ href, label: t.nav[key], icon }));
 
   return (
     <PortalFrame
       variant="member"
+      locale={lang}
       user={member}
       currentLabel={navItems.find((item) => (item.href === "/dashboard" ? pathname === "/dashboard" : pathname?.startsWith(item.href)))?.label}
       order={navItems.map((item) => item.href)}
@@ -61,17 +69,17 @@ export default function MemberShell({ member, children }: MemberShellProps) {
             />
             <span className="text-[10px] font-mono uppercase text-slate-600 font-semibold">
               {member.registration_status === "pending"
-                ? "Menunggu review"
+                ? t.status.pending
                 : member.registration_status === "rejected"
-                ? "Pendaftaran ditolak"
+                ? t.status.rejected
                 : member.is_active
-                ? "Member aktif"
-                : "Akses ditangguhkan"}
+                ? t.status.active
+                : t.status.suspended}
             </span>
           </div>
         </div>
 
-        <nav aria-label="Navigasi member" className="space-y-1 text-xs font-medium text-slate-700">
+        <nav aria-label={t.navAria} className="space-y-1 text-xs font-medium text-slate-700">
           {navItems.map((item) => {
             const active = item.href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(item.href);
             return (
@@ -97,17 +105,18 @@ export default function MemberShell({ member, children }: MemberShellProps) {
           {member.is_maintainer && (
             <Link href="/admin/review" className="flex min-h-11 items-center gap-2 px-3 font-mono font-semibold text-muara-ocean transition-colors hover:bg-surface-alt">
               <Icon name="shield" className="h-4 w-4" />
-              Workspace Admin
+              {t.adminWorkspace}
             </Link>
           )}
-          <Link href="/" className="flex min-h-11 items-center gap-2 px-3 font-mono text-secondary transition-colors hover:bg-surface-alt hover:text-foreground">
+          <Link href={PORTAL_COPY[lang].siteHref} className="flex min-h-11 items-center gap-2 px-3 font-mono text-secondary transition-colors hover:bg-surface-alt hover:text-foreground">
             <Icon name="arrow_back" className="h-4 w-4" />
-            Situs MuaraAI
+            {t.site}
           </Link>
           <a href="/api/auth/logout" className="flex min-h-11 items-center gap-2 px-3 font-mono text-rose-700 transition-colors hover:bg-rose-50">
             <Icon name="logout" className="h-4 w-4" />
-            Keluar
+            {t.logout}
           </a>
+          <LanguageToggle locale={lang} label={t.language} />
         </div>
         </>
       }

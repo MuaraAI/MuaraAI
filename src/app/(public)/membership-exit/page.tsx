@@ -4,8 +4,11 @@ import { createClient } from "@/lib/supabase/server";
 import MembershipExitClient from "@/components/portal/membership-exit-client";
 import { getEarliestExitDate } from "@/lib/membership";
 import type { MembershipIntakePolicy } from "@/types/database";
+import { currentLocale } from "@/lib/locale-server";
+import { PORTAL_COPY } from "@/lib/portal-copy";
 
 export default async function MembershipExitPage() {
+  const locale = await currentLocale();
   const supabase = await createClient();
   const {
     data: { user },
@@ -17,7 +20,7 @@ export default async function MembershipExitPage() {
     .select("membership_status, membership_started_at, exited_at, reapply_blocked")
     .eq("id", user.id)
     .maybeSingle();
-  if (!member) redirect("/onboarding");
+  if (!member) redirect(PORTAL_COPY[locale].onboardingHref);
 
   const { data: setting } = await supabase
     .from("community_settings")
@@ -37,6 +40,7 @@ export default async function MembershipExitPage() {
           status={member.membership_status}
           exitedAt={member.exited_at}
           earliestExitAt={earliestExitAt}
+          locale={locale}
         />
       </div>
     </main>

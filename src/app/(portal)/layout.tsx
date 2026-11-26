@@ -4,12 +4,15 @@ import { createClient } from "@/lib/supabase/server";
 import { Member } from "@/types/database";
 import PortalShell from "@/components/portal/portal-shell";
 import { isMaintainer } from "@/lib/guards";
+import { currentLocale } from "@/lib/locale-server";
+import { PORTAL_COPY } from "@/lib/portal-copy";
 
 export default async function PortalLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await currentLocale();
   const supabase = await createClient();
   const {
     data: { user },
@@ -32,11 +35,12 @@ export default async function PortalLayout({
     redirect("/membership-exit?status=banned");
   }
   if (!member) {
-    redirect("/onboarding");
+    redirect(PORTAL_COPY[locale].onboardingHref);
   }
 
   return (
     <PortalShell
+      locale={locale}
       member={{
         full_name: member.full_name,
         github_username: member.github_username,

@@ -1,3 +1,6 @@
+import type { Locale } from "@/lib/locale";
+import { DATE_LOCALE } from "@/lib/portal-copy";
+
 export type Division = "builder" | "creative";
 export type Enforcement = "dry_run" | "warn_only" | "full";
 export type Standing = "good" | "warned";
@@ -121,8 +124,8 @@ export const previousMonth = (month: string): string => shiftMonth(month, -1);
 export const nextMonth = (month: string): string => shiftMonth(month, 1);
 
 /** "2026-11-01" -> "November 2026" (UTC, Indonesian). */
-export function monthLabel(month: string): string {
-  return new Date(`${month}T00:00:00Z`).toLocaleDateString("id-ID", { month: "long", year: "numeric", timeZone: "UTC" });
+export function monthLabel(month: string, locale: Locale = "id"): string {
+  return new Date(`${month}T00:00:00Z`).toLocaleDateString(DATE_LOCALE[locale], { month: "long", year: "numeric", timeZone: "UTC" });
 }
 
 /** A member is not evaluated for the month they were approved in, nor before it. */

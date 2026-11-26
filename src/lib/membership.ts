@@ -1,5 +1,6 @@
 import type { MembershipIntakePolicy, MembershipStatus, RegistrationStatus } from "@/types/database";
 import { normalizeLocale, type Locale } from "@/lib/locale";
+import { DATE_LOCALE } from "@/lib/portal-copy";
 
 interface MembershipSnapshot {
   registration_status: RegistrationStatus;
@@ -79,22 +80,44 @@ export function canSubmitIntake(
   return { allowed: true };
 }
 
+const EXIT_REASONS = {
+  id: {
+    exited: "Membership ini sudah berstatus keluar.",
+    notApproved: "Hanya member approved yang dapat mengajukan keluar.",
+    notActive: "Membership ini tidak sedang aktif.",
+    historic: "Pengajuan keluar Founder/Maintainer historis diproses oleh maintainer.",
+    noStart: "Tanggal mulai membership belum tersedia.",
+    notYet: (date: string) => `Anda baru dapat mengajukan keluar mulai ${date}.`,
+  },
+  en: {
+    exited: "This membership has already ended.",
+    notApproved: "Only approved members can request to leave.",
+    notActive: "This membership is not active.",
+    historic: "Leaving requests from historic Founders and Maintainers are handled by the maintainers.",
+    noStart: "The membership start date is not available yet.",
+    notYet: (date: string) => `You can request to leave from ${date}.`,
+  },
+} as const;
+
 export function canRequestExit(
   member: MembershipSnapshot,
   now: Date,
-  policy: MembershipIntakePolicy
+  policy: MembershipIntakePolicy,
+  locale: Locale = "id"
 ): PolicyDecision {
+  const lang = normalizeLocale(locale);
+  const reasons = EXIT_REASONS[lang];
   if (member.reapply_blocked || member.membership_status === "exited") {
-    return { allowed: false, reason: "Membership ini sudah berstatus keluar." };
+    return { allowed: false, reason: reasons.exited };
   }
   if (member.registration_status !== "approved") {
-    return { allowed: false, reason: "Hanya member approved yang dapat mengajukan keluar." };
+    return { allowed: false, reason: reasons.notApproved };
   }
   if (member.membership_status !== "active") {
-    return { allowed: false, reason: "Membership ini tidak sedang aktif." };
+    return { allowed: false, reason: reasons.notActive };
   }
   if (member.hierarchy === "maintainer" && !member.membership_started_at) {
-    return { allowed: false, reason: "Pengajuan keluar Founder/Maintainer historis diproses oleh maintainer." };
+    return { allowed: false, reason: reasons.historic };
   }
 
   const earliest = getEarliestExitDate(
@@ -102,13 +125,13 @@ export function canRequestExit(
     policy.minimum_active_days_before_exit
   );
   if (!earliest) {
-    return { allowed: false, reason: "Tanggal mulai membership belum tersedia." };
+    return { allowed: false, reason: reasons.noStart };
   }
   if (now < earliest) {
     return {
       allowed: false,
       earliestExitAt: earliest.toISOString(),
-      reason: `Anda baru dapat mengajukan keluar mulai ${earliest.toLocaleDateString("id-ID")}.`,
+      reason: reasons.notYet(earliest.toLocaleDateString(DATE_LOCALE[lang])),
     };
   }
   return { allowed: true, earliestExitAt: earliest.toISOString() };
