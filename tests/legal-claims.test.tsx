@@ -25,6 +25,11 @@ describe("Privacy Policy says what the product really does (Indonesian)", () => 
     expect(text()).toMatch(/total commit kumulatif/);
   });
 
+  it("keeps the toolchain description private", () => {
+    render(<PrivacyPage />);
+    expect(text()).toMatch(/Hanya kamu dan maintainer[^.]*deskripsi toolchain/);
+  });
+
   it("has the four sections", () => {
     render(<PrivacyPage />);
     for (const name of ["1. Data yang Dikumpulkan", "2. Siapa yang Dapat Melihat Datamu", "3. Penggunaan & Keamanan Data", "4. Hak Akses & Penghapusan"]) {
