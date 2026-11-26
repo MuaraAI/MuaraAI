@@ -2,7 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { fetchOrgRepos } from "@/lib/github-repos";
 import { GITHUB_ORG_URL } from "@/lib/constants";
-import { communityContent } from "@/lib/community-content";
+import { communityContent, hiddenRepoNames } from "@/lib/community-content";
 import ProductList from "@/components/landing/product-list";
 import { PageHeader } from "@/components/ui/section";
 import Icon from "@/components/ui/icon";
@@ -20,9 +20,10 @@ const dateFormat = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "sh
 
 export default async function ProjectsPage() {
   const { repos, ok } = await fetchOrgRepos(GITHUB_ORG, { token: process.env.GITHUB_ORG_TOKEN });
-  // Products already have their own cards; the org profile repo is not a project.
+  // Products already have their own cards; the org profile and unreleased repos stay out of the list.
   const featured = new Set(communityContent.products.map((product) => product.repo.toLowerCase()));
-  const others = repos.filter((repo) => repo.name !== ".github" && !featured.has(repo.url.toLowerCase()));
+  const hidden = new Set(hiddenRepoNames.map((name) => name.toLowerCase()));
+  const others = repos.filter((repo) => !hidden.has(repo.name.toLowerCase()) && !featured.has(repo.url.toLowerCase()));
 
   return (
     <div className="mx-auto max-w-[100rem] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">

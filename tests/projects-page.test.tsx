@@ -23,7 +23,7 @@ describe("Projects page", () => {
   it("shows the org's products first, with live sites, and does not repeat them in the repo list", async () => {
     fetchMock.mockResolvedValue({
       ok: true,
-      repos: [repo("Mira"), repo("chess-agent"), repo(".github"), repo("site", { description: "", language: "" })],
+      repos: [repo("Mira"), repo("chess-agent"), repo(".github"), repo("ai-web"), repo("site", { description: "", language: "" })],
     });
     render(await ProjectsPage());
 
@@ -37,6 +37,7 @@ describe("Projects page", () => {
     expect(other.getAttribute("href")).toBe("https://github.com/MuaraAI/chess-agent");
     expect(other.getAttribute("rel")).toContain("noopener");
     expect(screen.queryByRole("link", { name: /^\.github$/ })).toBeNull();
+    expect(screen.queryByRole("link", { name: /ai-web/ })).toBeNull();
     expect(screen.getByText("Belum ada deskripsi.")).toBeTruthy();
     expect(screen.getByRole("heading", { level: 1 })).toBeTruthy();
   });
