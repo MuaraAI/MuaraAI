@@ -44,10 +44,10 @@ export default function PrivacyPage() {
           <h2 className="text-base font-semibold text-foreground">2. Siapa yang Dapat Melihat Datamu</h2>
           <p>
             Profil anggota yang sudah disetujui bersifat publik dan tampil di direktori anggota: nama lengkap, avatar dan username GitHub, divisi dan posisi,
-            status, institusi (jika diisi), deskripsi toolchain, tautan yang kamu isi, serta tier, streak, total commit kumulatif, dan status keanggotaan (aktif atau tidak, tanggal mulai dan keluar).
+            status, institusi (jika diisi), tautan yang kamu isi, serta tier, streak, total commit kumulatif, dan status keanggotaan (aktif atau tidak, tanggal mulai dan keluar).
           </p>
           <p>
-            Hanya kamu dan maintainer yang dapat melihat email, nomor WhatsApp, username Telegram, alasan bergabung, angka kontribusi bulanan per bulan, status
+            Hanya kamu dan maintainer yang dapat melihat email, nomor WhatsApp, username Telegram, alasan bergabung, deskripsi toolchain, angka kontribusi bulanan per bulan, status
             peringatan, dan kehadiran sesi Discord.
           </p>
           <p>
