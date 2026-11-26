@@ -35,7 +35,7 @@ const STEPS = [
   },
   {
     title: "Fill in the registration form",
-    text: "You give your name and WhatsApp number (Telegram is optional), choose a status (student, learner, general or other) and an optional institution, link a repository or portfolio, pick your division and position (and an optional second division), describe the tools you use, and tell us why you want to join in at least 50 characters. The registration form is only available in Indonesian for now.",
+    text: "You give your name and WhatsApp number (Telegram is optional), choose a status (student, learner, general or other) and an optional institution, link a repository or portfolio, pick your division and position (and an optional second division), describe the tools you use, and tell us why you want to join in at least 50 characters.",
   },
   {
     title: "Wait for a review",
@@ -56,7 +56,7 @@ export default async function EnglishJoinPage() {
         title="Join MuaraAI"
         description="Membership is open to anyone with a GitHub account. This is what happens, step by step."
         actions={
-          <Link href="/api/auth/login" className="px-btn inline-flex w-fit items-center gap-2 px-5 py-2.5 text-xs font-bold">
+          <Link href="/api/auth/login?next=/en/onboarding" className="px-btn inline-flex w-fit items-center gap-2 px-5 py-2.5 text-xs font-bold">
             <Icon name="github" className="h-4 w-4" />
             <span>Continue with GitHub</span>
           </Link>
@@ -78,7 +78,7 @@ export default async function EnglishJoinPage() {
       <p className="mt-12 max-w-3xl text-sm leading-relaxed text-secondary">
         Read the{" "}
         <Link href="/code-of-conduct" className="font-semibold text-muara-ocean hover:underline">Code of Conduct</Link>{" "}
-        before you apply. It is currently only available in Indonesian.
+        before you apply. The Privacy Policy, Terms of Service and Code of Conduct you agree to are currently only available in Indonesian.
       </p>
     </div>
   );

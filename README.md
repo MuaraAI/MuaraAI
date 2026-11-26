@@ -52,7 +52,7 @@ Tim inti: Yuken Velino (`@Curzyori`, Founder), Muhammad Raffli Aldiansyah (`@See
 ```text
 muaraai.com/
 ├── /                      # Landing (Indonesia)
-├── /en, /en/join          # Landing dan cara daftar (English)
+├── /en, /en/join, /en/onboarding  # Landing, cara daftar, dan form pendaftaran (English)
 ├── /projects              # Repo publik org dari GitHub
 ├── /members               # Direktori publik, urut tier lalu streak
 ├── /onboarding            # Form pendaftaran + legal gate + GitHub OAuth
@@ -73,7 +73,7 @@ muaraai.com/
     └── /cron/contributions  # Sinkron dan evaluasi harian (dilindungi CRON_SECRET)
 ```
 
-Versi Inggris hanya mencakup landing dan penjelasan cara daftar. Form pendaftaran dan dokumen legal masih berbahasa Indonesia.
+Versi Inggris mencakup landing, penjelasan cara daftar, dan form pendaftaran (teks form ada di `src/lib/onboarding-copy.ts`, pesan validasi di `src/lib/validation.ts`). Terms, Privacy Policy, Code of Conduct, serta portal anggota dan admin masih berbahasa Indonesia, dan halaman Inggris menyebut hal itu.
 
 ## Teknologi
 

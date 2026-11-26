@@ -5,6 +5,8 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
   const next = requestUrl.searchParams.get("next");
+  // Only the exact English form path switches language; any other next value for a new account is ignored.
+  const onboardingPath = next === "/en/onboarding" ? "/en/onboarding" : "/onboarding";
 
   if (code) {
     const supabase = await createClient();
@@ -31,14 +33,14 @@ export async function GET(request: Request) {
         }
 
         // Only a GitHub account without a member profile needs onboarding.
-        return NextResponse.redirect(`${requestUrl.origin}/onboarding`);
+        return NextResponse.redirect(`${requestUrl.origin}${onboardingPath}`);
       }
     }
   }
 
   const error = requestUrl.searchParams.get("error_description") || requestUrl.searchParams.get("error");
   const target = error
-    ? `/onboarding?error=${encodeURIComponent(error)}`
-    : "/onboarding?error=oauth_callback_failed";
+    ? `${onboardingPath}?error=${encodeURIComponent(error)}`
+    : `${onboardingPath}?error=oauth_callback_failed`;
   return NextResponse.redirect(`${requestUrl.origin}${target}`);
 }

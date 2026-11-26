@@ -105,7 +105,7 @@ describe("English join page", () => {
   it("explains the steps and starts GitHub sign-in", async () => {
     render(await EnglishJoinPage());
     expect(screen.getByRole("heading", { level: 1 }).textContent).toContain("Join MuaraAI");
-    expect(screen.getByRole("link", { name: /Continue with GitHub/i }).getAttribute("href")).toBe("/api/auth/login");
+    expect(screen.getByRole("link", { name: /Continue with GitHub/i }).getAttribute("href")).toBe("/api/auth/login?next=/en/onboarding");
     expect(screen.getByRole("link", { name: /Code of Conduct/i }).getAttribute("href")).toBe("/code-of-conduct");
   });
 
@@ -115,10 +115,11 @@ describe("English join page", () => {
     expect(screen.queryByText(/Beranda/)).toBeNull();
   });
 
-  it("says plainly that the form and the rules are still Indonesian", async () => {
+  it("tells the truth about languages: the form is in English, the legal documents are not", async () => {
     render(await EnglishJoinPage());
-    expect(document.body.textContent).toMatch(/registration form is only available in Indonesian/i);
-    expect(document.body.textContent).toMatch(/Code of Conduct.*Indonesian/i);
+    const text = document.body.textContent ?? "";
+    expect(text).not.toMatch(/registration form is only available in Indonesian/i);
+    expect(text).toMatch(/Privacy Policy, Terms of Service and Code of Conduct.*only available in Indonesian/i);
   });
 
   it("has English metadata that links back to the Indonesian page", () => {

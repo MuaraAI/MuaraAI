@@ -10,6 +10,7 @@ describe("language alternates", () => {
     const urls = sitemap().map((entry) => entry.url);
     expect(urls).toContain("https://muaraai.com/en");
     expect(urls).toContain("https://muaraai.com/en/join");
+    expect(urls).toContain("https://muaraai.com/en/onboarding");
     expect(new Set(urls).size).toBe(urls.length);
   });
 
@@ -19,7 +20,7 @@ describe("language alternates", () => {
     expect(home).toContain('id: "https://muaraai.com/"');
     expect(home).toContain('"x-default": "https://muaraai.com/"');
     const onboarding = read("src/app/(public)/onboarding/page.tsx");
-    expect(onboarding).toContain('en: "https://muaraai.com/en/join"');
+    expect(onboarding).toContain('en: "https://muaraai.com/en/onboarding"');
     expect(onboarding).toContain('id: "https://muaraai.com/onboarding"');
     expect(onboarding).toContain('"x-default": "https://muaraai.com/onboarding"');
   });
