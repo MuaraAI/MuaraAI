@@ -4,18 +4,29 @@ import { communityContent } from "../src/lib/community-content";
 describe("national community content", () => {
   it("contains official links without Telegram", () => {
     expect(communityContent.officialLinks.website).toBe("https://muaraai.com/");
-    expect(communityContent.officialLinks.playground).toBe("https://ai.muaraai.com/");
+    expect(communityContent.officialLinks).not.toHaveProperty("apiPortal");
     expect(communityContent.officialLinks.x).toBe("https://x.com/MuaraAI");
     expect(communityContent.officialLinks.instagram).toBe("https://www.instagram.com/muara.ai/");
     expect(communityContent.officialLinks.threads).toBe("https://www.threads.com/@muara.ai");
     expect(Object.values(communityContent.officialLinks)).not.toContain("https://t.me/muaraai");
   });
 
-  it("pins the current Muara Arus 1 scope", () => {
-    expect(communityContent.muaraArusOne.modelId).toBe("muara-arus-1");
-    expect(communityContent.muaraArusOne.parameters).toBe("1.5B");
-    expect(communityContent.muaraArusOne.offline).toBe(true);
-    expect(communityContent.muaraArusOne.programs).toEqual(["SI", "SIA", "IF"]);
+  it("features only Mira and FluxCode, each with a live site and a GitHub repo", () => {
+    const { products } = communityContent;
+    expect(products.map((product) => product.name)).toEqual(["Mira", "FluxCode"]);
+    expect(products.map((product) => product.url)).toEqual(["https://mira.muaraai.com", "https://fluxcode.muaraai.com"]);
+    for (const product of products) {
+      expect(product.repo).toMatch(/^https:\/\/github\.com\/MuaraAI\//);
+      expect(product.id.length).toBeGreaterThan(20);
+      expect(product.en.length).toBeGreaterThan(20);
+      expect(`${product.id}${product.en}`).not.toContain("\u2014");
+    }
+    expect(Object.values(communityContent.officialLinks)).not.toContain("https://ollama.com/MuaraAI");
+  });
+
+  it("marks the AI portal as coming soon without any link", () => {
+    expect(communityContent.comingSoon.map((item) => item.name)).toEqual(["Muara V1 Flash"]);
+    for (const item of communityContent.comingSoon) expect(item).not.toHaveProperty("url");
   });
 
   it("keeps corrected maintainer identity and order", () => {

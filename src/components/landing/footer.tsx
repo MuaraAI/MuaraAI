@@ -2,15 +2,41 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 import { GITHUB_ORG_URL } from "@/lib/constants";
+import { communityContent } from "@/lib/community-content";
 import Icon from "@/components/ui/icon";
 
-const products = [
-  { label: "Muara Arus 1", href: "https://ai.muaraai.com/" },
-  { label: "GitHub model", href: "https://github.com/MuaraAI/muara-arus-1" },
-  { label: "Hugging Face", href: "https://huggingface.co/MuaraAI/muara-arus-1" },
-  { label: "Ollama", href: "https://ollama.com/MuaraAI/muara-arus-1" },
-  { label: "UBSI API", href: "https://ubsi-api.muaraai.com" },
-];
+type Locale = "id" | "en";
+
+const COPY = {
+  id: {
+    tagline: "Where local craft flows global. Komunitas terbuka untuk siapa saja, lahir di Pontianak.",
+    partnership: "Hubungi kemitraan",
+    partnershipSubject: "Tawaran Kemitraan MuaraAI",
+    products: "Produk",
+    productsLabel: "Produk MuaraAI",
+    community: "Komunitas",
+    communityLabel: "Komunitas MuaraAI",
+    legalLabel: "Tautan MuaraAI",
+    copyright: "© 2026 MuaraAI · Komunitas terbuka · Lahir di Pontianak",
+    top: "Ke atas",
+    language: "Bahasa",
+  },
+  en: {
+    tagline: "Where local craft flows global. An open community for anyone, born in Pontianak.",
+    partnership: "Partnership enquiries",
+    partnershipSubject: "Partnership enquiry MuaraAI",
+    products: "Products",
+    productsLabel: "MuaraAI products",
+    community: "Community",
+    communityLabel: "MuaraAI community",
+    legalLabel: "MuaraAI links",
+    copyright: "© 2026 MuaraAI · Open community · Born in Pontianak",
+    top: "Back to top",
+    language: "Language",
+  },
+} as const;
+
+const products = communityContent.products.map((product) => ({ label: product.name, href: product.url }));
 
 const socials = [
   { label: "X", href: "https://x.com/MuaraAI" },
@@ -87,7 +113,8 @@ function PixelShore() {
   );
 }
 
-export default function Footer() {
+export default function Footer({ locale = "id" }: { locale?: Locale }) {
+  const copy = COPY[locale];
   return (
     <footer className="w-full bg-white text-secondary">
       <PixelShore />
@@ -101,28 +128,35 @@ export default function Footer() {
               <span className="font-display text-base font-bold text-foreground">MuaraAI</span>
             </div>
             <p className="mt-3 max-w-xs text-[13px] leading-relaxed">
-              Where local craft flows global. Komunitas terbuka untuk siapa saja, lahir di Pontianak.
+              {copy.tagline}
             </p>
             <div className="mt-4">
               <a
-                href="mailto:admin@muaraai.com?subject=Tawaran%20Kemitraan%20MuaraAI"
+                href={`mailto:admin@muaraai.com?subject=${encodeURIComponent(copy.partnershipSubject)}`}
                 className="px-btn-ghost inline-flex items-center gap-2 px-3 py-1.5 font-mono text-xs font-semibold [--px-off:3px]"
               >
                 <Icon name="mail" className="h-4 w-4 text-muara-ocean" />
-                <span>Hubungi kemitraan</span>
+                <span>{copy.partnership}</span>
               </a>
             </div>
           </div>
-          <Column title="Produk" label="Produk MuaraAI" items={products} />
-          <Column title="Komunitas" label="Komunitas MuaraAI" items={socials} />
-          <Column title="Legal" label="Tautan MuaraAI" items={[...legal, { label: "Email", href: "mailto:admin@muaraai.com" }]} />
+          <Column title={copy.products} label={copy.productsLabel} items={products} />
+          <Column title={copy.community} label={copy.communityLabel} items={socials} />
+          <Column title="Legal" label={copy.legalLabel} items={[...legal, { label: "Email", href: "mailto:admin@muaraai.com" }]} />
         </div>
 
         <div className="mx-auto mt-8 flex max-w-[100rem] flex-wrap items-center justify-between gap-3 border-t-2 border-dashed border-[#CFE2EE] pt-4 font-mono text-[11px]">
-          <span>© 2026 MuaraAI · Komunitas terbuka · Lahir di Pontianak</span>
+          <span>{copy.copyright}</span>
+          <nav aria-label={copy.language} className="flex items-center gap-3">
+            {([["id", "Bahasa Indonesia", "/"], ["en", "English", "/en"]] as const).map(([code, label, href]) => (
+              <Link key={code} href={href} aria-current={code === locale ? "true" : undefined} className={code === locale ? "font-semibold text-foreground" : "text-secondary hover:text-muara-ocean"}>
+                {label}
+              </Link>
+            ))}
+          </nav>
           <a href="#" className="group inline-flex items-center gap-1.5 font-semibold text-foreground transition-colors duration-200 hover:text-muara-ocean">
             <span className="inline-block transition-transform duration-200 ease-out group-hover:-translate-y-0.5" aria-hidden="true">▲</span>
-            Ke atas
+            {copy.top}
           </a>
         </div>
       </div>

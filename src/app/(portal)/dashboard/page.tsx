@@ -131,7 +131,7 @@ export default async function DashboardProfilePage() {
             <div>
               <div className="text-xs font-mono uppercase text-amber-800">Status pendaftaran</div>
               <div className="mt-2 flex items-center gap-2 text-xl font-display font-bold text-amber-700">
-                <span className="h-2.5 w-2.5 bg-amber-500 animate-pulse" aria-hidden="true" />
+                <span className="h-2.5 w-2.5 bg-amber-500" aria-hidden="true" />
                 Menunggu Review
               </div>
               <p className="mt-2 text-sm text-secondary">

@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 import { usePathname } from "next/navigation";
-import { motion } from "motion/react";
 import Icon, { type IconName } from "@/components/ui/icon";
 import PortalFrame, { type PortalUser } from "@/components/portal/portal-frame";
 
@@ -49,12 +48,9 @@ export default function AdminShell({ children, user }: AdminShellProps) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={`relative flex min-h-11 items-center gap-2.5 px-3 py-2 font-mono transition-colors duration-200 ${
-                  active ? "font-semibold text-[#072033]" : "hover:bg-white/10 hover:text-white"
+                  active ? "bg-white font-semibold text-[#072033] shadow-[inset_3px_0_0_#FCD34D]" : "hover:bg-white/10 hover:text-white"
                 }`}
               >
-                {active && (
-                  <motion.span layoutId="admin-nav-active" className="absolute inset-0 bg-white shadow-[inset_3px_0_0_#FCD34D]" transition={{ type: "spring", stiffness: 420, damping: 38 }} />
-                )}
                 <Icon name={item.icon} className={`relative w-4 h-4 ${active ? "text-muara-ocean" : "text-sky-300"}`} />
                 <span className="relative">{item.label}</span>
               </Link>

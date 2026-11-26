@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 import { usePathname } from "next/navigation";
-import { motion } from "motion/react";
 import Icon, { type IconName } from "@/components/ui/icon";
 import PortalFrame, { type PortalUser } from "@/components/portal/portal-frame";
 
@@ -52,7 +51,7 @@ export default function MemberShell({ member, children }: MemberShellProps) {
             <span
               className={`h-2 w-2 ${
                 member.registration_status === "pending"
-                  ? "bg-amber-500 animate-pulse"
+                  ? "bg-amber-500"
                   : member.registration_status === "rejected"
                   ? "bg-rose-500"
                   : member.is_active
@@ -81,12 +80,9 @@ export default function MemberShell({ member, children }: MemberShellProps) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={`relative flex min-h-11 items-center gap-2.5 px-3 py-2 font-mono transition-colors duration-200 ${
-                  active ? "font-semibold text-foreground" : "hover:bg-surface-alt hover:text-foreground"
+                  active ? "bg-[#DCEBF5] font-semibold text-foreground shadow-[inset_3px_0_0_#0369A1]" : "hover:bg-surface-alt hover:text-foreground"
                 }`}
               >
-                {active && (
-                  <motion.span layoutId="member-nav-active" className="absolute inset-0 bg-[#DCEBF5] shadow-[inset_3px_0_0_#0369A1]" transition={{ type: "spring", stiffness: 420, damping: 38 }} />
-                )}
                 <Icon name={item.icon} className={`relative w-4 h-4 ${active ? "text-muara-ocean" : "text-secondary"}`} />
                 <span className="relative">{item.label}</span>
                 {item.href !== "/dashboard" && member.registration_status !== "approved" && (

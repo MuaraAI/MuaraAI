@@ -7,7 +7,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { GITHUB_ORG_URL } from "@/lib/constants";
 import Icon from "@/components/ui/icon";
 
+export type Locale = "id" | "en";
+
 interface NavbarProps {
+  locale?: Locale;
   user?: {
     id: string;
     fullName?: string;
@@ -15,16 +18,44 @@ interface NavbarProps {
   } | null;
 }
 
-const NAV_LINKS = [
-  { href: "/projects", label: "Project" },
-  { href: "/members", label: "Anggota" },
-  { href: "/code-of-conduct", label: "Aturan" },
-];
+const COPY = {
+  id: {
+    home: "/",
+    join: "/onboarding",
+    links: [
+      { href: "/projects", label: "Project" },
+      { href: "/members", label: "Anggota" },
+      { href: "/code-of-conduct", label: "Aturan" },
+    ],
+    logIn: "Masuk",
+    signUp: "Daftar",
+    main: "Menu utama",
+    mobile: "Menu mobile",
+    open: "Buka menu",
+    close: "Tutup menu",
+  },
+  en: {
+    home: "/en",
+    join: "/en/join",
+    links: [
+      { href: "/projects", label: "Projects" },
+      { href: "/members", label: "Members" },
+      { href: "/code-of-conduct", label: "Rules" },
+    ],
+    logIn: "Log in",
+    signUp: "Join",
+    main: "Main menu",
+    mobile: "Mobile menu",
+    open: "Open menu",
+    close: "Close menu",
+  },
+} as const;
 
 const linkClass = (active: boolean) =>
   `px-3 py-2 text-sm font-medium transition-colors ${active ? "text-foreground" : "text-secondary hover:text-foreground"}`;
 
-export default function Navbar({ user }: NavbarProps) {
+export default function Navbar({ user, locale = "id" }: NavbarProps) {
+  const copy = COPY[locale];
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -47,15 +78,15 @@ export default function Navbar({ user }: NavbarProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-stroke bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-[100rem] items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2.5">
+        <Link href={copy.home} className="flex items-center gap-2.5">
           <span className="px-frame flex h-8 w-8 items-center justify-center overflow-hidden bg-white [--px-line:#CFE2EE]">
             <Image src="/brand/muara-logo.png" alt="" width={32} height={32} className="h-7 w-7 object-contain" priority />
           </span>
           <span className="font-display text-base font-bold tracking-tight text-foreground">Muara AI</span>
         </Link>
 
-        <nav aria-label="Menu utama" className="hidden items-center gap-1 md:flex">
-          {NAV_LINKS.map((link) => (
+        <nav aria-label={copy.main} className="hidden items-center gap-1 md:flex">
+          {copy.links.map((link) => (
             <Link key={link.href} href={link.href} aria-current={isActive(link.href) ? "page" : undefined} className={linkClass(isActive(link.href))}>
               {link.label}
             </Link>
@@ -70,8 +101,8 @@ export default function Navbar({ user }: NavbarProps) {
             <Link href="/dashboard" className="px-btn px-4 py-1.5 text-xs font-bold [--px-off:3px]">Dashboard</Link>
           ) : (
             <>
-              <Link href="/login" className="px-3 py-2 text-sm font-medium text-secondary transition-colors hover:text-foreground">Masuk</Link>
-              <Link href="/onboarding" className="px-btn px-4 py-1.5 text-xs font-bold [--px-off:3px]">Daftar</Link>
+              <Link href="/login" className="px-3 py-2 text-sm font-medium text-secondary transition-colors hover:text-foreground">{copy.logIn}</Link>
+              <Link href={copy.join} className="px-btn px-4 py-1.5 text-xs font-bold [--px-off:3px]">{copy.signUp}</Link>
             </>
           )}
         </div>
@@ -80,7 +111,7 @@ export default function Navbar({ user }: NavbarProps) {
           ref={buttonRef}
           type="button"
           onClick={() => setOpen((value) => !value)}
-          aria-label={open ? "Tutup menu" : "Buka menu"}
+          aria-label={open ? copy.close : copy.open}
           aria-expanded={open}
           aria-controls={open ? "mobile-menu" : undefined}
           className="flex h-11 w-11 items-center justify-center text-foreground md:hidden"
@@ -90,9 +121,9 @@ export default function Navbar({ user }: NavbarProps) {
       </div>
 
       {open && (
-        <nav id="mobile-menu" aria-label="Menu mobile" className="border-t border-stroke bg-white px-4 pb-5 pt-3 md:hidden">
+        <nav id="mobile-menu" aria-label={copy.mobile} className="border-t border-stroke bg-white px-4 pb-5 pt-3 md:hidden">
           <ul className="flex flex-col">
-            {NAV_LINKS.map((link) => (
+            {copy.links.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} onClick={() => setOpen(false)} aria-current={isActive(link.href) ? "page" : undefined} className="flex min-h-11 items-center text-base font-medium text-foreground">
                   {link.label}
@@ -105,8 +136,8 @@ export default function Navbar({ user }: NavbarProps) {
               <Link href="/dashboard" className="px-btn flex min-h-11 flex-1 items-center justify-center text-sm font-bold">Dashboard</Link>
             ) : (
               <>
-                <Link href="/login" className="px-btn-ghost flex min-h-11 flex-1 items-center justify-center text-sm font-semibold">Masuk</Link>
-                <Link href="/onboarding" className="px-btn flex min-h-11 flex-1 items-center justify-center text-sm font-bold">Daftar</Link>
+                <Link href="/login" className="px-btn-ghost flex min-h-11 flex-1 items-center justify-center text-sm font-semibold">{copy.logIn}</Link>
+                <Link href={copy.join} className="px-btn flex min-h-11 flex-1 items-center justify-center text-sm font-bold">{copy.signUp}</Link>
               </>
             )}
           </div>

@@ -1,8 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/icon";
-import FadeIn from "@/components/ui/fade-in";
-import TypeText from "@/components/ui/type-text";
 import { isDevMockEnabled } from "@/lib/dev-mock";
 import { isSupabaseConfigured } from "@/lib/supabase/server";
 
@@ -19,33 +17,33 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const oauthReady = isSupabaseConfigured() && !devMock;
 
   return (
-    <div className="mx-auto grid min-h-[calc(100dvh-72px-320px)] max-w-[100rem] items-center gap-10 px-4 py-12 sm:px-6 md:py-20 lg:grid-cols-[1fr_0.9fr] lg:px-8">
+    <div className="mx-auto grid min-h-[60dvh] max-w-[100rem] items-center gap-10 px-4 py-12 sm:px-6 md:py-20 lg:grid-cols-[1fr_0.9fr] lg:px-8">
       <div className="max-w-xl">
         <p className="mb-3 flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-muara-ocean">
           <span className="h-1.5 w-1.5 bg-muara-ocean" aria-hidden="true" />
-          <TypeText text="Portal Anggota" speed={30} />
+          Portal Anggota
         </p>
-        <FadeIn distance={18}>
+        <div>
           <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Masuk ke MuaraAI</h1>
-        </FadeIn>
-        <FadeIn delay={0.1} distance={14}>
+        </div>
+        <div>
           <p className="mt-4 text-[15px] leading-relaxed text-secondary">
             Gunakan akun GitHub yang terdaftar. Belum jadi anggota? Isi{" "}
             <Link href="/onboarding" className="font-semibold text-muara-ocean underline-offset-4 hover:underline">form onboarding</Link>{" "}
             dulu, lalu kirim Proof of Work.
           </p>
-        </FadeIn>
+        </div>
 
         {error && ERRORS[error] && (
-          <FadeIn delay={0.15} distance={10}>
+          <div>
             <p role="alert" className="px-chip mt-6 flex items-start gap-2 bg-rose-50 px-3 py-2 text-sm text-rose-800 [--px-line:rgba(225,29,72,.4)]">
               <Icon name="error" className="mt-0.5 h-4 w-4 shrink-0" />
               {ERRORS[error]}
             </p>
-          </FadeIn>
+          </div>
         )}
 
-        <FadeIn delay={0.2} distance={14}>
+        <div>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
             {oauthReady ? (
               <Link href="/api/auth/login" className="px-btn inline-flex min-h-12 items-center justify-center gap-2.5 px-6 py-3 text-sm font-bold">
@@ -65,10 +63,10 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               Daftar anggota baru
             </Link>
           </div>
-        </FadeIn>
+        </div>
 
         {devMock && (
-          <FadeIn delay={0.3} distance={14}>
+          <div>
             <section aria-label="Login dummy lokal" className="px-frame mt-10 bg-[#FFFBEB] p-5 [--px-line:#D97706]">
               <p className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-amber-800">
                 <span className="h-1.5 w-1.5 bg-amber-600" aria-hidden="true" />
@@ -88,11 +86,11 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
                 </Link>
               </div>
             </section>
-          </FadeIn>
+          </div>
         )}
       </div>
 
-      <FadeIn direction="right" delay={0.15} distance={36} className="hidden lg:block">
+      <div className="hidden lg:block">
         <div className="px-card relative overflow-hidden bg-white p-8 [--px-drop:#CFE2EE]">
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-secondary">Setelah masuk</p>
           <ul className="mt-5 space-y-4">
@@ -112,7 +110,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             ))}
           </ul>
         </div>
-      </FadeIn>
+      </div>
     </div>
   );
 }

@@ -2,6 +2,8 @@ import React from "react";
 import type { Metadata } from "next";
 import { fetchOrgRepos } from "@/lib/github-repos";
 import { GITHUB_ORG_URL } from "@/lib/constants";
+import { communityContent } from "@/lib/community-content";
+import ProductList from "@/components/landing/product-list";
 import { PageHeader } from "@/components/ui/section";
 import Icon from "@/components/ui/icon";
 
@@ -18,13 +20,16 @@ const dateFormat = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "sh
 
 export default async function ProjectsPage() {
   const { repos, ok } = await fetchOrgRepos(GITHUB_ORG, { token: process.env.GITHUB_ORG_TOKEN });
+  // Products already have their own cards; the org profile repo is not a project.
+  const featured = new Set(communityContent.products.map((product) => product.repo.toLowerCase()));
+  const others = repos.filter((repo) => repo.name !== ".github" && !featured.has(repo.url.toLowerCase()));
 
   return (
     <div className="mx-auto max-w-[100rem] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <PageHeader
         eyebrow="Project"
         title="Project MuaraAI"
-        description="Semua repo publik di org MuaraAI. Pilih satu, baca README-nya, lalu buka PR pertamamu."
+        description="Produk komunitas dan semua repo publik di org MuaraAI. Pilih satu, baca README-nya, lalu buka PR pertamamu."
         actions={
           <a href={GITHUB_ORG_URL} target="_blank" rel="noopener noreferrer" className="px-btn inline-flex w-fit items-center gap-2 px-5 py-2.5 text-xs font-bold">
             <Icon name="github" className="h-4 w-4" />
@@ -33,22 +38,25 @@ export default async function ProjectsPage() {
         }
       />
 
+      <ProductList />
+
+      <h2 className="mb-5 mt-14 font-display text-xl font-bold text-foreground">Repo lainnya</h2>
       {!ok ? (
         <p role="alert" className="text-sm text-secondary">
           Daftar repo belum bisa dimuat sekarang. Kamu tetap bisa melihatnya langsung di GitHub.
         </p>
-      ) : repos.length === 0 ? (
-        <p className="text-sm text-secondary">Belum ada repo publik.</p>
+      ) : others.length === 0 ? (
+        <p className="text-sm text-secondary">Belum ada repo lain.</p>
       ) : (
         <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {repos.map((repo) => (
+          {others.map((repo) => (
             <li key={repo.name} className="px-card flex flex-col justify-between bg-white p-5">
               <div>
-                <h2 className="font-display text-base font-semibold text-foreground">
+                <h3 className="font-display text-base font-semibold text-foreground">
                   <a href={repo.url} target="_blank" rel="noopener noreferrer" className="hover:text-muara-ocean hover:underline">
                     {repo.name}
                   </a>
-                </h2>
+                </h3>
                 <p className="mt-2 text-sm text-secondary">{repo.description || "Belum ada deskripsi."}</p>
               </div>
               <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-secondary">

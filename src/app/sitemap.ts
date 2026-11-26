@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 const baseUrl = "https://muaraai.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return ["/", "/projects", "/members", "/onboarding", "/terms", "/privacy", "/code-of-conduct"].map((path) => ({
+  return ["/", "/en", "/projects", "/members", "/onboarding", "/en/join", "/terms", "/privacy", "/code-of-conduct"].map((path) => ({
     url: `${baseUrl}${path}`,
     lastModified: new Date(),
     changeFrequency: path === "/" ? "weekly" : "monthly",

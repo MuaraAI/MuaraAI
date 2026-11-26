@@ -7,13 +7,9 @@ import Manifesto from "../src/components/landing/manifesto";
 import DonateCta from "../src/components/landing/donate-cta";
 
 describe("national community public copy", () => {
-  it("shows Muara Arus 1 and UBSI API facts", () => {
+  it("says plainly that Mira is independent of UBSI", () => {
     render(<ProjectsGrid />);
-    expect(screen.getByText(/Muara Arus 1/i)).toBeTruthy();
-    expect(screen.getByText(/1\.5B/i)).toBeTruthy();
-    expect(screen.getByText(/muara-arus-1/i)).toBeTruthy();
-    expect(screen.getByText(/UBSI API/i)).toBeTruthy();
-    expect(screen.getByText(/unofficial/i)).toBeTruthy();
+    expect(screen.getByText(/tidak berafiliasi dengan UBSI/i)).toBeTruthy();
   });
 
   it("removes internal vault and vendor language from public sections", () => {
@@ -25,11 +21,11 @@ describe("national community public copy", () => {
       </>,
     );
     expect(screen.queryByText(/AES-256-GCM Vault/i)).toBeNull();
-    expect(screen.getByText("Hugging Face")).toBeTruthy();
-    expect(screen.getByText("Ollama")).toBeTruthy();
-    expect(screen.getByText("UBSI API")).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Hugging Face" }).getAttribute("href")).toBe("https://huggingface.co/MuaraAI/muara-arus-1");
-    expect(screen.getByRole("link", { name: "Ollama" }).getAttribute("href")).toBe("https://ollama.com/MuaraAI/muara-arus-1");
+    expect(screen.getByRole("link", { name: "Mira" }).getAttribute("href")).toBe("https://mira.muaraai.com");
+    expect(screen.getByRole("link", { name: "FluxCode" }).getAttribute("href")).toBe("https://fluxcode.muaraai.com");
+    expect(screen.queryByRole("link", { name: "Muara V1 Flash" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Laku" })).toBeNull();
+    expect(screen.queryByText("Ollama")).toBeNull();
     expect(screen.getByRole("link", { name: "Threads" }).getAttribute("href")).toBe("https://www.threads.com/@muara.ai");
     expect(screen.getByRole("link", { name: "Instagram" }).getAttribute("href")).toBe("https://www.instagram.com/muara.ai/");
     expect(screen.getByRole("link", { name: "X" }).getAttribute("href")).toBe("https://x.com/MuaraAI");

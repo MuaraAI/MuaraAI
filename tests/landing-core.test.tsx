@@ -7,11 +7,16 @@ import Manifesto from "../src/components/landing/manifesto";
 import BenefitsGrid from "../src/components/landing/benefits-grid";
 
 describe("Landing Core Sections", () => {
-  it("displays strictly the 2 live flagship projects", () => {
+  it("features Mira and FluxCode with their real sites and marks the AI portal as coming soon", () => {
     render(<ProjectsGrid />);
-    expect(screen.getByText(/ubsi api/i)).toBeDefined();
-    expect(screen.getByText(/Muara Arus 1/i)).toBeDefined();
-    expect(screen.queryByText(/ai bot ciel/i)).toBeNull();
+    for (const name of ["Mira", "FluxCode"]) expect(screen.getByRole("heading", { name })).toBeDefined();
+    const sites = screen.getAllByRole("link", { name: /Buka web/i }).map((link) => link.getAttribute("href"));
+    expect(sites).toEqual(["https://mira.muaraai.com", "https://fluxcode.muaraai.com"]);
+    expect(screen.getByText(/Segera hadir/)).toBeDefined();
+    expect(screen.getByText(/Muara V1 Flash/)).toBeDefined();
+    expect(screen.queryByRole("link", { name: /Muara V1 Flash/ })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Laku" })).toBeNull();
+    expect(screen.queryByText(/Muara Arus/i)).toBeNull();
   });
 
   it("displays the Learn Build Contribute current", () => {

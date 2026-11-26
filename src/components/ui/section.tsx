@@ -80,19 +80,22 @@ export function PageHeader({
   title,
   description,
   actions,
+  home = { label: "Beranda", href: "/" },
 }: {
   eyebrow: string;
   title: string;
   description?: React.ReactNode;
   actions?: React.ReactNode;
+  /** Where the breadcrumb leads back to; the English site passes its own home. */
+  home?: { label: string; href: string };
 }) {
   return (
     <div className="mb-10 flex flex-col gap-6 border-b-2 border-dashed border-[#CFE2EE] pb-8 md:flex-row md:items-end md:justify-between">
       <div className="max-w-3xl">
         <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muara-ocean">
-          <Link href="/" className="group inline-flex items-center gap-1.5 transition-colors hover:text-foreground">
+          <Link href={home.href} className="group inline-flex items-center gap-1.5 transition-colors hover:text-foreground">
             <span className="inline-block transition-transform duration-200 group-hover:-translate-x-0.5" aria-hidden="true">←</span>
-            Beranda
+            {home.label}
           </Link>
           <span className="text-[#9CC6E0]" aria-hidden="true">/</span>
           <TypeText text={eyebrow} speed={28} />
