@@ -22,6 +22,7 @@ describe("Privacy Policy says what the product really does (Indonesian)", () => 
     expect(text()).toMatch(/profil[^.]*publik/i);
     expect(text()).toMatch(/Hanya kamu dan maintainer/);
     expect(text()).toMatch(/cuplikan alasan bergabung/);
+    expect(text()).toMatch(/total commit kumulatif/);
   });
 
   it("has the four sections", () => {
@@ -42,6 +43,7 @@ describe("the English Privacy Policy says the same", () => {
     expect(text()).toMatch(/profile of an approved member is public/i);
     expect(text()).toMatch(/Only you and the maintainers/);
     expect(text()).toMatch(/excerpt of your reason for joining/);
+    expect(text()).toMatch(/cumulative commit total/);
     for (const name of ["1. Data We Collect", "2. Who Can See Your Data", "3. Use & Security of Data", "4. Access & Deletion"]) {
       expect(screen.getByRole("heading", { level: 2, name })).toBeTruthy();
     }

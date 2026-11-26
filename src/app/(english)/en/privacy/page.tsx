@@ -49,15 +49,15 @@ export default function EnglishPrivacyPage() {
           <h2 className="text-base font-semibold text-foreground">2. Who Can See Your Data</h2>
           <p>
             The profile of an approved member is public and appears in the member directory: full name, GitHub avatar and username, division and position,
-            status, institution (if given), toolchain description, the links you filled in, and your contribution tier and streak.
+            status, institution (if given), toolchain description, the links you filled in, and your contribution tier, streak, cumulative commit total, and membership status (active or not, start and exit dates).
           </p>
           <p>
-            Only you and the maintainers can see your email, WhatsApp number, Telegram username, reason for joining, monthly contribution numbers, warning
+            Only you and the maintainers can see your email, WhatsApp number, Telegram username, reason for joining, per-month contribution numbers, warning
             status and Discord session attendance.
           </p>
           <p>
-            When you apply, a summary of your application (name, status, GitHub username, portfolio link and an excerpt of your reason for joining) is sent
-            to the maintainers by email and in a private Discord channel.
+            When you apply, a summary of your application (name, status, institution, GitHub username, division and track, portfolio link and an excerpt of your reason for joining)
+            is sent to the maintainers by email and in a Discord channel.
           </p>
         </section>
 
