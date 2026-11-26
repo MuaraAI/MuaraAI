@@ -2,6 +2,16 @@ import React from "react";
 import Icon from "@/components/ui/icon";
 import { PageHeader } from "@/components/ui/section";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "https://muaraai.com/code-of-conduct",
+    languages: { id: "https://muaraai.com/code-of-conduct", en: "https://muaraai.com/en/code-of-conduct", "x-default": "https://muaraai.com/code-of-conduct" },
+  },
+};
+
+
 export default function CodeOfConductPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">

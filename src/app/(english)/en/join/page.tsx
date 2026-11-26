@@ -76,8 +76,8 @@ export default async function EnglishJoinPage() {
 
       <p className="mt-12 max-w-3xl text-sm leading-relaxed text-secondary">
         Read the{" "}
-        <Link href="/code-of-conduct" className="font-semibold text-muara-ocean hover:underline">Code of Conduct</Link>{" "}
-        before you apply. The Privacy Policy, Terms of Service and Code of Conduct you agree to are currently only available in Indonesian.
+        <Link href="/en/code-of-conduct" className="font-semibold text-muara-ocean hover:underline">Code of Conduct</Link>{" "}
+        before you apply. You agree to it together with the Privacy Policy and the Terms of Service. All three are English translations of the Indonesian originals, and the Indonesian versions apply if they differ.
       </p>
     </div>
   );

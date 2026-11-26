@@ -88,7 +88,7 @@ describe("English navigation", () => {
 
     expect(links["Projects"]).toBe("/projects");
     expect(links["Members"]).toBe("/members");
-    expect(links["Rules"]).toBe("/code-of-conduct");
+    expect(links["Rules"]).toBe("/en/code-of-conduct");
     expect(links["Log in"]).toBe("/login");
     expect(screen.getByRole("link", { name: "Join" }).getAttribute("href")).toBe("/en/join");
     expect(screen.getByRole("link", { name: /Muara AI/ }).getAttribute("href")).toBe("/en");

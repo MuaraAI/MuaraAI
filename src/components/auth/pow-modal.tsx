@@ -312,7 +312,7 @@ export default function PoWForm({
         {step === 3 && (
           <label className="px-frame [--px-line:#CFE2EE] flex items-start gap-3 bg-surface-alt p-4 text-xs leading-relaxed text-secondary">
             <input type="checkbox" checked={agreed} onChange={(event) => { setAgreed(event.target.checked); setError(null); }} className="mt-0.5 h-4 w-4 shrink-0 accent-muara-ocean" />
-            <span>{t.agreeBefore}<Link href="/privacy" target="_blank" className="font-semibold text-muara-ocean underline">Privacy Policy</Link>, <Link href="/terms" target="_blank" className="font-semibold text-muara-ocean underline">Terms of Service</Link>{t.agreeAnd}<Link href="/code-of-conduct" target="_blank" className="font-semibold text-muara-ocean underline">Code of Conduct</Link>{t.agreeAfter}</span>
+            <span>{t.agreeBefore}<Link href={t.privacyHref} target="_blank" className="font-semibold text-muara-ocean underline">Privacy Policy</Link>, <Link href={t.termsHref} target="_blank" className="font-semibold text-muara-ocean underline">Terms of Service</Link>{t.agreeAnd}<Link href={t.conductHref} target="_blank" className="font-semibold text-muara-ocean underline">Code of Conduct</Link>{t.agreeAfter}</span>
           </label>
         )}
         <div className="flex flex-col-reverse gap-3 border-t border-stroke pt-5 sm:flex-row sm:justify-between">

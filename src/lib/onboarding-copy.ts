@@ -46,6 +46,9 @@ export interface OnboardingCopy {
   agreeBefore: string;
   agreeAnd: string;
   agreeAfter: string;
+  privacyHref: string;
+  termsHref: string;
+  conductHref: string;
   back: string;
   next: string;
   submit: string;
@@ -109,6 +112,9 @@ export const ONBOARDING_COPY: Record<Locale, OnboardingCopy> = {
     agreeBefore: "Saya menyetujui ",
     agreeAnd: ", dan ",
     agreeAfter: " MuaraAI.",
+    privacyHref: "/privacy",
+    termsHref: "/terms",
+    conductHref: "/code-of-conduct",
     back: "Kembali",
     next: "Lanjut",
     submit: "Kirim pendaftaran",
@@ -166,7 +172,10 @@ export const ONBOARDING_COPY: Record<Locale, OnboardingCopy> = {
     disclaimer: "By submitting, you confirm that the information and work you send are true and that you accept the community's review process.",
     agreeBefore: "I agree to the MuaraAI ",
     agreeAnd: " and ",
-    agreeAfter: " (these documents are currently only available in Indonesian).",
+    agreeAfter: " (English translations; the Indonesian originals apply if they differ).",
+    privacyHref: "/en/privacy",
+    termsHref: "/en/terms",
+    conductHref: "/en/code-of-conduct",
     back: "Back",
     next: "Next",
     submit: "Submit application",

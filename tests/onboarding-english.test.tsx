@@ -87,9 +87,11 @@ describe("registration form in English", () => {
     expect(screen.getByText("Position")).toBeTruthy();
     const submit = screen.getByRole("button", { name: "Continue to GitHub" }) as HTMLButtonElement;
     expect(submit.disabled).toBe(true);
-    expect(screen.getByRole("link", { name: "Privacy Policy" }).getAttribute("href")).toBe("/privacy");
-    expect(screen.getByRole("link", { name: "Code of Conduct" }).getAttribute("href")).toBe("/code-of-conduct");
-    expect(document.body.textContent).toMatch(/only available in Indonesian/);
+    expect(screen.getByRole("link", { name: "Privacy Policy" }).getAttribute("href")).toBe("/en/privacy");
+    expect(screen.getByRole("link", { name: "Terms of Service" }).getAttribute("href")).toBe("/en/terms");
+    expect(screen.getByRole("link", { name: "Code of Conduct" }).getAttribute("href")).toBe("/en/code-of-conduct");
+    expect(document.body.textContent).toMatch(/English translations; the Indonesian originals apply if they differ/);
+    expect(document.body.textContent).not.toMatch(/only available in Indonesian/);
     fireEvent.click(screen.getByRole("checkbox"));
     expect(submit.disabled).toBe(false);
   });

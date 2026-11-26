@@ -3,7 +3,7 @@ export type Locale = "id" | "en";
 /** Request header the middleware sets for server components (a visitor-supplied value is always overwritten). */
 export const LOCALE_HEADER = "x-locale";
 
-const ENGLISH_PATHS = new Set(["/en", "/en/join", "/en/onboarding"]);
+const ENGLISH_PATHS = new Set(["/en", "/en/join", "/en/onboarding", "/en/terms", "/en/privacy", "/en/code-of-conduct"]);
 
 /**
  * English only on the pages that really are English. An unknown /en/... path renders the Indonesian 404,

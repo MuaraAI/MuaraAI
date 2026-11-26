@@ -45,11 +45,18 @@ const socials = [
   { label: "GitHub", href: GITHUB_ORG_URL },
 ];
 
-const legal = [
-  { label: "Terms", href: "/terms" },
-  { label: "Privacy", href: "/privacy" },
-  { label: "Code of Conduct", href: "/code-of-conduct" },
-];
+const legal = {
+  id: [
+    { label: "Terms", href: "/terms" },
+    { label: "Privacy", href: "/privacy" },
+    { label: "Code of Conduct", href: "/code-of-conduct" },
+  ],
+  en: [
+    { label: "Terms", href: "/en/terms" },
+    { label: "Privacy", href: "/en/privacy" },
+    { label: "Code of Conduct", href: "/en/code-of-conduct" },
+  ],
+} as const;
 
 const LINK_CLASS =
   "group inline-flex items-center gap-1.5 py-0.5 text-[13px] text-secondary transition-colors duration-200 hover:text-muara-ocean";
@@ -142,7 +149,7 @@ export default function Footer({ locale = "id" }: { locale?: Locale }) {
           </div>
           <Column title={copy.products} label={copy.productsLabel} items={products} />
           <Column title={copy.community} label={copy.communityLabel} items={socials} />
-          <Column title="Legal" label={copy.legalLabel} items={[...legal, { label: "Email", href: "mailto:admin@muaraai.com" }]} />
+          <Column title="Legal" label={copy.legalLabel} items={[...legal[locale], { label: "Email", href: "mailto:admin@muaraai.com" }]} />
         </div>
 
         <div className="mx-auto mt-8 flex max-w-[100rem] flex-wrap items-center justify-between gap-3 border-t-2 border-dashed border-[#CFE2EE] pt-4 font-mono text-[11px]">
