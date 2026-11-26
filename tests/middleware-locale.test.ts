@@ -23,7 +23,8 @@ describe("middleware locale header", () => {
     expect(await forwarded("/en/join")).toBe("en");
     expect(await forwarded("/")).toBe("id");
     expect(await forwarded("/projects")).toBe("id");
-    expect(await forwarded("/en/unknown")).toBe("id");
+    expect(await forwarded("/en/unknown")).toBe("en");
+    expect(await forwarded("/english")).toBe("id");
   });
 
   it("does not let a visitor force the language with their own header", async () => {

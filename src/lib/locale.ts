@@ -3,15 +3,10 @@ export type Locale = "id" | "en";
 /** Request header the middleware sets for server components (a visitor-supplied value is always overwritten). */
 export const LOCALE_HEADER = "x-locale";
 
-const ENGLISH_PATHS = new Set(["/en", "/en/join", "/en/onboarding", "/en/terms", "/en/privacy", "/en/code-of-conduct"]);
-
-/**
- * English only on the pages that really are English. An unknown /en/... path renders the Indonesian 404,
- * so it stays Indonesian and the document language matches what is on screen.
- */
+/** English for /en and everything under it, including the English 404 of an unknown /en/... path. "/english" and "/members/en" stay Indonesian. */
 export function localeFor(pathname: string): Locale {
   const path = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
-  return ENGLISH_PATHS.has(path) ? "en" : "id";
+  return path === "/en" || path.startsWith("/en/") ? "en" : "id";
 }
 
 /** Anything other than exactly "en" is Indonesian, so a value from outside (or an inherited key like "constructor") can never pick a table entry. */
