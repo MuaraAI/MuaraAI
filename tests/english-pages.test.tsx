@@ -56,11 +56,15 @@ describe("English landing", () => {
     expect(document.body.textContent).toContain("10 merged pull requests");
   });
 
-  it("lists the positions from the settings and the real Muara Arus 1 links", async () => {
+  it("lists the positions from the settings and the real products", async () => {
     render(await EnglishHomePage());
     expect(screen.getByText("Web")).toBeTruthy();
     expect(screen.getByText("Video")).toBeTruthy();
-    expect(screen.getByRole("link", { name: /Hugging Face/ }).getAttribute("href")).toBe("https://huggingface.co/MuaraAI/muara-arus-1");
+    for (const name of ["Mira", "FluxCode", "Muara V1 Flash", "Laku"]) expect(screen.getByRole("heading", { name })).toBeTruthy();
+    const sites = screen.getAllByRole("link", { name: /Open site/i }).map((link) => link.getAttribute("href"));
+    expect(sites).toEqual(["https://mira.muaraai.com", "https://fluxcode.muaraai.com", "https://ai.muaraai.com", "https://laku.muaraai.com"]);
+    expect(document.body.textContent).toMatch(/native code editor written in Rust/i);
+    expect(document.body.textContent).not.toMatch(/Muara Arus|Hugging Face|Ollama/);
     expect(screen.getByRole("link", { name: /All repositories/i }).getAttribute("href")).toBe("https://github.com/MuaraAI");
   });
 
@@ -73,9 +77,25 @@ describe("English landing", () => {
     expect(text).not.toMatch(/removed|kicked|terminated/i);
   });
 
+  it("shares as an English page, not as the Indonesian root", () => {
+    expect(homeMetadata.openGraph).toMatchObject({ url: "https://muaraai.com/en", locale: "en_US", siteName: "MuaraAI" });
+    expect(String(homeMetadata.openGraph?.title)).toContain("open community");
+    expect(String(homeMetadata.twitter?.title)).toContain("open community");
+    expect(joinMetadata.openGraph).toMatchObject({ url: "https://muaraai.com/en/join", locale: "en_US" });
+    expect(String(joinMetadata.twitter?.title)).toContain("Join");
+  });
+
+  it("states the tier and review rules the way the system applies them", async () => {
+    render(await EnglishHomePage());
+    const text = document.body.textContent ?? "";
+    expect(text).toContain("Members who meet the target earn a recognition tier");
+    expect(text).toContain("approved by someone other than the author");
+    expect(text).not.toContain("another member approved");
+  });
+
   it("is searchable in both languages", () => {
     expect(String(homeMetadata.title)).toContain("MuaraAI");
-    expect(homeMetadata.alternates?.languages).toMatchObject({ id: "https://muaraai.com/", en: "https://muaraai.com/en" });
+    expect(homeMetadata.alternates?.languages).toMatchObject({ id: "https://muaraai.com/", en: "https://muaraai.com/en", "x-default": "https://muaraai.com/" });
   });
 });
 
@@ -101,7 +121,7 @@ describe("English join page", () => {
 
   it("has English metadata that links back to the Indonesian page", () => {
     expect(String(joinMetadata.title)).toContain("Join");
-    expect(joinMetadata.alternates?.languages).toMatchObject({ id: "https://muaraai.com/onboarding", en: "https://muaraai.com/en/join" });
+    expect(joinMetadata.alternates?.languages).toMatchObject({ id: "https://muaraai.com/onboarding", en: "https://muaraai.com/en/join", "x-default": "https://muaraai.com/onboarding" });
   });
 });
 

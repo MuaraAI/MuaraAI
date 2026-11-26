@@ -17,8 +17,10 @@ describe("language alternates", () => {
     const home = read("src/app/(public)/page.tsx");
     expect(home).toContain('en: "https://muaraai.com/en"');
     expect(home).toContain('id: "https://muaraai.com/"');
+    expect(home).toContain('"x-default": "https://muaraai.com/"');
     const onboarding = read("src/app/(public)/onboarding/page.tsx");
     expect(onboarding).toContain('en: "https://muaraai.com/en/join"');
     expect(onboarding).toContain('id: "https://muaraai.com/onboarding"');
+    expect(onboarding).toContain('"x-default": "https://muaraai.com/onboarding"');
   });
 });

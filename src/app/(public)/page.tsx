@@ -16,7 +16,7 @@ import { Member, Achievement } from "@/types/database";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { alternates: { canonical: "https://muaraai.com/", languages: { id: "https://muaraai.com/", en: "https://muaraai.com/en" } } };
+export const metadata: Metadata = { alternates: { canonical: "https://muaraai.com/", languages: { id: "https://muaraai.com/", en: "https://muaraai.com/en", "x-default": "https://muaraai.com/" } } };
 
 export const revalidate = 60; // ISR 60 seconds
 

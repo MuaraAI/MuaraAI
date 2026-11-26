@@ -7,10 +7,14 @@ import Manifesto from "../src/components/landing/manifesto";
 import BenefitsGrid from "../src/components/landing/benefits-grid";
 
 describe("Landing Core Sections", () => {
-  it("displays strictly the 2 live flagship projects", () => {
+  it("shows the four products that live in the org, with their real sites", () => {
     render(<ProjectsGrid />);
-    expect(screen.getByText(/ubsi api/i)).toBeDefined();
-    expect(screen.getByText(/Muara Arus 1/i)).toBeDefined();
+    for (const name of ["Mira", "FluxCode", "Muara V1 Flash", "Laku"]) {
+      expect(screen.getByRole("heading", { name })).toBeDefined();
+    }
+    const sites = screen.getAllByRole("link", { name: /Buka web/i }).map((link) => link.getAttribute("href"));
+    expect(sites).toEqual(["https://mira.muaraai.com", "https://fluxcode.muaraai.com", "https://ai.muaraai.com", "https://laku.muaraai.com"]);
+    expect(screen.queryByText(/Muara Arus/i)).toBeNull();
     expect(screen.queryByText(/ai bot ciel/i)).toBeNull();
   });
 

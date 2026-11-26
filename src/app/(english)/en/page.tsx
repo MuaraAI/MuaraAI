@@ -4,7 +4,7 @@ import Link from "next/link";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import { parseRules } from "@/lib/contributions/rules";
-import { communityContent } from "@/lib/community-content";
+import ProductList from "@/components/landing/product-list";
 import { GITHUB_ORG_URL, SOCIABUZZ_URL } from "@/lib/constants";
 import { Section, SectionHeader } from "@/components/ui/section";
 import CommunityStructure from "@/components/landing/community-structure";
@@ -15,7 +15,22 @@ export const metadata: Metadata = {
     "MuaraAI is an open community. Contribute to real projects on GitHub, get your pull requests reviewed by other members, and build a track record anyone can check.",
   alternates: {
     canonical: "https://muaraai.com/en",
-    languages: { id: "https://muaraai.com/", en: "https://muaraai.com/en" },
+    languages: { id: "https://muaraai.com/", en: "https://muaraai.com/en", "x-default": "https://muaraai.com/" },
+  },
+  openGraph: {
+    title: "MuaraAI | An open community for builders and creatives",
+    description: "Contribute to real projects on GitHub and build a track record anyone can check.",
+    url: "https://muaraai.com/en",
+    siteName: "MuaraAI",
+    locale: "en_US",
+    type: "website",
+    images: [{ url: "/brand/muara-logo.png", width: 512, height: 512, alt: "MuaraAI logo" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "MuaraAI | An open community for builders and creatives",
+    description: "Contribute to real projects on GitHub and build a track record anyone can check.",
+    images: ["/brand/muara-logo.png"],
   },
 };
 
@@ -24,7 +39,7 @@ const plural = (count: number, one: string, many: string) => `${count} ${count =
 const STEPS = [
   { title: "Sign in with GitHub", text: "Pick a division and a position, and tell us why you want to join." },
   { title: "A maintainer reviews your application", text: "When it is approved, your GitHub account is invited to the MuaraAI organisation." },
-  { title: "Contribute with pull requests", text: "Only merged pull requests that another member approved count toward your monthly target." },
+  { title: "Contribute with pull requests", text: "Only merged pull requests approved by someone other than the author count toward your monthly target." },
 ];
 
 export default async function EnglishHomePage() {
@@ -34,7 +49,6 @@ export default async function EnglishHomePage() {
   const [positionsValue, rulesValue] = await Promise.all([read(POSITIONS_SETTING_KEY), read("contribution_rules")]);
   const positions = parsePositions(positionsValue);
   const { builder, creative } = parseRules(rulesValue);
-  const arus = communityContent.muaraArusOne;
 
   return (
     <div className="flex flex-col">
@@ -90,31 +104,20 @@ export default async function EnglishHomePage() {
           </div>
         </div>
         <p className="mt-8 max-w-2xl text-sm leading-relaxed text-secondary">
-          The maintainers set these numbers and may change them. Members who go beyond the target earn a recognition tier.
+          The maintainers set these numbers and may change them. Members who meet the target earn a recognition tier, with higher tiers for going well beyond it.
         </p>
       </Section>
 
       <CommunityStructure positions={positions} locale="en" />
 
       <Section tone="tint">
-        <SectionHeader eyebrow="Projects" title="Open repositories you can contribute to today." />
-        <div className="max-w-2xl">
-          <h3 className="font-display text-xl font-bold text-foreground">{arus.name}</h3>
-          <p className="mt-2 text-sm leading-relaxed text-secondary">
-            A {arus.parameters}-parameter local AI model for academic and coding questions. It runs offline.
-          </p>
-          <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">
-            <li><a href={arus.playground} target="_blank" rel="noopener noreferrer" className="text-muara-ocean hover:underline">Playground</a></li>
-            <li><a href={arus.github} target="_blank" rel="noopener noreferrer" className="text-muara-ocean hover:underline">Code on GitHub</a></li>
-            <li><a href={arus.huggingFace} target="_blank" rel="noopener noreferrer" className="text-muara-ocean hover:underline">Hugging Face</a></li>
-            <li><a href={arus.ollama} target="_blank" rel="noopener noreferrer" className="text-muara-ocean hover:underline">Ollama</a></li>
-          </ul>
-          <p className="mt-6 text-sm">
-            <a href={GITHUB_ORG_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-muara-ocean hover:underline">
-              All repositories on GitHub
-            </a>
-          </p>
-        </div>
+        <SectionHeader eyebrow="Projects" title="What the community has built." />
+        <ProductList locale="en" />
+        <p className="mt-8 text-sm">
+          <a href={GITHUB_ORG_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-muara-ocean hover:underline">
+            All repositories on GitHub
+          </a>
+        </p>
       </Section>
 
       <Section tone="white">

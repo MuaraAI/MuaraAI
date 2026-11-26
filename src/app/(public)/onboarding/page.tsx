@@ -7,7 +7,7 @@ import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import type { PoWInput } from "@/lib/validation";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { alternates: { canonical: "https://muaraai.com/onboarding", languages: { id: "https://muaraai.com/onboarding", en: "https://muaraai.com/en/join" } } };
+export const metadata: Metadata = { alternates: { canonical: "https://muaraai.com/onboarding", languages: { id: "https://muaraai.com/onboarding", en: "https://muaraai.com/en/join", "x-default": "https://muaraai.com/onboarding" } } };
 
 const PLACEHOLDER_INSTITUTIONS = ["Tidak disebutkan", "Kampus lain di Indonesia"];
 

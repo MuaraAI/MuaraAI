@@ -9,7 +9,22 @@ export const metadata: Metadata = {
   description: "Sign in with GitHub, fill in the registration form, and start contributing once a maintainer approves you.",
   alternates: {
     canonical: "https://muaraai.com/en/join",
-    languages: { id: "https://muaraai.com/onboarding", en: "https://muaraai.com/en/join" },
+    languages: { id: "https://muaraai.com/onboarding", en: "https://muaraai.com/en/join", "x-default": "https://muaraai.com/onboarding" },
+  },
+  openGraph: {
+    title: "Join MuaraAI | How membership works",
+    description: "Sign in with GitHub, fill in the registration form, and start contributing once a maintainer approves you.",
+    url: "https://muaraai.com/en/join",
+    siteName: "MuaraAI",
+    locale: "en_US",
+    type: "website",
+    images: [{ url: "/brand/muara-logo.png", width: 512, height: 512, alt: "MuaraAI logo" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "Join MuaraAI | How membership works",
+    description: "Sign in with GitHub, fill in the registration form, and start contributing once a maintainer approves you.",
+    images: ["/brand/muara-logo.png"],
   },
 };
 
@@ -28,7 +43,7 @@ const STEPS = [
   },
   {
     title: "Start contributing",
-    text: "Pick a repository and open a pull request. Merged pull requests that another member approved count toward your monthly target.",
+    text: "Pick a repository and open a pull request. Merged pull requests approved by someone other than the author count toward your monthly target.",
   },
 ];
 

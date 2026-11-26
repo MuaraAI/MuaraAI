@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 import { GITHUB_ORG_URL } from "@/lib/constants";
+import { communityContent } from "@/lib/community-content";
 import Icon from "@/components/ui/icon";
 
 type Locale = "id" | "en";
@@ -35,13 +36,7 @@ const COPY = {
   },
 } as const;
 
-const products = [
-  { label: "Muara Arus 1", href: "https://ai.muaraai.com/" },
-  { label: "GitHub model", href: "https://github.com/MuaraAI/muara-arus-1" },
-  { label: "Hugging Face", href: "https://huggingface.co/MuaraAI/muara-arus-1" },
-  { label: "Ollama", href: "https://ollama.com/MuaraAI/muara-arus-1" },
-  { label: "UBSI API", href: "https://ubsi-api.muaraai.com" },
-];
+const products = communityContent.products.map((product) => ({ label: product.name, href: product.url }));
 
 const socials = [
   { label: "X", href: "https://x.com/MuaraAI" },

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "MuaraAI: Komunitas Terbuka untuk Builder dan Kreator",
   description: "Komunitas terbuka untuk siapa saja yang mau belajar, membangun project, dan berkontribusi lewat GitHub bersama MuaraAI.",
   metadataBase: new URL("https://muaraai.com"),
-  keywords: ["MuaraAI", "komunitas open source Indonesia", "komunitas AI", "Muara Arus 1", "Proof of Work", "kontribusi GitHub"],
+  keywords: ["MuaraAI", "komunitas open source Indonesia", "komunitas AI", "Mira UBSI", "FluxCode", "Proof of Work", "kontribusi GitHub"],
   alternates: { canonical: "https://muaraai.com/" },
   icons: { icon: "/brand/muara-logo.png", apple: "/brand/muara-logo.png" },
   openGraph: {
