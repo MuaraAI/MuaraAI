@@ -7,15 +7,16 @@ import Manifesto from "../src/components/landing/manifesto";
 import BenefitsGrid from "../src/components/landing/benefits-grid";
 
 describe("Landing Core Sections", () => {
-  it("shows the four products that live in the org, with their real sites", () => {
+  it("features Mira and FluxCode with their real sites and marks the AI portal as coming soon", () => {
     render(<ProjectsGrid />);
-    for (const name of ["Mira", "FluxCode", "Muara V1 Flash", "Laku"]) {
-      expect(screen.getByRole("heading", { name })).toBeDefined();
-    }
+    for (const name of ["Mira", "FluxCode"]) expect(screen.getByRole("heading", { name })).toBeDefined();
     const sites = screen.getAllByRole("link", { name: /Buka web/i }).map((link) => link.getAttribute("href"));
-    expect(sites).toEqual(["https://mira.muaraai.com", "https://fluxcode.muaraai.com", "https://ai.muaraai.com", "https://laku.muaraai.com"]);
+    expect(sites).toEqual(["https://mira.muaraai.com", "https://fluxcode.muaraai.com"]);
+    expect(screen.getByText(/Segera hadir/)).toBeDefined();
+    expect(screen.getByText(/Muara V1 Flash/)).toBeDefined();
+    expect(screen.queryByRole("link", { name: /Muara V1 Flash/ })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Laku" })).toBeNull();
     expect(screen.queryByText(/Muara Arus/i)).toBeNull();
-    expect(screen.queryByText(/ai bot ciel/i)).toBeNull();
   });
 
   it("displays the Learn Build Contribute current", () => {

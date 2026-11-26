@@ -33,30 +33,20 @@ const products: readonly Product[] = [
     id: "Editor kode native yang ditulis dengan Rust, dengan agen AI bawaan, untuk Windows, macOS, dan Linux.",
     en: "A native code editor written in Rust with built-in AI agents, for Windows, macOS and Linux.",
   },
-  {
-    slug: "muara-v1-flash",
-    name: "Muara V1 Flash",
-    url: "https://ai.muaraai.com",
-    repo: "https://github.com/MuaraAI/ai-web",
-    tags: ["API", "Model", "API key"],
-    id: "Portal API komunitas: ambil API key, pantau kuota, dan pakai model Muara V1 Flash.",
-    en: "The community's API portal: get an API key, track your quota and use the Muara V1 Flash model.",
-  },
-  {
-    slug: "laku",
-    name: "Laku",
-    url: "https://laku.muaraai.com",
-    repo: "https://github.com/MuaraAI/laku",
-    tags: ["Restock", "Shopee", "TikTok Shop", "Tokopedia"],
-    id: "Mesin restock untuk seller marketplace: membaca export marketplace dan menghitung apa yang perlu di-restock.",
-    en: "A restock engine for marketplace sellers: it reads your marketplace export and works out what to restock.",
-  },
 ];
+
+/** Announced but not public yet: shown as text only, never as a link. */
+const comingSoon = [
+  {
+    name: "Muara V1 Flash",
+    id: "portal API dan model AI komunitas.",
+    en: "the community's AI API portal and model.",
+  },
+] as const;
 
 export const communityContent = {
   officialLinks: {
     website: "https://muaraai.com/",
-    apiPortal: "https://ai.muaraai.com/",
     github: "https://github.com/MuaraAI",
     x: "https://x.com/MuaraAI",
     instagram: "https://www.instagram.com/muara.ai/",
@@ -65,6 +55,7 @@ export const communityContent = {
     email: "mailto:admin@muaraai.com",
   },
   products,
+  comingSoon,
   coreMaintainers: [
     { name: "Yuken Velino", github: "Curzyori", title: "Founder", roles: ["Maintainer", "Builder", "AI Engineer"], division: "Builder" },
     { name: "Muhammad Raffli Aldiansyah", github: "Seeyaa77", title: "Co-Founder", roles: ["Maintainer", "Builder", "Backend"], division: "Builder" },

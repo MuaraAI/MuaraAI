@@ -23,8 +23,8 @@ describe("national community public copy", () => {
     expect(screen.queryByText(/AES-256-GCM Vault/i)).toBeNull();
     expect(screen.getByRole("link", { name: "Mira" }).getAttribute("href")).toBe("https://mira.muaraai.com");
     expect(screen.getByRole("link", { name: "FluxCode" }).getAttribute("href")).toBe("https://fluxcode.muaraai.com");
-    expect(screen.getByRole("link", { name: "Muara V1 Flash" }).getAttribute("href")).toBe("https://ai.muaraai.com");
-    expect(screen.getByRole("link", { name: "Laku" }).getAttribute("href")).toBe("https://laku.muaraai.com");
+    expect(screen.queryByRole("link", { name: "Muara V1 Flash" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Laku" })).toBeNull();
     expect(screen.queryByText("Ollama")).toBeNull();
     expect(screen.getByRole("link", { name: "Threads" }).getAttribute("href")).toBe("https://www.threads.com/@muara.ai");
     expect(screen.getByRole("link", { name: "Instagram" }).getAttribute("href")).toBe("https://www.instagram.com/muara.ai/");

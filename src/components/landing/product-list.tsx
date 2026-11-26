@@ -5,8 +5,8 @@ import { communityContent } from "@/lib/community-content";
 type Locale = "id" | "en";
 
 const COPY = {
-  id: { site: "Buka Web", repo: "Repositori GitHub" },
-  en: { site: "Open site", repo: "Source on GitHub" },
+  id: { site: "Buka Web", repo: "Repositori GitHub", soon: "Segera hadir:" },
+  en: { site: "Open site", repo: "Source on GitHub", soon: "Coming soon:" },
 } as const;
 
 /** The products that live in the org, with their live site and repo. One source for the landing, /projects and /en. */
@@ -14,6 +14,7 @@ export default function ProductList({ locale = "id" }: { locale?: Locale }) {
   const copy = COPY[locale];
 
   return (
+    <>
     <ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
       {communityContent.products.map((product) => (
         <li key={product.slug} className="px-card flex flex-col justify-between bg-white p-6 sm:p-7">
@@ -52,5 +53,11 @@ export default function ProductList({ locale = "id" }: { locale?: Locale }) {
         </li>
       ))}
     </ul>
+    {communityContent.comingSoon.map((item) => (
+      <p key={item.name} className="mt-6 text-sm text-secondary">
+        <span className="font-semibold text-foreground">{copy.soon}</span> {item.name}, {item[locale]}
+      </p>
+    ))}
+    </>
   );
 }

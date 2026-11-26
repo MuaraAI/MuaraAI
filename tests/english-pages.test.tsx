@@ -56,13 +56,15 @@ describe("English landing", () => {
     expect(document.body.textContent).toContain("10 merged pull requests");
   });
 
-  it("lists the positions from the settings and the real products", async () => {
+  it("lists the positions from the settings and the two featured products", async () => {
     render(await EnglishHomePage());
     expect(screen.getByText("Web")).toBeTruthy();
     expect(screen.getByText("Video")).toBeTruthy();
-    for (const name of ["Mira", "FluxCode", "Muara V1 Flash", "Laku"]) expect(screen.getByRole("heading", { name })).toBeTruthy();
+    for (const name of ["Mira", "FluxCode"]) expect(screen.getByRole("heading", { name })).toBeTruthy();
+    expect(document.body.textContent).toContain("Coming soon");
+    expect(screen.queryByRole("link", { name: /Muara V1 Flash/ })).toBeNull();
     const sites = screen.getAllByRole("link", { name: /Open site/i }).map((link) => link.getAttribute("href"));
-    expect(sites).toEqual(["https://mira.muaraai.com", "https://fluxcode.muaraai.com", "https://ai.muaraai.com", "https://laku.muaraai.com"]);
+    expect(sites).toEqual(["https://mira.muaraai.com", "https://fluxcode.muaraai.com"]);
     expect(document.body.textContent).toMatch(/native code editor written in Rust/i);
     expect(document.body.textContent).not.toMatch(/Muara Arus|Hugging Face|Ollama/);
     expect(screen.getByRole("link", { name: /All repositories/i }).getAttribute("href")).toBe("https://github.com/MuaraAI");

@@ -28,7 +28,8 @@ describe("Projects page", () => {
     render(await ProjectsPage());
 
     const sites = screen.getAllByRole("link", { name: /Buka web/i }).map((link) => link.getAttribute("href"));
-    expect(sites).toEqual(["https://mira.muaraai.com", "https://fluxcode.muaraai.com", "https://ai.muaraai.com", "https://laku.muaraai.com"]);
+    expect(sites).toEqual(["https://mira.muaraai.com", "https://fluxcode.muaraai.com"]);
+    expect(screen.getByText(/Segera hadir/)).toBeTruthy();
 
     const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
     expect(hrefs.filter((href) => href === "https://github.com/MuaraAI/Mira")).toHaveLength(1);

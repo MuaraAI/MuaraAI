@@ -5,7 +5,6 @@
 MuaraAI adalah komunitas terbuka untuk siapa saja yang mau belajar, membangun project, dan berkontribusi sebagai builder atau kreator. Anggota belajar, membangun project, dan berkontribusi lewat pull request di GitHub org [MuaraAI](https://github.com/MuaraAI), dan kontribusi yang sudah di-merge dihitung otomatis. Komunitas ini lahir di UBSI Pontianak dan menerima mahasiswa, pelajar, dan umum dari mana saja.
 
 - Website: https://muaraai.com/ (Indonesia) dan https://muaraai.com/en (English)
-- Portal API: https://ai.muaraai.com/
 
 ![MuaraAI logo](public/brand/muara-logo.png)
 
@@ -41,8 +40,8 @@ Daftar ini dicek terhadap GitHub org dan situs aslinya pada 26 November 2026. Su
 | --- | --- | --- | --- |
 | Mira | Dashboard SIAKAD dan MyBest UBSI, plus REST API dan MCP server untuk enam layanan kampus. Proyek independen, tidak berafiliasi dengan UBSI. (Dulu bernama UBSI API.) | https://mira.muaraai.com | https://github.com/MuaraAI/Mira |
 | FluxCode | Editor kode native yang ditulis dengan Rust, dengan agen AI bawaan, untuk Windows, macOS, dan Linux. | https://fluxcode.muaraai.com | https://github.com/MuaraAI/FluxCode |
-| Muara V1 Flash | Portal API komunitas: ambil API key, pantau kuota, dan pakai model Muara V1 Flash. | https://ai.muaraai.com | https://github.com/MuaraAI/ai-web |
-| Laku | Mesin restock untuk seller marketplace: membaca export marketplace dan menghitung apa yang perlu di-restock. | https://laku.muaraai.com | https://github.com/MuaraAI/laku |
+
+Segera hadir: Muara V1 Flash, portal API dan model AI komunitas.
 
 Semua repo publik org, termasuk yang belum jadi produk, terdaftar di https://muaraai.com/projects.
 
@@ -149,7 +148,6 @@ Test mencakup UI, aturan kontribusi dan tier, adapter Supabase, cron, check-in s
 ## Official links
 
 - Website: https://muaraai.com/
-- Portal API: https://ai.muaraai.com/
 - GitHub: https://github.com/MuaraAI
 - X: https://x.com/MuaraAI
 - Instagram: https://www.instagram.com/muara.ai/
