@@ -74,7 +74,7 @@ muaraai.com/
     └── /cron/contributions  # Sinkron dan evaluasi harian (dilindungi CRON_SECRET)
 ```
 
-Versi Inggris mencakup landing, penjelasan cara daftar, dan form pendaftaran (teks form ada di `src/lib/onboarding-copy.ts`, pesan validasi di `src/lib/validation.ts`). Terms, Privacy Policy, dan Code of Conduct punya terjemahan Inggris di `/en/terms`, `/en/privacy`, `/en/code-of-conduct`; setiap halaman menyebut bahwa versi Indonesia yang berlaku bila berbeda. Portal anggota dan admin masih berbahasa Indonesia.
+Versi Inggris mencakup landing, penjelasan cara daftar, dan form pendaftaran (teks form ada di `src/lib/onboarding-copy.ts`, pesan validasi di `src/lib/validation.ts`). Terms, Privacy Policy, dan Code of Conduct punya terjemahan Inggris di `/en/terms`, `/en/privacy`, `/en/code-of-conduct`; setiap halaman menyebut bahwa versi Indonesia yang berlaku bila berbeda. Portal anggota (`/dashboard`, `/dashboard/learn`, `/membership-exit`) bisa berbahasa Inggris: bahasanya diambil dari cookie `muara-lang`, yang diset saat masuk lewat `/en/join` atau lewat tombol ID/EN di sidebar; di luar portal cookie itu diabaikan. Materi belajar tetap Indonesia dan admin hanya Indonesia.
 
 ## Teknologi
 

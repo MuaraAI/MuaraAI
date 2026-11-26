@@ -1,12 +1,22 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { LOCALE_COOKIE } from "@/lib/locale";
+
+const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
   const next = requestUrl.searchParams.get("next");
   // Only the exact English form path switches language; any other next value for a new account is ignored.
-  const onboardingPath = next === "/en/onboarding" ? "/en/onboarding" : "/onboarding";
+  const english = next === "/en/onboarding";
+  const onboardingPath = english ? "/en/onboarding" : "/onboarding";
+  // The member portal has no /en URLs, so remember the language the applicant came in with.
+  const redirectTo = (target: string) => {
+    const response = NextResponse.redirect(`${requestUrl.origin}${target}`);
+    if (english) response.cookies.set(LOCALE_COOKIE, "en", { path: "/", maxAge: ONE_YEAR_SECONDS, sameSite: "lax" });
+    return response;
+  };
 
   if (code) {
     const supabase = await createClient();
@@ -29,11 +39,11 @@ export async function GET(request: Request) {
           // Every existing member, including pending and rejected users, enters
           // the dashboard. The dashboard renders the correct locked/status UI.
           const target = next && next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
-          return NextResponse.redirect(`${requestUrl.origin}${target}`);
+          return redirectTo(target);
         }
 
         // Only a GitHub account without a member profile needs onboarding.
-        return NextResponse.redirect(`${requestUrl.origin}${onboardingPath}`);
+        return redirectTo(onboardingPath);
       }
     }
   }
@@ -42,5 +52,5 @@ export async function GET(request: Request) {
   const target = error
     ? `${onboardingPath}?error=${encodeURIComponent(error)}`
     : `${onboardingPath}?error=oauth_callback_failed`;
-  return NextResponse.redirect(`${requestUrl.origin}${target}`);
+  return redirectTo(target);
 }

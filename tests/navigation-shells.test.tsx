@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import Navbar from "../src/components/landing/navbar";
 import MemberShell from "../src/components/portal/member-shell";
@@ -7,6 +7,7 @@ import AdminShell from "../src/components/portal/admin-shell";
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/dashboard",
+  useRouter: () => ({ refresh: vi.fn() }),
 }));
 
 describe("navigation shells", () => {
@@ -20,6 +21,27 @@ describe("navigation shells", () => {
     expect(screen.queryByText("Accolades")).toBeNull();
     expect(screen.queryByText("Manifesto")).toBeNull();
     expect(screen.queryByText("Treasury")).toBeNull();
+  });
+
+  it("speaks English in the member shell and switches language through the cookie", async () => {
+    const refresh = vi.fn();
+    const nav = await import("next/navigation");
+    vi.spyOn(nav, "useRouter").mockReturnValue({ refresh } as unknown as ReturnType<typeof nav.useRouter>);
+    render(
+      <MemberShell locale="en" member={{ full_name: "Yuken", github_username: "Curzyori", is_active: true, registration_status: "pending" }}>
+        <p>x</p>
+      </MemberShell>,
+    );
+    expect(screen.getByRole("link", { name: "Learn" }).getAttribute("href")).toBe("/dashboard/learn");
+    expect(screen.getByRole("link", { name: "Members" })).toBeTruthy();
+    expect(screen.getByText("Awaiting review")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "MuaraAI site" }).getAttribute("href")).toBe("/en");
+    expect(screen.queryByText("Situs MuaraAI")).toBeNull();
+    const toggle = screen.getByRole("group", { name: "Language" });
+    expect(toggle.querySelector('[aria-pressed="true"]')?.textContent).toBe("EN");
+    fireEvent.click(screen.getByRole("button", { name: "ID" }));
+    expect(document.cookie).toContain("muara-lang=id");
+    expect(refresh).toHaveBeenCalled();
   });
 
   it("has no dead Kas link in member or admin shells", () => {

@@ -1,11 +1,18 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { currentLocale } from "@/lib/locale-server";
 import { createPrivilegedClient, getMaintainerClient } from "@/lib/supabase/admin";
 import { generateCode, isSessionOpen, normalizeCode, validateSessionInput, type SessionInput } from "@/lib/sessions/sessions";
 
 const GENERIC_ERROR = "Terjadi kesalahan pada server. Silakan coba lagi.";
-const CHECKIN_ERROR = "Kode tidak valid, atau sesi belum dibuka / sudah selesai.";
+const CHECKIN_ERROR = {
+  id: "Kode tidak valid, atau sesi belum dibuka / sudah selesai.",
+  en: "The code is not valid, or the session has not opened yet or has already ended.",
+} as const;
+const GENERIC_ERROR_BY_LOCALE = { id: GENERIC_ERROR, en: "Something went wrong on the server. Please try again." } as const;
+const SIGN_IN_FIRST = { id: "Silakan masuk dulu.", en: "Please sign in first." } as const;
+const ACTIVE_ONLY = { id: "Hanya anggota aktif yang bisa check-in.", en: "Only active members can check in." } as const;
 const FORBIDDEN = "Akses ditolak.";
 const UNIQUE_VIOLATION = "23505";
 const CODE_ATTEMPTS = 3;
@@ -83,14 +90,15 @@ export async function regenerateCheckinCode(id: string): Promise<{ success: true
  * Every code problem (unknown, too early, too late) answers with the same message so codes cannot be probed.
  */
 export async function checkInToSession(code: unknown): Promise<{ success: boolean; error?: string; title?: string }> {
+  const locale = await currentLocale();
   const normalized = normalizeCode(code);
-  if (!normalized) return { success: false, error: CHECKIN_ERROR };
+  if (!normalized) return { success: false, error: CHECKIN_ERROR[locale] };
 
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "Silakan masuk dulu." };
+  if (!user) return { success: false, error: SIGN_IN_FIRST[locale] };
 
   const privileged = await createPrivilegedClient();
   const { data: member } = await privileged
@@ -104,7 +112,7 @@ export async function checkInToSession(code: unknown): Promise<{ success: boolea
     member.membership_status !== "active" ||
     member.is_active !== true
   ) {
-    return { success: false, error: "Hanya anggota aktif yang bisa check-in." };
+    return { success: false, error: ACTIVE_ONLY[locale] };
   }
 
   const { data: session } = await privileged
@@ -113,13 +121,16 @@ export async function checkInToSession(code: unknown): Promise<{ success: boolea
     .eq("checkin_code", normalized)
     .maybeSingle();
   if (!session || !isSessionOpen({ startsAt: session.starts_at, endsAt: session.ends_at }, new Date())) {
-    return { success: false, error: CHECKIN_ERROR };
+    return { success: false, error: CHECKIN_ERROR[locale] };
   }
 
   const { error } = await privileged
     .from("session_attendance")
     .upsert({ session_id: session.id, member_id: user.id }, { onConflict: "session_id,member_id", ignoreDuplicates: true });
-  if (error) return fail("checkInToSession", error);
+  if (error) {
+    fail("checkInToSession", error);
+    return { success: false, error: GENERIC_ERROR_BY_LOCALE[locale] };
+  }
 
   return { success: true, title: session.title as string };
 }

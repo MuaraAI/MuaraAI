@@ -3,18 +3,25 @@
 import React, { useState } from "react";
 import { requestMembershipExit } from "@/app/actions/membership";
 import Icon from "@/components/ui/icon";
+import { normalizeLocale, type Locale } from "@/lib/locale";
+import { DATE_LOCALE, PORTAL_COPY } from "@/lib/portal-copy";
 
 type MembershipExitClientProps = {
   status: "active" | "exited" | "banned";
   exitedAt: string | null;
   earliestExitAt: string | null;
+  locale?: Locale;
 };
 
 export default function MembershipExitClient({
   status,
   exitedAt,
   earliestExitAt,
+  locale = "id",
 }: MembershipExitClientProps) {
+  const lang = normalizeLocale(locale);
+  const t = PORTAL_COPY[lang].exit;
+  const dateLocale = DATE_LOCALE[lang];
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +37,7 @@ export default function MembershipExitClient({
     const result = await requestMembershipExit(reason);
     setLoading(false);
     if (!result.success) {
-      setError(result.error || "Pengajuan keluar gagal diproses.");
+      setError(result.error || t.failed);
       return;
     }
     setDone(true);
@@ -41,13 +48,13 @@ export default function MembershipExitClient({
       <section className="min-h-screen bg-background px-4 py-16 text-foreground">
         <div className="px-card mx-auto max-w-xl bg-white p-8 text-center">
           <Icon name="logout" className="mx-auto mb-4 h-12 w-12 text-secondary" />
-          <h1 className="font-display text-2xl font-bold">Riwayat Member: Sudah Keluar</h1>
+          <h1 className="font-display text-2xl font-bold">{t.historyTitle}</h1>
           <p className="mt-3 text-sm text-secondary">
-            Membership Anda sudah ditutup. Riwayat tetap disimpan dan akun ini tidak dapat mendaftar ulang.
+            {t.historyBody}
           </p>
           {exitedAt && (
             <p className="mt-4 font-mono text-xs text-secondary">
-              Keluar pada {new Date(exitedAt).toLocaleString("id-ID")}
+              {t.leftAt(new Date(exitedAt).toLocaleString(dateLocale))}
             </p>
           )}
         </div>
@@ -60,9 +67,9 @@ export default function MembershipExitClient({
       <section className="min-h-screen bg-background px-4 py-16 text-foreground">
         <div className="px-frame [--px-line:#FDA4AF] mx-auto max-w-xl bg-white p-8 text-center">
           <Icon name="block" className="mx-auto mb-4 h-12 w-12 text-rose-600" />
-          <h1 className="font-display text-2xl font-bold">Akses Membership Dihentikan</h1>
+          <h1 className="font-display text-2xl font-bold">{t.bannedTitle}</h1>
           <p className="mt-3 text-sm text-secondary">
-            Silakan hubungi maintainer jika Anda membutuhkan klarifikasi. Akun ini tidak dapat mendaftar ulang.
+            {t.bannedBody}
           </p>
         </div>
       </section>
@@ -74,16 +81,16 @@ export default function MembershipExitClient({
       <div className="flex items-start gap-3">
         <Icon name="info" className="mt-0.5 h-5 w-5 text-muara-ocean" />
         <div>
-          <h2 className="font-display text-lg font-bold text-foreground">Lifecycle Membership</h2>
+          <h2 className="font-display text-lg font-bold text-foreground">{t.title}</h2>
           <p className="mt-1 text-xs text-secondary">
-            Member baru dapat mengajukan keluar setelah aktif minimal 30 hari.
+            {t.minimum}
           </p>
         </div>
       </div>
 
       {earliest && !canExit && (
         <p className="px-frame [--px-line:#FCD34D] mt-5 bg-amber-50 p-3 text-xs text-amber-900">
-          Anda dapat mengajukan keluar mulai {earliest.toLocaleDateString("id-ID")}.
+          {t.eligibleFrom(earliest.toLocaleDateString(dateLocale))}
         </p>
       )}
 
@@ -95,7 +102,7 @@ export default function MembershipExitClient({
 
       <form onSubmit={handleSubmit} className="mt-5 space-y-3">
         <label htmlFor="exit-reason" className="block text-xs font-semibold text-foreground">
-          Alasan keluar (opsional)
+          {t.reasonLabel}
         </label>
         <textarea
           id="exit-reason"
@@ -110,7 +117,7 @@ export default function MembershipExitClient({
           disabled={!canExit || loading}
           className="px-btn-danger px-4 py-2.5 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {loading ? "Memproses..." : "Ajukan Keluar"}
+          {loading ? t.processing : t.submit}
         </button>
       </form>
     </section>

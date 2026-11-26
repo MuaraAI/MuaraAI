@@ -1,3 +1,6 @@
+import type { Locale } from "@/lib/locale";
+import { DATE_LOCALE } from "@/lib/portal-copy";
+
 export const SESSION_TYPES = ["diskusi", "sharing", "modul", "aturan_github", "random", "lainnya"] as const;
 export type SessionType = (typeof SESSION_TYPES)[number];
 
@@ -135,9 +138,9 @@ export function nextFridayDefault(now: Date): { start: string; end: string } {
 }
 
 /** "Jumat, 4 Des 2026 · 19.30 WIB". */
-export function formatWib(iso: string): string {
+export function formatWib(iso: string, locale: Locale = "id"): string {
   const wib = new Date(Date.parse(iso) + WIB_OFFSET_MS);
-  const date = wib.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+  const date = wib.toLocaleDateString(DATE_LOCALE[locale], { weekday: "long", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
   return `${date} · ${pad(wib.getUTCHours())}.${pad(wib.getUTCMinutes())} WIB`;
 }
 

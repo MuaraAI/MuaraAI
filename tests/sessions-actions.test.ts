@@ -34,6 +34,8 @@ function fakeClient() {
   };
 }
 
+let requestLocale: "id" | "en" = "id";
+vi.mock("@/lib/locale-server", () => ({ currentLocale: async () => requestLocale }));
 vi.mock("@/lib/supabase/server", () => ({
   createClient: async () => ({ auth: { getUser: async () => ({ data: { user } }) } }),
 }));
@@ -167,6 +169,17 @@ describe("checkInToSession", () => {
       expect(await checkInToSession(bad)).toEqual({ success: false, error: CHECKIN_ERROR });
     }
     expect(calls).toEqual([]);
+  });
+
+  it("answers in English when the portal is in English", async () => {
+    requestLocale = "en";
+    try {
+      expect(await checkInToSession("ABC")).toEqual({ success: false, error: "The code is not valid, or the session has not opened yet or has already ended." });
+      user = null;
+      expect(await checkInToSession("ABCD23")).toEqual({ success: false, error: "Please sign in first." });
+    } finally {
+      requestLocale = "id";
+    }
   });
 
   it("asks anonymous visitors to sign in", async () => {

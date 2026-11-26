@@ -23,6 +23,22 @@ beforeEach(() => {
   exchangeError = null;
 });
 
+const cookieOf = async (query: string) => (await GET(new Request(`https://muaraai.com/api/auth/callback?${query}`))).cookies.get("muara-lang")?.value;
+
+describe("auth callback language cookie", () => {
+  it("remembers English for the portal when sign-in started from the English join page", async () => {
+    expect(await cookieOf("code=x&next=/en/onboarding")).toBe("en");
+    member = { id: "u1", registration_status: "pending" };
+    expect(await cookieOf("code=x&next=/en/onboarding")).toBe("en");
+  });
+
+  it("does not set it for anything else, so it cannot be forced", async () => {
+    for (const q of ["code=x", "code=x&next=/members", "code=x&next=/en/onboarding/../x", "code=x&next=%2Fen%2Fjoin"]) {
+      expect(await cookieOf(q)).toBeUndefined();
+    }
+  });
+});
+
 describe("auth callback language", () => {
   it("sends a new GitHub account to the English form only when it asked for it", async () => {
     expect(await go("code=x&next=/en/onboarding")).toBe("https://muaraai.com/en/onboarding");

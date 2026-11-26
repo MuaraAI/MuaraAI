@@ -5,12 +5,17 @@ import Image from "next/image";
 import { LearningMaterial } from "@/types/database";
 import { recordMaterialRead } from "@/app/actions/learn";
 import Icon from "@/components/ui/icon";
+import { normalizeLocale, type Locale } from "@/lib/locale";
+import { DATE_LOCALE, PORTAL_COPY } from "@/lib/portal-copy";
 
 interface LearnFeedClientProps {
   initialMaterials: LearningMaterial[];
+  locale?: Locale;
 }
 
-export default function LearnFeedClient({ initialMaterials }: LearnFeedClientProps) {
+export default function LearnFeedClient({ initialMaterials, locale = "id" }: LearnFeedClientProps) {
+  const lang = normalizeLocale(locale);
+  const t = PORTAL_COPY[lang].learn;
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
 
   const handleOpenMaterial = async (m: LearningMaterial) => {
@@ -24,7 +29,7 @@ export default function LearnFeedClient({ initialMaterials }: LearnFeedClientPro
   if (initialMaterials.length === 0) {
     return (
       <div className="border-2 border-dashed border-[#CFE2EE] p-12 text-center text-slate-500 text-xs font-mono">
-        Belum ada materi pembelajaran yang diterbitkan.
+        {t.empty}
       </div>
     );
   }
@@ -50,7 +55,7 @@ export default function LearnFeedClient({ initialMaterials }: LearnFeedClientPro
                   {m.division}
                 </span>
                 <span className="text-[10px] font-mono text-slate-500">
-                  {new Date(m.created_at).toLocaleDateString("id-ID")}
+                  {new Date(m.created_at).toLocaleDateString(DATE_LOCALE[lang])}
                 </span>
               </div>
 
@@ -67,13 +72,13 @@ export default function LearnFeedClient({ initialMaterials }: LearnFeedClientPro
                 className="px-btn-ghost [--px-off:3px] inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-mono font-semibold text-foreground transition-colors"
               >
                 <Icon name="open_in_new" className="w-4 h-4 text-muara-ocean" />
-                <span>Buka Materi</span>
+                <span>{t.open}</span>
               </button>
 
               {isOpened && (
                 <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
                   <Icon name="check" className="w-3.5 h-3.5 text-emerald-400" />
-                  Sudah Dibuka
+                  {t.opened}
                 </span>
               )}
             </div>

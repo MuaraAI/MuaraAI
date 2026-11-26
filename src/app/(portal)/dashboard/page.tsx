@@ -6,8 +6,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import Icon from "@/components/ui/icon";
 import { getEarliestExitDate } from "@/lib/membership";
-import type { Affiliation, MembershipIntakePolicy } from "@/types/database";
-import { AFFILIATION_LABELS } from "@/lib/validation";
+import type { MembershipIntakePolicy } from "@/types/database";
+import { currentLocale } from "@/lib/locale-server";
+import { AFFILIATION_LABELS_BY_LOCALE, DATE_LOCALE, PORTAL_COPY } from "@/lib/portal-copy";
 import { PortalHeader } from "@/components/ui/section";
 import ContributionCard from "@/components/portal/contribution-card";
 import TierBadge from "@/components/members/tier-badge";
@@ -15,6 +16,9 @@ import SessionsSection from "@/components/portal/sessions-section";
 import { monthStart, parseRules, type ContributionRules, type MonthlyStats } from "@/lib/contributions/rules";
 
 export default async function DashboardProfilePage() {
+  const locale = await currentLocale();
+  const t = PORTAL_COPY[locale].dashboard;
+  const dateLocale = DATE_LOCALE[locale];
   const supabase = await createClient();
   const {
     data: { user },
@@ -25,7 +29,7 @@ export default async function DashboardProfilePage() {
     : { data: null };
 
   if (!memberData) {
-    redirect("/onboarding");
+    redirect(PORTAL_COPY[locale].onboardingHref);
   }
 
   const member = memberData as Member;
@@ -77,8 +81,8 @@ export default async function DashboardProfilePage() {
 
   return (
     <div className="space-y-8">
-      <PortalHeader eyebrow="Member workspace" title="Beranda">
-        Pantau status membership dan lanjutkan langkah berikutnya di MuaraAI.
+      <PortalHeader eyebrow={t.eyebrow} title={t.title}>
+        {t.intro}
       </PortalHeader>
 
       {member.registration_status === "rejected" ? (
@@ -86,40 +90,38 @@ export default async function DashboardProfilePage() {
           <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
             <div className="space-y-3">
               <div>
-                <div className="text-xs font-mono uppercase text-rose-800">Status pendaftaran</div>
+                <div className="text-xs font-mono uppercase text-rose-800">{t.registrationStatus}</div>
                 <div className="mt-1 flex items-center gap-2 text-xl font-display font-bold text-rose-700">
                   <span className="h-2.5 w-2.5 bg-rose-500" aria-hidden="true" />
-                  Pendaftaran Belum Diterima
+                  {t.rejectedTitle}
                 </div>
               </div>
 
               <div className="px-frame [--px-line:#FDA4AF] bg-white/80 p-3.5 text-xs text-secondary">
-                <div className="font-semibold text-rose-900 mb-1">Catatan dari Core Team:</div>
+                <div className="font-semibold text-rose-900 mb-1">{t.coreNote}</div>
                 <p className="leading-relaxed text-foreground">
-                  {member.rejection_reason || "Berkas Proof of Work belum memenuhi kriteria komunitas. Silakan perbaiki dan ajukan kembali."}
+                  {member.rejection_reason || t.defaultRejection}
                 </p>
               </div>
 
               <p className="text-xs text-secondary">
-                {canReapply
-                  ? "Masa cooldown 24 jam telah selesai. Anda dapat memperbarui data dan mengirim ulang pendaftaran sekarang."
-                  : `Masa cooldown sedang berjalan. Anda dapat mengajukan pendaftaran ulang setelah 1 hari (sisa waktu ~${remainingHours} jam).`}
+                {canReapply ? t.cooldownOver : t.cooldownRunning(remainingHours)}
               </p>
             </div>
 
             <div className="shrink-0">
               {canReapply ? (
                 <Link
-                  href="/onboarding"
+                  href={PORTAL_COPY[locale].onboardingHref}
                   className="px-btn inline-flex min-h-11 items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold transition-colors"
                 >
                   <Icon name="refresh" className="w-4 h-4" />
-                  <span>Ajukan Ulang Pendaftaran</span>
+                  <span>{t.reapply}</span>
                 </Link>
               ) : (
                 <span className="px-btn-ghost [--px-off:3px] inline-flex min-h-11 items-center justify-center gap-2 bg-white/80 px-4 py-2.5 text-xs font-mono font-medium text-rose-700">
                   <Icon name="schedule" className="w-4 h-4 text-rose-500" />
-                  <span>Cooldown aktif (~{remainingHours}j lagi)</span>
+                  <span>{t.cooldownBadge(remainingHours)}</span>
                 </span>
               )}
             </div>
@@ -129,17 +131,17 @@ export default async function DashboardProfilePage() {
         <section className="px-frame [--px-line:#FCD34D] bg-amber-50/60 p-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <div className="text-xs font-mono uppercase text-amber-800">Status pendaftaran</div>
+              <div className="text-xs font-mono uppercase text-amber-800">{t.registrationStatus}</div>
               <div className="mt-2 flex items-center gap-2 text-xl font-display font-bold text-amber-700">
                 <span className="h-2.5 w-2.5 bg-amber-500" aria-hidden="true" />
-                Menunggu Review
+                {t.pendingTitle}
               </div>
               <p className="mt-2 text-sm text-secondary">
-                Berkas Proof of Work Anda sedang ditinjau oleh Core Team MuaraAI. Anda dapat melihat navigasi dan detail akun sambil menunggu verifikasi.
+                {t.pendingBody}
               </p>
             </div>
             <span className="px-btn-ghost [--px-off:3px] inline-flex min-h-11 items-center justify-center px-4 py-2.5 text-sm font-semibold text-amber-800">
-              Dalam antrean review
+              {t.inQueue}
             </span>
           </div>
         </section>
@@ -147,15 +149,15 @@ export default async function DashboardProfilePage() {
         <section className="px-card bg-white p-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <div className="text-xs font-mono uppercase text-secondary">Status membership</div>
+              <div className="text-xs font-mono uppercase text-secondary">{t.membershipStatus}</div>
               <div className="mt-2 flex items-center gap-2 text-xl font-display font-bold text-foreground">
                 <span className="h-2.5 w-2.5 bg-status-success" aria-hidden="true" />
-                Aktif
+                {t.active}
               </div>
-              <p className="mt-2 text-sm text-secondary">Akun kamu dapat mengakses ruang belajar, project, dan akses bersama.</p>
+              <p className="mt-2 text-sm text-secondary">{t.activeBody}</p>
             </div>
             <Link href="/dashboard/learn" className="px-btn inline-flex min-h-11 items-center justify-center px-4 py-2.5 text-sm font-semibold transition-colors">
-              Lanjut belajar
+              {t.keepLearning}
             </Link>
           </div>
         </section>
@@ -168,33 +170,34 @@ export default async function DashboardProfilePage() {
           rules={contribution.rules}
           standing={member.contribution_standing ?? "good"}
           month={contribution.month}
+          locale={locale}
         />
       )}
 
-      {contribution && <SessionsSection memberId={member.id} />}
+      {contribution && <SessionsSection memberId={member.id} locale={locale} />}
 
       <section className="grid gap-4 sm:grid-cols-3">
         <Link href="/dashboard/learn" className="px-frame [--px-line:#CFE2EE] bg-surface-alt p-5 transition-colors">
-          <div className="text-xs font-mono uppercase text-secondary">Berikutnya</div>
-          <div className="mt-2 font-display font-semibold text-foreground">Buka materi belajar</div>
+          <div className="text-xs font-mono uppercase text-secondary">{t.next}</div>
+          <div className="mt-2 font-display font-semibold text-foreground">{t.openLearn}</div>
         </Link>
         <Link href="/membership-exit" className="px-frame [--px-line:#CFE2EE] bg-surface-alt p-5 transition-colors">
-          <div className="text-xs font-mono uppercase text-secondary">Lifecycle</div>
-          <div className="mt-2 font-display font-semibold text-foreground">Lihat status membership</div>
+          <div className="text-xs font-mono uppercase text-secondary">{t.lifecycle}</div>
+          <div className="mt-2 font-display font-semibold text-foreground">{t.viewMembership}</div>
         </Link>
       </section>
 
       <div className="flex items-center justify-between gap-4">
-        <h2 className="font-display text-xl font-bold text-foreground">Profil lengkap</h2>
-        <span className="text-xs text-secondary">Data yang terverifikasi</span>
+        <h2 className="font-display text-xl font-bold text-foreground">{t.fullProfile}</h2>
+        <span className="text-xs text-secondary">{t.verifiedData}</span>
       </div>
 
       {member.registration_status === "pending" && (
         <div className="px-frame [--px-line:#FCD34D] bg-amber-50 p-5 text-xs text-amber-900 flex items-start gap-3">
           <Icon name="pending" className="w-5 h-5 text-amber-600 shrink-0" />
           <div>
-            <div className="font-bold text-sm text-foreground mb-0.5">Status Pendaftaran: Menunggu Review</div>
-            Berkas Proof of Work Anda sedang ditinjau oleh Core Team. Anda akan menerima undangan resmi ke GitHub Org setelah diverifikasi.
+            <div className="font-bold text-sm text-foreground mb-0.5">{t.pendingBannerTitle}</div>
+            {t.pendingBanner}
           </div>
         </div>
       )}
@@ -202,14 +205,14 @@ export default async function DashboardProfilePage() {
       {member.membership_started_at && member.membership_status === "active" && (
         <div className="px-frame [--px-line:#CFE2EE] bg-surface-alt p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="text-xs font-mono uppercase text-secondary">Lifecycle Membership</div>
+            <div className="text-xs font-mono uppercase text-secondary">{t.lifecycleTitle}</div>
             <div className="mt-1 text-sm font-semibold text-foreground">
-              Aktif sejak {new Date(member.membership_started_at).toLocaleDateString("id-ID")}
+              {t.activeSince(new Date(member.membership_started_at).toLocaleDateString(dateLocale))}
             </div>
             <div className="mt-1 text-xs text-secondary">
               {earliestExitAt
-                ? `Boleh mengajukan keluar mulai ${earliestExitAt.toLocaleDateString("id-ID")}.`
-                : "Tanggal eligibility exit belum tersedia."}
+                ? t.exitFrom(earliestExitAt.toLocaleDateString(dateLocale))
+                : t.exitUnknown}
             </div>
           </div>
           <Link
@@ -217,7 +220,7 @@ export default async function DashboardProfilePage() {
             className="px-btn-ghost [--px-off:3px] inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold text-foreground hover:text-muara-ocean transition-colors"
           >
             <Icon name="logout" className="w-4 h-4" />
-            Ajukan Keluar
+            {t.requestExit}
           </Link>
         </div>
       )}
@@ -226,7 +229,7 @@ export default async function DashboardProfilePage() {
       <div className="px-card bg-white p-6 sm:p-8 space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-stroke">
           <div>
-            <div className="text-xs font-mono text-secondary uppercase">Nama Lengkap</div>
+            <div className="text-xs font-mono text-secondary uppercase">{t.fullName}</div>
             <div className="font-display text-xl font-bold text-foreground mt-0.5">{member.full_name}</div>
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -249,52 +252,52 @@ export default async function DashboardProfilePage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-xs">
           <div>
-            <div className="text-secondary uppercase font-mono mb-1">Institusi</div>
+            <div className="text-secondary uppercase font-mono mb-1">{t.institution}</div>
             <div className="text-foreground font-mono font-bold">{member.campus || "-"}</div>
           </div>
           <div>
-            <div className="text-secondary uppercase font-mono mb-1">Status</div>
-            <div className="text-foreground font-mono">{AFFILIATION_LABELS[member.affiliation as Affiliation] ?? "-"}</div>
+            <div className="text-secondary uppercase font-mono mb-1">{t.status}</div>
+            <div className="text-foreground font-mono">{AFFILIATION_LABELS_BY_LOCALE[locale][member.affiliation] ?? "-"}</div>
           </div>
           <div>
-            <div className="text-secondary uppercase font-mono mb-1">GitHub Account</div>
+            <div className="text-secondary uppercase font-mono mb-1">{t.github}</div>
             <div className="text-foreground font-mono">@{member.github_username}</div>
           </div>
           <div>
-            <div className="text-secondary uppercase font-mono mb-1">Divisi & Posisi</div>
+            <div className="text-secondary uppercase font-mono mb-1">{t.divisionPosition}</div>
             <div className="text-foreground font-mono capitalize">
               {member.division} ({member.track || "-"})
               {member.secondary_division ? ` + ${member.secondary_division} (${member.secondary_track || "-"})` : ""}
             </div>
           </div>
           <div>
-            <div className="text-secondary uppercase font-mono mb-1">Tier</div>
+            <div className="text-secondary uppercase font-mono mb-1">{t.tier}</div>
             <div className="text-foreground font-mono">
-              {member.tier ? <TierBadge tier={member.tier} streak={member.streak} /> : "Belum ada tier"}
+              {member.tier ? <TierBadge tier={member.tier} streak={member.streak} /> : t.noTier}
             </div>
           </div>
           <div>
-            <div className="text-secondary uppercase font-mono mb-1">Status Keaktifan</div>
+            <div className="text-secondary uppercase font-mono mb-1">{t.activity}</div>
             <div className="text-foreground font-mono">
-              {member.is_active ? "Aktif" : "Dinonaktifkan"}
+              {member.is_active ? t.activeLabel : t.deactivated}
             </div>
           </div>
           <div>
-            <div className="text-secondary uppercase font-mono mb-1">Tautan Portofolio / PoW</div>
+            <div className="text-secondary uppercase font-mono mb-1">{t.portfolio}</div>
             <Link
               href={member.portfolio_url || "#"}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muara-ocean hover:underline truncate block font-mono"
             >
-              {member.portfolio_url || "Belum ada link"}
+              {member.portfolio_url || t.noLink}
             </Link>
           </div>
         </div>
 
         {member.bio && (
           <div className="pt-4 border-t border-stroke">
-            <div className="text-secondary uppercase font-mono text-xs mb-1.5">Toolchain & Workflow</div>
+            <div className="text-secondary uppercase font-mono text-xs mb-1.5">{t.toolchain}</div>
             <p className="px-frame [--px-line:#CFE2EE] text-xs text-foreground leading-relaxed font-mono whitespace-pre-wrap bg-surface-alt p-3.5">
               {member.bio}
             </p>
