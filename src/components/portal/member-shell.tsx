@@ -45,7 +45,7 @@ export default function MemberShell({ member, locale = "id", children }: MemberS
       order={navItems.map((item) => item.href)}
       sidebar={
         <>
-        <Link href="/" className="flex items-center gap-2 mb-6">
+        <Link href={PORTAL_COPY[lang].siteHref} className="flex items-center gap-2 mb-6">
           <span className="px-frame flex h-8 w-8 items-center justify-center overflow-hidden bg-white [--px-line:#CFE2EE]">
             <Image src="/brand/muara-logo.png" alt="" width={32} height={32} className="h-7 w-7 object-contain" />
           </span>
