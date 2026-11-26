@@ -2,12 +2,13 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { notifyMaintainers } from "@/lib/notify";
-import { PoWInput, normalizeTelegram, validatePoWSubmission, type Locale } from "@/lib/validation";
+import { PoWInput, normalizeTelegram, validatePoWSubmission } from "@/lib/validation";
+import { normalizeLocale } from "@/lib/locale";
 import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import { canSubmitIntake } from "@/lib/membership";
 import type { MembershipIntakePolicy } from "@/types/database";
 
-const MESSAGES: Record<Locale, { noSession: string; noPositions: string; noIntake: string; generic: string }> = {
+const MESSAGES: Record<"id" | "en", { noSession: string; noPositions: string; noIntake: string; generic: string }> = {
   id: {
     noSession: "Sesi tidak ditemukan. Silakan login kembali dengan GitHub.",
     noPositions: "Daftar posisi belum dikonfigurasi.",
@@ -32,7 +33,7 @@ function socialUrl(value: string | undefined, base: string): string | null {
 
 /** `language` comes from the client, so anything other than "en" means Indonesian. */
 export async function submitProofOfWork(data: PoWInput, language?: unknown) {
-  const locale: Locale = language === "en" ? "en" : "id";
+  const locale = normalizeLocale(language);
   const text = MESSAGES[locale];
   const supabase = await createClient();
   const {

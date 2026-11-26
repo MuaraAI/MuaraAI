@@ -5,13 +5,14 @@ import { createClient } from "@/lib/supabase/server";
 import { createPrivilegedClient } from "@/lib/supabase/admin";
 import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import { ONBOARDING_COPY } from "@/lib/onboarding-copy";
-import type { Locale, PoWInput } from "@/lib/validation";
+import type { PoWInput } from "@/lib/validation";
+import { normalizeLocale, type Locale } from "@/lib/locale";
 
 const PLACEHOLDER_INSTITUTIONS = ["Tidak disebutkan", "Kampus lain di Indonesia"];
 
 /** The registration page body, shared by /onboarding (Indonesian) and /en/onboarding (English). */
 export default async function OnboardingView({ locale }: { locale: Locale }) {
-  const t = ONBOARDING_COPY[locale];
+  const t = ONBOARDING_COPY[normalizeLocale(locale)];
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

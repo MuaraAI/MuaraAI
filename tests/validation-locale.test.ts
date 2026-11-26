@@ -39,6 +39,12 @@ describe("validation messages in English", () => {
     expect(validatePoWSubmission({ ...valid, fullName: "ab" }, positions, "fr" as never).error).toBe("Nama lengkap minimal 3 karakter.");
   });
 
+  it("treats inherited object keys like a language it does not know, instead of crashing", () => {
+    for (const key of ["constructor", "toString", "__proto__", "hasOwnProperty"]) {
+      expect(validatePoWSubmission({ ...valid, fullName: "ab" }, positions, key as never).error).toBe("Nama lengkap minimal 3 karakter.");
+    }
+  });
+
   it("accepts the same valid input in both languages", () => {
     expect(validatePoWSubmission(valid, positions, "en")).toEqual({ isValid: true });
   });

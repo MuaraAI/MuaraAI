@@ -44,7 +44,25 @@ describe("registration form in English", () => {
     expect(screen.getByLabelText(/Full name/i)).toBeTruthy();
     expect(screen.getByLabelText(/Institution \(optional\)/i)).toBeTruthy();
     expect(screen.getByLabelText(/Telegram \(optional\)/i)).toBeTruthy();
-    expect(container.textContent).not.toMatch(/Tentang kamu|Lanjut|Nama Lengkap|Kembali|Pendaftaran|Institusi/);
+    expect(container.textContent).not.toMatch(/Tentang kamu|Lanjut|Nama Lengkap|Kembali|Pendaftaran|Institusi|Pilih/);
+    // Placeholders and accessible names count too, not just visible text.
+    const attributes = [...container.querySelectorAll("[placeholder],[aria-label]")].map((element) => `${element.getAttribute("placeholder") ?? ""} ${element.getAttribute("aria-label") ?? ""}`).join(" ");
+    expect(attributes).not.toMatch(/Pilih|Kampus|Nomor aktif|Pendaftaran|Progress|Daftar/);
+  });
+
+  it("says Choose instead of Pilih on an empty select, and keeps Pilih in Indonesian", () => {
+    const empty = { builder: [], creative: ["Video"] };
+    render(<PoWForm positions={empty} locale="en" />);
+    fireEvent.change(screen.getByLabelText(/Full name/i), { target: { value: "Budi Santoso" } });
+    fireEvent.change(screen.getByLabelText(/WhatsApp/i), { target: { value: "081234567890" } });
+    next(/^Next$/);
+    expect(screen.getByText("Choose…")).toBeTruthy();
+    expect(screen.queryByText("Pilih…")).toBeNull();
+  });
+
+  it("does not crash on an inherited key as the language, and falls back to Indonesian", () => {
+    render(<PoWForm positions={positions} locale={"constructor" as never} />);
+    expect(screen.getByRole("heading", { name: "Buat profil komunitasmu" })).toBeTruthy();
   });
 
   it("offers the status choices in English while keeping the stored values", () => {

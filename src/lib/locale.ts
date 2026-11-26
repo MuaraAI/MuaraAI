@@ -14,6 +14,11 @@ export function localeFor(pathname: string): Locale {
   return ENGLISH_PATHS.has(path) ? "en" : "id";
 }
 
-export function localeFromHeader(value: string | null): Locale {
+/** Anything other than exactly "en" is Indonesian, so a value from outside (or an inherited key like "constructor") can never pick a table entry. */
+export function normalizeLocale(value: unknown): Locale {
   return value === "en" ? "en" : "id";
+}
+
+export function localeFromHeader(value: string | null): Locale {
+  return normalizeLocale(value);
 }

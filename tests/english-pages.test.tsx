@@ -124,7 +124,9 @@ describe("English join page", () => {
 
   it("has English metadata that links back to the Indonesian page", () => {
     expect(String(joinMetadata.title)).toContain("Join");
-    expect(joinMetadata.alternates?.languages).toMatchObject({ id: "https://muaraai.com/onboarding", en: "https://muaraai.com/en/join", "x-default": "https://muaraai.com/onboarding" });
+    // The Indonesian counterpart of /en/join is not a single page, so no hreflang pair is claimed (it would not be reciprocal).
+    expect(joinMetadata.alternates?.canonical).toBe("https://muaraai.com/en/join");
+    expect(joinMetadata.alternates).not.toHaveProperty("languages");
   });
 });
 

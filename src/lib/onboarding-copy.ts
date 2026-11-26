@@ -1,5 +1,5 @@
 import type { Affiliation } from "@/types/database";
-import type { Locale } from "@/lib/validation";
+import type { Locale } from "@/lib/locale";
 
 export interface OnboardingCopy {
   steps: readonly [string, string, string, string];
@@ -58,6 +58,8 @@ export interface OnboardingCopy {
   loginHref: string;
   preparingTitle: string;
   preparingBody: string;
+  /** Placeholder of an empty select. */
+  choose: string;
 }
 
 /** All text of the registration form. The Indonesian strings are the original ones; every key exists in both languages. */
@@ -118,6 +120,7 @@ export const ONBOARDING_COPY: Record<Locale, OnboardingCopy> = {
     loginHref: "/api/auth/login?next=/onboarding",
     preparingTitle: "Pendaftaran sedang disiapkan",
     preparingBody: "Daftar posisi belum tersedia. Coba lagi beberapa saat lagi.",
+    choose: "Pilih…",
   },
   en: {
     steps: ["About you", "Proof of Work", "Public profile", "Review"],
@@ -175,5 +178,6 @@ export const ONBOARDING_COPY: Record<Locale, OnboardingCopy> = {
     loginHref: "/api/auth/login?next=/en/onboarding",
     preparingTitle: "Registration is being prepared",
     preparingBody: "The position list is not available yet. Please try again in a moment.",
+    choose: "Choose…",
   },
 };

@@ -15,6 +15,12 @@ describe("canSubmitIntake reasons in English", () => {
     expect(canSubmitIntake(rejected, open, now, "en").reason).toBe("You can reapply after the 24-hour cooldown (about 22 hours left).");
   });
 
+  it("treats inherited object keys like a language it does not know", () => {
+    for (const key of ["constructor", "toString", "__proto__"]) {
+      expect(canSubmitIntake(member({ registration_status: "approved" }), open, now, key as never).reason).toBe("Akun Anda sudah berstatus anggota resmi aktif.");
+    }
+  });
+
   it("keeps the Indonesian reasons by default", () => {
     expect(canSubmitIntake(member({ registration_status: "approved" }), open, now).reason).toBe("Akun Anda sudah berstatus anggota resmi aktif.");
     expect(canSubmitIntake(member({ membership_status: "exited" }), open, now, "fr" as never).reason).toBe("Akun ini sudah pernah keluar dan tidak dapat mendaftar ulang.");

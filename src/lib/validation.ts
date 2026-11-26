@@ -1,5 +1,6 @@
 import type { Affiliation } from "@/types/database";
 import type { PositionsConfig } from "@/lib/positions";
+import { normalizeLocale, type Locale } from "@/lib/locale";
 
 export const AFFILIATIONS: readonly Affiliation[] = ["mahasiswa", "pelajar", "umum", "lainnya"];
 export const AFFILIATION_LABELS: Record<Affiliation, string> = {
@@ -11,7 +12,7 @@ export const AFFILIATION_LABELS: Record<Affiliation, string> = {
 export type Division = "builder" | "creative";
 export const MIN_JOIN_REASON_LENGTH = 50;
 
-export type Locale = "id" | "en";
+export type { Locale };
 
 interface Messages {
   invalidData: string;
@@ -126,7 +127,7 @@ export function validatePoWSubmission(
   positions: PositionsConfig,
   locale: Locale = "id"
 ): { isValid: boolean; error?: string } {
-  const m = VALIDATION_MESSAGES[locale] ?? VALIDATION_MESSAGES.id;
+  const m = VALIDATION_MESSAGES[normalizeLocale(locale)];
   const requiredText = [data.fullName, data.joinReason, data.toolchainNarrative, data.phoneWa, data.portfolioUrl, data.track];
   const optionalText = [
     data.institution,

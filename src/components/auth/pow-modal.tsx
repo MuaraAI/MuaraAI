@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { submitProofOfWork } from "@/app/actions/pow";
-import { AFFILIATIONS, MIN_JOIN_REASON_LENGTH, type Division, type Locale, type PoWInput } from "@/lib/validation";
+import { AFFILIATIONS, MIN_JOIN_REASON_LENGTH, type Division, type PoWInput } from "@/lib/validation";
+import { normalizeLocale, type Locale } from "@/lib/locale";
 import { ONBOARDING_COPY } from "@/lib/onboarding-copy";
 import type { PositionsConfig } from "@/lib/positions";
 import Icon from "@/components/ui/icon";
@@ -76,7 +77,7 @@ export default function PoWForm({
   positions: PositionsConfig;
   locale?: Locale;
 }) {
-  const t = ONBOARDING_COPY[locale] ?? ONBOARDING_COPY.id;
+  const t = ONBOARDING_COPY[normalizeLocale(locale)];
   const [step, setStep] = useState<Step>(0);
   const [formData, setFormData] = useState<PoWInput>(() => buildInitial(positions, initialData));
   const [loading, setLoading] = useState(false);
@@ -222,7 +223,7 @@ export default function PoWForm({
             <p className="text-sm text-secondary">{t.aboutIntro}</p>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field id="fullName" label={t.fullName} value={formData.fullName} onChange={(value) => update("fullName", value)} required />
-              <SelectField
+              <SelectField placeholder={t.choose}
                 id="affiliation"
                 label={t.status}
                 value={formData.affiliation}
@@ -241,21 +242,21 @@ export default function PoWForm({
             <legend className="font-display text-xl font-semibold text-foreground">{t.proofLegend}</legend>
             <Field id="portfolioUrl" label={t.portfolio} value={formData.portfolioUrl} onChange={(value) => update("portfolioUrl", value)} required type="url" />
             <div className="grid gap-4 sm:grid-cols-2">
-              <SelectField
+              <SelectField placeholder={t.choose}
                 id="division"
                 label={t.division}
                 value={formData.division}
                 options={DIVISIONS.map((value) => ({ value, label: DIVISION_LABELS[value] }))}
                 onChange={changeDivision}
               />
-              <SelectField
+              <SelectField placeholder={t.choose}
                 id="track"
                 label={t.track}
                 value={formData.track}
                 options={positions[formData.division].map((value) => ({ value, label: value }))}
                 onChange={(value) => update("track", value)}
               />
-              <SelectField
+              <SelectField placeholder={t.choose}
                 id="secondaryDivision"
                 label={t.secondaryDivision}
                 required={false}
@@ -264,7 +265,7 @@ export default function PoWForm({
                 onChange={changeSecondaryDivision}
               />
               {formData.secondaryDivision && (
-                <SelectField
+                <SelectField placeholder={t.choose}
                   id="secondaryTrack"
                   label={t.secondaryTrack}
                   value={formData.secondaryTrack ?? ""}
@@ -331,8 +332,8 @@ function Field({ id, label, value, onChange, required = false, type = "text", ma
   return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><input id={id} type={type} value={value} placeholder={placeholder} required={required} maxLength={maxLength} onChange={(event) => onChange(event.target.value)} className="border-2 border-[#CFE2EE] w-full bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white" /></div>;
 }
 
-function SelectField({ id, label, value, options, onChange, required = true }: { id: string; label: string; value: string; options: readonly { value: string; label: string }[]; onChange: (value: string) => void; required?: boolean }) {
-  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><PixelSelect id={id} value={value} onChange={onChange} options={options} /></div>;
+function SelectField({ id, label, value, options, onChange, placeholder, required = true }: { id: string; label: string; value: string; options: readonly { value: string; label: string }[]; onChange: (value: string) => void; placeholder: string; required?: boolean }) {
+  return <div><label htmlFor={id} className="mb-1.5 block text-sm font-medium text-foreground">{label}{required ? " *" : ""}</label><PixelSelect id={id} value={value} onChange={onChange} options={options} placeholder={placeholder} /></div>;
 }
 
 function TextAreaField({ id, label, value, onChange, required }: { id: string; label: string; value: string; onChange: (value: string) => void; required?: boolean }) {

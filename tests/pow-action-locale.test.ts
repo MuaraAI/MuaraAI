@@ -76,7 +76,7 @@ describe("submitProofOfWork in English", () => {
   });
 
   it("falls back to Indonesian for a language the client invents", async () => {
-    for (const locale of ["fr", undefined, 7, { en: true }]) {
+    for (const locale of ["fr", undefined, 7, { en: true }, "constructor", "__proto__", "toString"]) {
       expect(await submitProofOfWork({ ...input, track: "Game" }, locale as never)).toEqual({ success: false, error: "Posisi tidak valid untuk divisi yang dipilih." });
     }
   });

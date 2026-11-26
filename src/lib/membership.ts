@@ -1,4 +1,5 @@
 import type { MembershipIntakePolicy, MembershipStatus, RegistrationStatus } from "@/types/database";
+import { normalizeLocale, type Locale } from "@/lib/locale";
 
 interface MembershipSnapshot {
   registration_status: RegistrationStatus;
@@ -25,9 +26,7 @@ export function getEarliestExitDate(startedAt: string | null | undefined, minimu
   return date;
 }
 
-type IntakeLocale = "id" | "en";
-
-const INTAKE_REASONS: Record<IntakeLocale, { closed: string; exited: string; approved: string; cooldown(hours: number): string }> = {
+const INTAKE_REASONS: Record<Locale, { closed: string; exited: string; approved: string; cooldown(hours: number): string }> = {
   id: {
     closed: "Pendaftaran anggota baru belum dibuka. Silakan coba lagi setelah jadwal pendaftaran dimulai.",
     exited: "Akun ini sudah pernah keluar dan tidak dapat mendaftar ulang.",
@@ -46,9 +45,9 @@ export function canSubmitIntake(
   member: MembershipSnapshot | null,
   policy: MembershipIntakePolicy,
   now: Date,
-  locale: IntakeLocale = "id"
+  locale: Locale = "id"
 ): PolicyDecision {
-  const reasons = INTAKE_REASONS[locale] ?? INTAKE_REASONS.id;
+  const reasons = INTAKE_REASONS[normalizeLocale(locale)];
   if (!member) return { allowed: true };
   const effectiveAt = new Date(policy.effective_at);
   if (!Number.isNaN(effectiveAt.getTime()) && now < effectiveAt) {

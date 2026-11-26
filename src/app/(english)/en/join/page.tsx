@@ -9,7 +9,6 @@ export const metadata: Metadata = {
   description: "Sign in with GitHub, fill in the registration form, and start contributing once a maintainer approves you.",
   alternates: {
     canonical: "https://muaraai.com/en/join",
-    languages: { id: "https://muaraai.com/onboarding", en: "https://muaraai.com/en/join", "x-default": "https://muaraai.com/onboarding" },
   },
   openGraph: {
     title: "Join MuaraAI | How membership works",
