@@ -35,6 +35,9 @@ const products: readonly Product[] = [
   },
 ];
 
+/** Public repos that should not show up in the "Repo lainnya" list: the org profile and the unreleased AI portal. */
+export const hiddenRepoNames: readonly string[] = [".github", "ai-web"];
+
 /** Announced but not public yet: shown as text only, never as a link. */
 const comingSoon = [
   {

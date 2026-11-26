@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import React from "react";
+import { headers } from "next/headers";
+import { LOCALE_HEADER, localeFromHeader } from "@/lib/locale";
 import { Suspense } from "react";
 import "./globals.css";
 import RouteProgress from "@/components/ui/route-progress";
@@ -28,13 +31,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = localeFromHeader((await headers()).get(LOCALE_HEADER));
   return (
-    <html lang="id">
+    <html lang={locale}>
       <body className="bg-background text-foreground antialiased selection:bg-muara-sky selection:text-muara-ocean">
         <Suspense fallback={null}>
           <RouteProgress />
