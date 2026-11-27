@@ -43,7 +43,7 @@ describe("members privacy", () => {
   });
 
   it("lists the expected private columns", () => {
-    for (const column of ["email", "phone_wa", "telegram_username", "nim", "join_reason", "rejection_reason"]) {
+    for (const column of ["email", "phone_wa", "telegram_username", "join_reason", "rejection_reason"]) {
       expect(PRIVATE_MEMBER_COLUMNS).toContain(column);
     }
   });

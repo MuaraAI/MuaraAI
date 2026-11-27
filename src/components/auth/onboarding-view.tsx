@@ -51,7 +51,7 @@ export default async function OnboardingView({ locale, embedded = false }: { loc
     const privileged = await createPrivilegedClient();
     const { data: member } = await privileged
       .from("members")
-      .select("id, registration_status, full_name, affiliation, campus, phone_wa, telegram_username, portfolio_url, division, track, secondary_division, secondary_track, join_reason, bio, toolchain_narrative, website_url, linkedin_url, instagram_url, threads_url, x_url, rejection_reason, reviewed_at, updated_at, created_at")
+      .select("id, registration_status, full_name, affiliation, campus, phone_wa, telegram_username, portfolio_url, division, track, secondary_division, secondary_track, join_reason, bio, website_url, linkedin_url, instagram_url, threads_url, x_url, rejection_reason, reviewed_at, updated_at, created_at")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -83,7 +83,7 @@ export default async function OnboardingView({ locale, embedded = false }: { loc
         secondaryDivision: member.secondary_division || undefined,
         secondaryTrack: member.secondary_track || undefined,
         joinReason: member.join_reason || "",
-        toolchainNarrative: member.bio || member.toolchain_narrative || "",
+        toolchainNarrative: member.bio || "",
         portfolioUrl: member.portfolio_url || "",
         websiteUrl: member.website_url || "",
         linkedinUrl: member.linkedin_url || "",

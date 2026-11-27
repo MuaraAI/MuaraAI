@@ -18,12 +18,7 @@ export interface Member {
   avatar_url: string | null;
   phone_wa: string | null;
   bio: string | null;
-  nim: string | null;
   campus: string;
-  prodi: string | null;
-  kelas: string | null;
-  semester: number | null;
-  angkatan: number | null;
   hierarchy: MemberHierarchy;
   sub_hierarchy: string | null;
   /** Every division the person belongs to; division stays their primary one (it decides their contribution target). */
@@ -37,7 +32,6 @@ export interface Member {
   titles: string[];
   division: MemberDivision;
   track: string | null;
-  generation: number | null;
   github_username: string;
   github_url: string | null;
   website_url: string | null;
