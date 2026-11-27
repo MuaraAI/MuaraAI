@@ -7,6 +7,8 @@ import { escapeHtml } from "@/lib/notify";
 import { fetchMemberOrgCommits } from "@/lib/github-sync";
 import { POSITIONS_SETTING_KEY, normalizePositions, parsePositions, type PositionsConfig } from "@/lib/positions";
 import { applyRole, hierarchyFor, roleBadges, validateRoleChange } from "@/lib/structure";
+import { desiredTeams, planTeamSync, type SyncPlan } from "@/lib/github-teams";
+import { addTeamMember, createTeam, fetchOrgTeams, removeTeamMember } from "@/lib/github-org";
 import { isValidTierMultipliers, serializeRules, type ContributionRules } from "@/lib/contributions/rules";
 import { runContributionSync } from "@/lib/contributions/engine";
 import { buildSupabaseDeps } from "@/lib/contributions/supabase-deps";
@@ -257,6 +259,101 @@ export async function setMemberRole(memberId: string, input: unknown) {
     return { success: false, error: GENERIC_ERROR };
   }
   return { success: true };
+}
+
+// 8b. GitHub org teams: what would change (read-only), and doing it.
+//     The plan is always worked out on the server from the members table and GitHub, never taken from the client.
+type TeamSyncState = { error: string } | { error?: undefined; token: string; ids: Record<string, number>; plan: SyncPlan };
+
+async function loadTeamSyncState(): Promise<TeamSyncState> {
+  const { supabase } = await assertMaintainer();
+  const token = process.env.GITHUB_ORG_TOKEN;
+  if (!token) return { error: "GITHUB_ORG_TOKEN belum diatur di server." };
+
+  const { data, error } = await supabase
+    .from("members")
+    .select("github_username, registration_status, membership_status, is_active, hierarchy, roles, titles, division, divisions, head_of");
+  // An empty members list would look like "nobody is registered", so a failed read must stop here.
+  if (error || !data) {
+    console.error("[admin:teamSyncMembers]", error?.message ?? "no data");
+    return { error: "Gagal membaca data anggota. Coba lagi." };
+  }
+  const members = data;
+  // Only people who were once approved can be taken out of a team (e.g. they left or were deactivated).
+  // Someone who is still pending or was rejected is left alone: they may simply be an existing GitHub team member who is registering.
+  const known = new Set(
+    members
+      .filter((member) => member.registration_status === "approved")
+      .map((member) => member.github_username?.trim().toLowerCase())
+      .filter((name): name is string => Boolean(name)),
+  );
+
+  const { teams, ids } = await fetchOrgTeams(token);
+  return { token, ids, plan: planTeamSync({ desired: desiredTeams(members), current: teams, known }) };
+}
+
+export async function previewTeamSync(): Promise<{ success: true; plan: SyncPlan } | { success: false; error: string }> {
+  const state: TeamSyncState = await loadTeamSyncState().catch((error: unknown) => {
+    if (error instanceof Error && error.message.startsWith("Forbidden")) throw error;
+    console.error("[admin:previewTeamSync]", error instanceof Error ? error.message : "unknown error");
+    return { error: "Gagal membaca tim GitHub. Coba lagi." };
+  });
+  return state.error !== undefined ? { success: false, error: state.error } : { success: true, plan: state.plan };
+}
+
+export interface TeamSyncFailure {
+  action: "create" | "add" | "remove";
+  team: string;
+  user?: string;
+}
+
+export async function applyTeamSync(): Promise<
+  { success: boolean; applied: { created: number; added: number; invited: number; removed: number }; failures: TeamSyncFailure[] } | { success: false; error: string }
+> {
+  const state: TeamSyncState = await loadTeamSyncState().catch((error: unknown) => {
+    if (error instanceof Error && error.message.startsWith("Forbidden")) throw error;
+    console.error("[admin:applyTeamSync]", error instanceof Error ? error.message : "unknown error");
+    return { error: "Gagal membaca tim GitHub. Coba lagi." };
+  });
+  if (state.error !== undefined) return { success: false, error: state.error };
+
+  const { token, plan } = state;
+  const ids = { ...state.ids };
+  const failures: TeamSyncFailure[] = [];
+  const uncreated = new Set<string>();
+  const applied = { created: 0, added: 0, invited: 0, removed: 0 };
+  const attempt = async (failure: TeamSyncFailure, run: () => Promise<unknown>) => {
+    try {
+      await run();
+      return true;
+    } catch (error) {
+      console.error(`[admin:applyTeamSync:${failure.action}]`, error instanceof Error ? error.message : "unknown error");
+      failures.push(failure);
+      return false;
+    }
+  };
+
+  for (const { slug, parent } of plan.create) {
+    const parentId = ids[parent];
+    const created = parentId !== undefined && (await attempt({ action: "create", team: slug }, async () => { ids[slug] = await createTeam(token, slug, parentId); }));
+    if (created) applied.created += 1;
+    else {
+      uncreated.add(slug);
+      if (parentId === undefined) failures.push({ action: "create", team: slug });
+    }
+  }
+  for (const { team, user } of plan.add) {
+    if (uncreated.has(team)) continue;
+    const outcome: { state: "active" | "pending" } = { state: "active" };
+    if (await attempt({ action: "add", team, user }, async () => { outcome.state = await addTeamMember(token, team, user); })) {
+      applied[outcome.state === "pending" ? "invited" : "added"] += 1;
+    }
+  }
+  for (const { team, user } of plan.remove) {
+    if (await attempt({ action: "remove", team, user }, () => removeTeamMember(token, team, user))) applied.removed += 1;
+  }
+
+  return { success: failures.length === 0, applied, failures };
 }
 
 // 9. Update the official positions per division (does not touch existing members)
