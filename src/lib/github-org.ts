@@ -46,8 +46,11 @@ export async function createTeam(token: string, slug: string, parentId: number):
   return ((await response.json()) as { id: number }).id;
 }
 
-export async function addTeamMember(token: string, team: string, user: string): Promise<void> {
-  await request(token, `/orgs/${ORG}/teams/${encodeURIComponent(team)}/memberships/${encodeURIComponent(user)}`, { method: "PUT", body: { role: "member" } });
+/** "pending" means the person is not an org member yet and has only been invited; they will not show in the team until they accept. */
+export async function addTeamMember(token: string, team: string, user: string): Promise<"active" | "pending"> {
+  const response = await request(token, `/orgs/${ORG}/teams/${encodeURIComponent(team)}/memberships/${encodeURIComponent(user)}`, { method: "PUT", body: { role: "member" } });
+  const body = (await response.json().catch(() => null)) as { state?: string } | null;
+  return body?.state === "pending" ? "pending" : "active";
 }
 
 export async function removeTeamMember(token: string, team: string, user: string): Promise<void> {

@@ -43,8 +43,8 @@ export default function TeamSyncPanel() {
       setResult({ tone: "error", text: response.error });
       return;
     }
-    const { created, added, removed } = response.applied;
-    const summary = `${created} tim dibuat, ${added} orang ditambahkan, ${removed} dikeluarkan.`;
+    const { created, added, invited, removed } = response.applied;
+    const summary = `${created} tim dibuat, ${added} orang ditambahkan, ${removed} dikeluarkan.${invited > 0 ? ` ${invited} orang baru diundang ke org dan baru masuk tim setelah menerima undangan.` : ""}`;
     setResult({ tone: response.success ? "success" : "error", text: response.success ? summary : `${summary} Sebagian gagal:`, failures: response.failures });
     notify({ tone: response.success ? "success" : "error", title: response.success ? "Tim GitHub tersinkron" : "Sinkron tim GitHub sebagian gagal", message: summary });
 

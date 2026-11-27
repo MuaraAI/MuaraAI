@@ -7,11 +7,14 @@ const org = {
   removeTeamMember: vi.fn(),
 };
 let caller = { id: "u1", hierarchy: "maintainer", roles: [] as string[] };
+let membersResult: { data: unknown[] | null; error: { message: string } | null } = { data: null, error: null };
 
 const member = (over: Record<string, unknown>) => ({ registration_status: "approved", membership_status: "active", is_active: true, hierarchy: "member", roles: [], titles: [], head_of: [], division: "builder", divisions: ["builder"], ...over });
 const rows = [
   member({ github_username: "Yuken", hierarchy: "maintainer", roles: ["maintainer"], head_of: ["builder"], divisions: ["builder", "cybersecurity"] }),
   member({ github_username: "Plain" }),
+  member({ github_username: "Gone", membership_status: "exited" }),
+  member({ github_username: "Waiting", registration_status: "pending" }),
 ];
 
 vi.mock("@/lib/supabase/server", () => ({
@@ -22,7 +25,7 @@ vi.mock("@/lib/supabase/server", () => ({
         select: () => builder,
         eq: () => builder,
         single: async () => ({ data: caller }),
-        then: (resolve: (value: unknown) => unknown) => resolve({ data: rows }),
+        then: (resolve: (value: unknown) => unknown) => resolve(membersResult.data === null && membersResult.error === null ? { data: rows, error: null } : membersResult),
       };
       return builder;
     },
@@ -40,16 +43,17 @@ vi.mock("resend", () => ({ Resend: class {} }));
 import { applyTeamSync, previewTeamSync } from "../src/app/actions/admin";
 
 const existing = {
-  teams: { maintainers: ["yuken"], heads: [], "head-builder": [], "head-creative": [], members: ["yuken", "greeezzz"], "member-builder": [], "member-creative": [] },
+  teams: { maintainers: ["yuken"], heads: [], "head-builder": [], "head-creative": [], members: ["yuken", "greeezzz", "gone", "waiting"], "member-builder": ["gone"], "member-creative": [] },
   ids: { heads: 2, members: 5 },
 };
 
 beforeEach(() => {
   process.env.GITHUB_ORG_TOKEN = "tok";
   caller = { id: "u1", hierarchy: "maintainer", roles: [] };
+  membersResult = { data: null, error: null };
   org.fetchOrgTeams.mockReset().mockResolvedValue(existing);
   org.createTeam.mockReset().mockResolvedValue(77);
-  org.addTeamMember.mockReset().mockResolvedValue(undefined);
+  org.addTeamMember.mockReset().mockResolvedValue("active");
   org.removeTeamMember.mockReset().mockResolvedValue(undefined);
 });
 
@@ -62,9 +66,19 @@ describe("previewTeamSync", () => {
     expect(result.plan.create).toEqual([{ slug: "head-cybersecurity", parent: "heads" }, { slug: "member-cybersecurity", parent: "members" }]);
     expect(result.plan.add).toContainEqual({ team: "heads", user: "yuken" });
     expect(result.plan.add).toContainEqual({ team: "member-builder", user: "plain" });
-    expect(result.plan.unknown).toEqual(["greeezzz"]);
+    expect(result.plan.remove).toEqual([{ team: "members", user: "gone" }, { team: "member-builder", user: "gone" }]);
+    expect(result.plan.unknown).toEqual(["greeezzz", "waiting"]);
     expect(org.createTeam).not.toHaveBeenCalled();
     expect(org.addTeamMember).not.toHaveBeenCalled();
+    expect(org.removeTeamMember).not.toHaveBeenCalled();
+  });
+
+  it("does not treat a failed read of the members table as nobody being registered", async () => {
+    membersResult = { data: null, error: { message: "boom secret" } };
+    const result = await previewTeamSync();
+    expect(result).toEqual({ success: false, error: "Gagal membaca data anggota. Coba lagi." });
+    expect(org.fetchOrgTeams).not.toHaveBeenCalled();
+    expect(await applyTeamSync()).toEqual({ success: false, error: "Gagal membaca data anggota. Coba lagi." });
     expect(org.removeTeamMember).not.toHaveBeenCalled();
   });
 
@@ -98,14 +112,41 @@ describe("applyTeamSync", () => {
     expect(org.addTeamMember).toHaveBeenCalledWith("tok", "heads", "yuken");
     expect(org.addTeamMember).toHaveBeenCalledWith("tok", "member-builder", "plain");
     expect(org.addTeamMember).toHaveBeenCalledWith("tok", "member-cybersecurity", "yuken");
-    expect(org.removeTeamMember).not.toHaveBeenCalled();
-    expect(result).toMatchObject({ success: true, failures: [], applied: { created: 2 } });
+    expect(result).toMatchObject({ success: true, failures: [], applied: { created: 2, invited: 0, removed: 2 } });
   });
 
-  it("works the plan out again on the server and never touches people it does not know", async () => {
+  it("removes only people who were approved and no longer belong, after the additions", async () => {
+    const order: string[] = [];
+    org.addTeamMember.mockImplementation(async () => { order.push("add"); return "active"; });
+    org.removeTeamMember.mockImplementation(async () => { order.push("remove"); });
+    await applyTeamSync();
+
+    expect(org.removeTeamMember.mock.calls.map((call) => [call[1], call[2]])).toEqual([["members", "gone"], ["member-builder", "gone"]]);
+    expect(order.lastIndexOf("add")).toBeLessThan(order.indexOf("remove"));
+  });
+
+  it("never touches people who are not approved members: unregistered GitHub users and applicants still pending", async () => {
     await applyTeamSync();
     const touched = [...org.addTeamMember.mock.calls, ...org.removeTeamMember.mock.calls].map((call) => call[2]);
     expect(touched).not.toContain("greeezzz");
+    expect(touched).not.toContain("waiting");
+  });
+
+  it("counts people who were only invited to the org separately from people added to a team", async () => {
+    org.addTeamMember.mockImplementation(async (_token: string, _team: string, user: string) => (user === "plain" ? "pending" : "active"));
+    const result = await applyTeamSync();
+    expect(result).toMatchObject({ success: true, applied: { invited: 2 } });
+  });
+
+  it("reports a failed removal and keeps going", async () => {
+    org.removeTeamMember.mockImplementation(async (_token: string, team: string) => {
+      if (team === "members") throw new Error("GitHub DELETE failed: HTTP 404");
+    });
+    const result = await applyTeamSync();
+    expect(result.success).toBe(false);
+    if (!("failures" in result)) return;
+    expect(result.failures).toEqual([{ action: "remove", team: "members", user: "gone" }]);
+    expect(org.removeTeamMember).toHaveBeenCalledWith("tok", "member-builder", "gone");
   });
 
   it("keeps going when one change fails and reports it", async () => {

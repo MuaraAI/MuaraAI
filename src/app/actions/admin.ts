@@ -270,11 +270,23 @@ async function loadTeamSyncState(): Promise<TeamSyncState> {
   const token = process.env.GITHUB_ORG_TOKEN;
   if (!token) return { error: "GITHUB_ORG_TOKEN belum diatur di server." };
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("members")
     .select("github_username, registration_status, membership_status, is_active, hierarchy, roles, titles, division, divisions, head_of");
-  const members = data ?? [];
-  const known = new Set(members.map((member) => member.github_username?.trim().toLowerCase()).filter((name): name is string => Boolean(name)));
+  // An empty members list would look like "nobody is registered", so a failed read must stop here.
+  if (error || !data) {
+    console.error("[admin:teamSyncMembers]", error?.message ?? "no data");
+    return { error: "Gagal membaca data anggota. Coba lagi." };
+  }
+  const members = data;
+  // Only people who were once approved can be taken out of a team (e.g. they left or were deactivated).
+  // Someone who is still pending or was rejected is left alone: they may simply be an existing GitHub team member who is registering.
+  const known = new Set(
+    members
+      .filter((member) => member.registration_status === "approved")
+      .map((member) => member.github_username?.trim().toLowerCase())
+      .filter((name): name is string => Boolean(name)),
+  );
 
   const { teams, ids } = await fetchOrgTeams(token);
   return { token, ids, plan: planTeamSync({ desired: desiredTeams(members), current: teams, known }) };
@@ -296,7 +308,7 @@ export interface TeamSyncFailure {
 }
 
 export async function applyTeamSync(): Promise<
-  { success: boolean; applied: { created: number; added: number; removed: number }; failures: TeamSyncFailure[] } | { success: false; error: string }
+  { success: boolean; applied: { created: number; added: number; invited: number; removed: number }; failures: TeamSyncFailure[] } | { success: false; error: string }
 > {
   const state: TeamSyncState = await loadTeamSyncState().catch((error: unknown) => {
     if (error instanceof Error && error.message.startsWith("Forbidden")) throw error;
@@ -309,7 +321,7 @@ export async function applyTeamSync(): Promise<
   const ids = { ...state.ids };
   const failures: TeamSyncFailure[] = [];
   const uncreated = new Set<string>();
-  const applied = { created: 0, added: 0, removed: 0 };
+  const applied = { created: 0, added: 0, invited: 0, removed: 0 };
   const attempt = async (failure: TeamSyncFailure, run: () => Promise<unknown>) => {
     try {
       await run();
@@ -332,7 +344,10 @@ export async function applyTeamSync(): Promise<
   }
   for (const { team, user } of plan.add) {
     if (uncreated.has(team)) continue;
-    if (await attempt({ action: "add", team, user }, () => addTeamMember(token, team, user))) applied.added += 1;
+    const outcome: { state: "active" | "pending" } = { state: "active" };
+    if (await attempt({ action: "add", team, user }, async () => { outcome.state = await addTeamMember(token, team, user); })) {
+      applied[outcome.state === "pending" ? "invited" : "added"] += 1;
+    }
   }
   for (const { team, user } of plan.remove) {
     if (await attempt({ action: "remove", team, user }, () => removeTeamMember(token, team, user))) applied.removed += 1;

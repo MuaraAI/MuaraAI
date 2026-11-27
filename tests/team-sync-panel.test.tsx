@@ -25,7 +25,7 @@ const plan = {
 
 beforeEach(() => {
   previewTeamSync.mockReset().mockResolvedValue({ success: true, plan });
-  applyTeamSync.mockReset().mockResolvedValue({ success: true, applied: { created: 1, added: 2, removed: 1 }, failures: [] });
+  applyTeamSync.mockReset().mockResolvedValue({ success: true, applied: { created: 1, added: 2, invited: 0, removed: 1 }, failures: [] });
   notify.mockReset();
   confirm.mockClear();
   confirmAnswer = true;
@@ -60,6 +60,13 @@ describe("team sync panel", () => {
     expect(notify).toHaveBeenCalledWith(expect.objectContaining({ tone: "success" }));
   });
 
+  it("tells the admin when new people were only invited to the org", async () => {
+    applyTeamSync.mockResolvedValue({ success: true, applied: { created: 0, added: 1, invited: 2, removed: 0 }, failures: [] });
+    await show();
+    fireEvent.click(screen.getByRole("button", { name: "Terapkan ke GitHub" }));
+    expect((await screen.findByRole("status")).textContent).toContain("2 orang baru diundang ke org dan baru masuk tim setelah menerima undangan.");
+  });
+
   it("does nothing when the admin declines", async () => {
     confirmAnswer = false;
     await show();
@@ -69,7 +76,7 @@ describe("team sync panel", () => {
   });
 
   it("lists each change that failed", async () => {
-    applyTeamSync.mockResolvedValue({ success: false, applied: { created: 1, added: 1, removed: 0 }, failures: [{ action: "add", team: "heads", user: "verzio" }] });
+    applyTeamSync.mockResolvedValue({ success: false, applied: { created: 1, added: 1, invited: 0, removed: 0 }, failures: [{ action: "add", team: "heads", user: "verzio" }] });
     await show();
     fireEvent.click(screen.getByRole("button", { name: "Terapkan ke GitHub" }));
 

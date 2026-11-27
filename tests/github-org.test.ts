@@ -56,7 +56,7 @@ describe("changing teams", () => {
 
   it("adds and removes a member with the team slug and username in the path, encoded", async () => {
     respond.mockResolvedValue(new Response(null, { status: 204 }));
-    await addTeamMember("tok", "head-creative", "verzio");
+    await expect(addTeamMember("tok", "head-creative", "verzio")).resolves.toBe("active");
     await removeTeamMember("tok", "head-creative", "yuken");
     expect(calls[0]).toMatchObject({ method: "PUT", url: "https://api.github.com/orgs/MuaraAI/teams/head-creative/memberships/verzio" });
     expect(JSON.parse(calls[0].body ?? "{}")).toEqual({ role: "member" });
@@ -65,6 +65,13 @@ describe("changing teams", () => {
     calls.length = 0;
     await addTeamMember("tok", "a/b", "x y");
     expect(calls[0].url).toBe("https://api.github.com/orgs/MuaraAI/teams/a%2Fb/memberships/x%20y");
+  });
+
+  it("says when the person was only invited to the org", async () => {
+    respond.mockResolvedValue(json({ state: "pending", role: "member" }));
+    await expect(addTeamMember("tok", "heads", "newcomer")).resolves.toBe("pending");
+    respond.mockResolvedValue(json({ state: "active", role: "member" }));
+    await expect(addTeamMember("tok", "heads", "insider")).resolves.toBe("active");
   });
 
   it("reports a failed change with its status", async () => {
