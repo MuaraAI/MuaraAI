@@ -10,6 +10,7 @@ import FadeIn from "@/components/ui/fade-in";
 import { filterMembers, RosterFilter } from "@/components/landing/syndicate-roster";
 import { PixelTabs, TabSlide } from "@/components/ui/pixel-tabs";
 import TierBadge from "@/components/members/tier-badge";
+import { roleLabel } from "@/lib/structure";
 
 interface MembersDirectoryProps {
   initialMembers: Member[];
@@ -23,6 +24,8 @@ const PLACEHOLDER_INSTITUTIONS = ["Tidak disebutkan", "Kampus lain di Indonesia"
 const filters: { id: RosterFilter; label: string }[] = [
   { id: "all", label: "Semua" },
   { id: "maintainer", label: "Maintainer" },
+  { id: "head", label: "Head" },
+  { id: "lead", label: "Lead" },
   { id: "builder", label: "Builder" },
   { id: "creative", label: "Creative" },
   { id: "top-tier", label: "Peringkat tier" },
@@ -99,6 +102,7 @@ export default function MembersDirectory({ initialMembers, positions }: MembersD
                       </div>
                     </div>
                     <div className="mt-5 flex flex-wrap gap-1.5">
+                      {member.hierarchy !== "member" ? <span className="px-chip bg-white px-2 py-0.5 font-mono text-[11px] font-semibold text-muara-ocean">{roleLabel(member)}</span> : null}
                       {titles.map((title) => <span key={title} className="px-chip bg-surface-alt px-2 py-0.5 font-mono text-[11px] font-medium text-foreground">{title}</span>)}
                       <span className="px-chip px-2 py-0.5 font-mono text-[11px] font-medium capitalize text-secondary">{member.division}</span>
                       {isOfficial(member.division, member.track) ? <span className="px-chip px-2 py-0.5 font-mono text-[11px] font-medium text-foreground">{member.track}</span> : null}

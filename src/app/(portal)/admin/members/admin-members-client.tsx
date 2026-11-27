@@ -2,15 +2,56 @@
 
 import React, { useState } from "react";
 import { Member } from "@/types/database";
-import { toggleMemberActive, syncOrgCommits } from "@/app/actions/admin";
+import { toggleMemberActive, syncOrgCommits, setMemberRole } from "@/app/actions/admin";
+import type { PositionsConfig } from "@/lib/positions";
+import { RANKS, roleLabel, type Division, type Rank, type RoleChange } from "@/lib/structure";
 import Icon from "@/components/ui/icon";
 import { useFeedback } from "@/components/ui/feedback";
 
 interface AdminMembersClientProps {
   initialMembers: Member[];
+  positions: PositionsConfig | null;
 }
 
-export default function AdminMembersClient({ initialMembers }: AdminMembersClientProps) {
+const SELECT_CLASS = "min-h-9 border-2 border-[#CFE2EE] bg-surface-alt px-2 py-1 text-[11px] text-foreground focus:border-muara-ocean";
+const RANK_NAMES: Record<Rank, string> = { maintainer: "Maintainer", head: "Head", lead: "Lead", member: "Member" };
+
+/** Rank, division and position of one person, saved together. */
+function RoleCell({ member, positions, busy, onSave }: { member: Member; positions: PositionsConfig; busy: boolean; onSave: (change: RoleChange) => void }) {
+  const [rank, setRank] = useState<Rank>(member.hierarchy);
+  const [division, setDivision] = useState<Division>(member.division);
+  const [track, setTrack] = useState(member.track ?? "");
+  const dirty = rank !== member.hierarchy || division !== member.division || track !== (member.track ?? "");
+
+  return (
+    <div className="space-y-1.5">
+      <div className="font-bold text-foreground">{roleLabel(member)}</div>
+      <div className="flex flex-wrap items-center gap-1.5">
+        <select aria-label={`Peringkat ${member.full_name}`} value={rank} onChange={(e) => setRank(e.target.value as Rank)} className={SELECT_CLASS}>
+          {RANKS.map((value) => <option key={value} value={value}>{RANK_NAMES[value]}</option>)}
+        </select>
+        <select aria-label={`Divisi ${member.full_name}`} value={division} onChange={(e) => { setDivision(e.target.value as Division); setTrack(""); }} className={SELECT_CLASS}>
+          <option value="builder">Builder</option>
+          <option value="creative">Creative</option>
+        </select>
+        <select aria-label={`Posisi ${member.full_name}`} value={track} onChange={(e) => setTrack(e.target.value)} className={SELECT_CLASS}>
+          <option value="">Tanpa posisi</option>
+          {positions[division].map((value) => <option key={value} value={value}>{value}</option>)}
+        </select>
+        <button
+          type="button"
+          disabled={!dirty || busy}
+          onClick={() => onSave({ hierarchy: rank, division, track: track || null })}
+          className="px-chip border border-muara-ocean px-3 py-1 text-[11px] font-bold text-muara-ocean disabled:opacity-40"
+        >
+          Simpan peran
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default function AdminMembersClient({ initialMembers, positions }: AdminMembersClientProps) {
   const { confirm, notify } = useFeedback();
   const [members, setMembers] = useState<Member[]>(initialMembers);
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -57,6 +98,29 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
     }
   };
 
+  const handleSaveRole = async (member: Member, change: RoleChange) => {
+    const touchesAccess = change.hierarchy === "maintainer" || member.hierarchy === "maintainer";
+    const ok = await confirm({
+      title: touchesAccess ? "Ubah akses maintainer?" : "Simpan peran baru?",
+      message: touchesAccess
+        ? `Maintainer punya akses penuh ke admin. @${member.github_username} akan menjadi ${roleLabel(change)}.`
+        : `@${member.github_username} akan menjadi ${roleLabel(change)}.`,
+      confirmLabel: "Simpan",
+    });
+    if (!ok) return;
+
+    setProcessingId(member.id);
+    const res = await setMemberRole(member.id, change);
+    setProcessingId(null);
+
+    if (res.success) {
+      setMembers((prev) => prev.map((m) => (m.id === member.id ? { ...m, hierarchy: change.hierarchy, division: change.division, track: change.track } : m)));
+      notify({ tone: "success", title: "Peran disimpan", message: `@${member.github_username}: ${roleLabel(change)}` });
+    } else {
+      notify({ tone: "error", title: "Gagal menyimpan peran", message: String(res.error ?? "Terjadi kesalahan.") });
+    }
+  };
+
   return (
     <div className="px-card bg-white p-6 sm:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -81,6 +145,7 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
           <thead>
             <tr className="border-b border-stroke text-secondary uppercase">
               <th className="py-2.5 px-3">Member</th>
+              <th className="py-2.5 px-3">Peran</th>
               <th className="py-2.5 px-3">Lifecycle</th>
               <th className="py-2.5 px-3 text-center">Commits</th>
               <th className="py-2.5 px-3">Intake</th>
@@ -97,6 +162,13 @@ export default function AdminMembersClient({ initialMembers }: AdminMembersClien
                   <td className="py-3 px-3">
                     <div className="font-bold text-foreground">{m.full_name}</div>
                     <div className="text-[10px] text-secondary">@{m.github_username}</div>
+                  </td>
+                  <td className="py-3 px-3">
+                    {positions ? (
+                      <RoleCell key={`${m.id}-${m.hierarchy}-${m.division}-${m.track}`} member={m} positions={positions} busy={processingId === m.id} onSave={(change) => handleSaveRole(m, change)} />
+                    ) : (
+                      <span className="font-bold text-foreground">{roleLabel(m)}</span>
+                    )}
                   </td>
                   <td className="py-3 px-3">
                     <span className={`px-chip inline-block px-2 py-0.5 text-[10px] font-bold uppercase ${

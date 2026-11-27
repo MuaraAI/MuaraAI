@@ -8,6 +8,7 @@ import Icon from "@/components/ui/icon";
 import FadeIn from "@/components/ui/fade-in";
 import { Section, SectionHeader } from "@/components/ui/section";
 import { communityContent } from "@/lib/community-content";
+import { isMaintainer } from "@/lib/guards";
 
 export type RosterFilter =
   | "maintainer"
@@ -24,52 +25,10 @@ export function filterMembers(members: Member[], filter: RosterFilter): Member[]
       .filter((m) => (m.tier || 0) > 0)
       .sort((a, b) => (b.tier || 0) - (a.tier || 0) || (b.streak || 0) - (a.streak || 0) || a.full_name.localeCompare(b.full_name));
   }
-  if (filter === "maintainer") {
-    return members.filter(
-      (m) =>
-        m.hierarchy === "maintainer" ||
-        m.roles?.includes("maintainer") ||
-        m.sub_hierarchy === "founder" ||
-        m.sub_hierarchy === "co-founder" ||
-        (m.titles || []).some((t) => /founder|maintainer/i.test(t))
-    );
-  }
-  if (filter === "lead") {
-    return members.filter(
-      (m) =>
-        m.hierarchy === "lead" ||
-        m.roles?.some((r) => r.startsWith("lead")) ||
-        m.sub_hierarchy?.startsWith("lead") ||
-        (m.titles || []).some((t) => /lead/i.test(t))
-    );
-  }
-  if (filter === "head") {
-    return members.filter(
-      (m) =>
-        m.hierarchy === "head" ||
-        m.roles?.some((r) => r.startsWith("head")) ||
-        m.sub_hierarchy?.startsWith("head") ||
-        (m.titles || []).some((t) => /head/i.test(t))
-    );
-  }
-  if (filter === "creative") {
-    return members.filter(
-      (m) =>
-        m.division === "creative" ||
-        m.roles?.includes("creative") ||
-        m.roles?.includes("member-creative") ||
-        m.sub_hierarchy === "member-creative"
-    );
-  }
-  if (filter === "builder") {
-    return members.filter(
-      (m) =>
-        m.division === "builder" ||
-        m.roles?.includes("builder") ||
-        m.roles?.includes("member-builder") ||
-        m.sub_hierarchy === "member-builder"
-    );
-  }
+  // One rule per filter. "Maintainer" follows isMaintainer (the same rule the database uses for access).
+  if (filter === "maintainer") return members.filter((m) => isMaintainer(m));
+  if (filter === "lead" || filter === "head") return members.filter((m) => m.hierarchy === filter);
+  if (filter === "creative" || filter === "builder") return members.filter((m) => m.division === filter);
   return members;
 }
 

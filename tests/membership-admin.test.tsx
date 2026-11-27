@@ -19,7 +19,7 @@ const member = {
 
 describe("Admin membership lifecycle visibility", () => {
   it("renders exited status and reapply block", () => {
-    render(<AdminMembersClient initialMembers={[member]} />);
+    render(<AdminMembersClient initialMembers={[member]} positions={null} />);
     expect(screen.getByText("Exited")).toBeDefined();
     expect(screen.getByText(/Tidak dapat daftar ulang/i)).toBeDefined();
     expect(screen.getByText("ubsi-2026-s1")).toBeDefined();

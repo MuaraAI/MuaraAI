@@ -3,7 +3,7 @@ import { Section, SectionHeader } from "@/components/ui/section";
 import { TIER_NAMES } from "@/lib/contributions/tiers";
 import type { PositionsConfig } from "@/lib/positions";
 
-const ROLES = ["Maintainer", "Head", "Lead", "Member"];
+import { RANKS, type Rank } from "@/lib/structure";
 
 const COPY = {
   id: {
@@ -12,6 +12,12 @@ const COPY = {
     builder: "Membangun aplikasi, sistem, dan project lewat kode.",
     creative: "Membuat karya, konten, dan ide yang dikerjakan lewat PR di repo org.",
     roles: "Peran",
+    rankText: {
+      maintainer: "Menjaga arah komunitas dan meninjau pendaftar.",
+      head: "Memimpin satu divisi: Head of Builder dan Head of Creative.",
+      lead: "Memandu satu bidang kerja di dalam divisi.",
+      member: "Berkontribusi lewat PR di repo org dan ikut sesi komunitas.",
+    } satisfies Record<Rank, string>,
     tiers: "Tier",
     tiersNote: "Tier dihitung tiap bulan dari kontribusi yang melampaui target. Hanya pengakuan, tanpa hak istimewa.",
   },
@@ -21,10 +27,18 @@ const COPY = {
     builder: "Building apps, systems and projects with code.",
     creative: "Making work, content and ideas, delivered as pull requests to the org's repos.",
     roles: "Roles",
+    rankText: {
+      maintainer: "Keeps the community on course and reviews applicants.",
+      head: "Leads a division: Head of Builder and Head of Creative.",
+      lead: "Guides one area of work inside a division.",
+      member: "Contributes through pull requests to the org's repos and joins community sessions.",
+    } satisfies Record<Rank, string>,
     tiers: "Tiers",
     tiersNote: "Tiers are worked out every month from contributions above the target. Recognition only, no perks.",
   },
 } as const;
+
+const RANK_NAMES: Record<Rank, string> = { maintainer: "Maintainer", head: "Head", lead: "Lead", member: "Member" };
 
 function Chips({ items }: { items: string[] }) {
   return (
@@ -62,7 +76,14 @@ export default function CommunityStructure({ positions, locale = "id" }: { posit
         <div className="space-y-8">
           <div>
             <h3 className="font-display text-base font-bold text-foreground">{copy.roles}</h3>
-            <Chips items={ROLES} />
+            <dl className="mt-4 space-y-3">
+              {RANKS.map((rank) => (
+                <div key={rank} className="px-frame bg-surface-alt p-3 [--px-line:#CFE2EE]">
+                  <dt className="font-mono text-xs font-bold uppercase text-foreground">{RANK_NAMES[rank]}</dt>
+                  <dd className="mt-1 text-sm leading-relaxed text-secondary">{copy.rankText[rank]}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
           <div>
             <h3 className="font-display text-base font-bold text-foreground">{copy.tiers}</h3>

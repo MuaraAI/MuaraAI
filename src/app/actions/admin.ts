@@ -5,7 +5,8 @@ import { createPrivilegedClient } from "@/lib/supabase/admin";
 import { isMaintainer } from "@/lib/guards";
 import { escapeHtml } from "@/lib/notify";
 import { fetchMemberOrgCommits } from "@/lib/github-sync";
-import { POSITIONS_SETTING_KEY, normalizePositions, type PositionsConfig } from "@/lib/positions";
+import { POSITIONS_SETTING_KEY, normalizePositions, parsePositions, type PositionsConfig } from "@/lib/positions";
+import { applyRole, roleLabel, validateRoleChange } from "@/lib/structure";
 import { isValidTierMultipliers, serializeRules, type ContributionRules } from "@/lib/contributions/rules";
 import { runContributionSync } from "@/lib/contributions/engine";
 import { buildSupabaseDeps } from "@/lib/contributions/supabase-deps";
@@ -205,6 +206,49 @@ export async function toggleMemberActive(memberId: string, isActive: boolean) {
 
   if (error) {
     console.error("[admin:toggleMemberActive]", error.message);
+    return { success: false, error: GENERIC_ERROR };
+  }
+  return { success: true };
+}
+
+// 8. Set a member's rank, division and position (also keeps the legacy roles list in step with hierarchy)
+export async function setMemberRole(memberId: string, input: unknown) {
+  const { supabase } = await assertMaintainer();
+
+  const { data: positionsSetting } = await supabase.from("community_settings").select("value").eq("key", POSITIONS_SETTING_KEY).maybeSingle();
+  const positions = parsePositions(positionsSetting?.value);
+  if (!positions) return { success: false, error: "Daftar posisi resmi belum diatur." };
+
+  const parsed = validateRoleChange(input, positions);
+  if (!parsed.ok) return { success: false, error: parsed.error };
+  const change = parsed.value;
+
+  const { data: target } = await supabase.from("members").select("id, hierarchy, roles").eq("id", memberId).maybeSingle();
+  if (!target) return { success: false, error: "Anggota tidak ditemukan." };
+
+  // Never leave the community without a maintainer: access is decided by hierarchy OR the roles list.
+  if (isMaintainer(target) && change.hierarchy !== "maintainer") {
+    const { data: current } = await supabase.from("members").select("id").or("hierarchy.eq.maintainer,roles.cs.{maintainer}");
+    if ((current ?? []).filter((row) => row.id !== memberId).length === 0) {
+      return { success: false, error: "Tidak bisa menurunkan maintainer terakhir." };
+    }
+  }
+
+  const keepsMaintainerIdentity = change.hierarchy === "maintainer";
+  const { error } = await supabase
+    .from("members")
+    .update({
+      hierarchy: change.hierarchy,
+      division: change.division,
+      track: change.track,
+      roles: applyRole(target.roles, change.hierarchy),
+      // Maintainers keep their own founder/co-founder wording; everyone else gets the standard names.
+      ...(keepsMaintainerIdentity ? {} : { sub_hierarchy: `${change.hierarchy}-${change.division}`, role_title: roleLabel(change) }),
+    })
+    .eq("id", memberId);
+
+  if (error) {
+    console.error("[admin:setMemberRole]", error.message);
     return { success: false, error: GENERIC_ERROR };
   }
   return { success: true };

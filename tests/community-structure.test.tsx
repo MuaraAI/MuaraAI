@@ -19,6 +19,19 @@ describe("CommunityStructure", () => {
     for (const tier of ["Riak", "Arus", "Pasang", "Samudra"]) expect(screen.getByText(tier)).toBeTruthy();
   });
 
+  it("explains each rank in order, including the heads of both divisions", () => {
+    render(<CommunityStructure positions={positions} />);
+    const ranks = screen.getAllByRole("term").map((term) => term.textContent);
+    expect(ranks).toEqual(["Maintainer", "Head", "Lead", "Member"]);
+    expect(screen.getByText(/Head of Builder dan Head of Creative/)).toBeTruthy();
+  });
+
+  it("explains the ranks in English too", () => {
+    render(<CommunityStructure positions={positions} locale="en" />);
+    expect(screen.getByText(/Head of Builder and Head of Creative/)).toBeTruthy();
+    expect(screen.queryByText(/Head of Builder dan/)).toBeNull();
+  });
+
   it("still renders the divisions when the positions setting is missing", () => {
     render(<CommunityStructure positions={null} />);
     expect(screen.getByRole("heading", { name: "Builder" })).toBeTruthy();
