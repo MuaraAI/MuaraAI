@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getMaintainerClient } from "@/lib/supabase/admin";
 import { Member } from "@/types/database";
 import AdminMembersClient from "./admin-members-client";
+import TeamSyncPanel from "./team-sync-panel";
 import { PortalHeader } from "@/components/ui/section";
 import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 
@@ -23,6 +24,8 @@ export default async function AdminMembersPage() {
       <PortalHeader eyebrow="Maintainer workspace" title="Audit Anggota & Status Akses">
           Pantau status keaktifan anggota, atur peran mereka, dan kendalikan akses.
       </PortalHeader>
+
+      <TeamSyncPanel />
 
       <AdminMembersClient initialMembers={members} positions={parsePositions(positionsSetting?.value)} />
     </div>
