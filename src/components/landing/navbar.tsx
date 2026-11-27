@@ -24,6 +24,8 @@ const COPY = {
     join: "/onboarding",
     links: [
       { href: "/projects", label: "Project" },
+      { href: "/karya", label: "Karya" },
+      { href: "/#struktur", label: "Struktur" },
       { href: "/members", label: "Anggota" },
       { href: "/code-of-conduct", label: "Aturan" },
     ],
@@ -39,6 +41,8 @@ const COPY = {
     join: "/en/join",
     links: [
       { href: "/projects", label: "Projects" },
+      { href: "/karya", label: "Works" },
+      { href: "/en#struktur", label: "Structure" },
       { href: "/members", label: "Members" },
       { href: "/en/code-of-conduct", label: "Rules" },
     ],
