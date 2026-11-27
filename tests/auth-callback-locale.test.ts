@@ -39,15 +39,15 @@ describe("auth callback language cookie", () => {
   });
 });
 
-describe("auth callback language", () => {
-  it("sends a new GitHub account to the English form only when it asked for it", async () => {
-    expect(await go("code=x&next=/en/onboarding")).toBe("https://muaraai.com/en/onboarding");
-    expect(await go("code=x")).toBe("https://muaraai.com/onboarding");
+describe("auth callback destination", () => {
+  it("sends a new GitHub account straight to the dashboard, where it applies for membership, whatever it asked for", async () => {
+    expect(await go("code=x")).toBe("https://muaraai.com/dashboard");
+    expect(await go("code=x&next=/en/onboarding")).toBe("https://muaraai.com/dashboard");
   });
 
   it("ignores any other next value for a new account (no open redirects)", async () => {
     for (const next of ["https://evil.com", "//evil.com", "/admin/review", "/en/onboarding/../x"]) {
-      expect(await go(`code=x&next=${encodeURIComponent(next)}`)).toBe("https://muaraai.com/onboarding");
+      expect(await go(`code=x&next=${encodeURIComponent(next)}`)).toBe("https://muaraai.com/dashboard");
     }
   });
 
@@ -58,9 +58,10 @@ describe("auth callback language", () => {
     expect(await go("code=x&next=//evil.com")).toBe("https://muaraai.com/dashboard");
   });
 
-  it("returns failures to the form in the same language", async () => {
+  it("returns a failed sign-in to the login page, never to the form, so a failure can not loop", async () => {
     exchangeError = { message: "bad" };
-    expect(await go("code=x&next=/en/onboarding")).toBe("https://muaraai.com/en/onboarding?error=oauth_callback_failed");
-    expect(await go("code=x")).toBe("https://muaraai.com/onboarding?error=oauth_callback_failed");
+    expect(await go("code=x&next=/en/onboarding")).toBe("https://muaraai.com/login?error=oauth_failed");
+    expect(await go("code=x")).toBe("https://muaraai.com/login?error=oauth_failed");
+    expect(await go("error_description=denied")).toBe("https://muaraai.com/login?error=oauth_failed");
   });
 });

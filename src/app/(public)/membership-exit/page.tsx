@@ -5,7 +5,6 @@ import MembershipExitClient from "@/components/portal/membership-exit-client";
 import { getEarliestExitDate } from "@/lib/membership";
 import type { MembershipIntakePolicy } from "@/types/database";
 import { currentLocale } from "@/lib/locale-server";
-import { PORTAL_COPY } from "@/lib/portal-copy";
 
 export default async function MembershipExitPage() {
   const locale = await currentLocale();
@@ -20,7 +19,8 @@ export default async function MembershipExitPage() {
     .select("membership_status, membership_started_at, exited_at, reapply_blocked")
     .eq("id", user.id)
     .maybeSingle();
-  if (!member) redirect(PORTAL_COPY[locale].onboardingHref);
+  // Someone who has not applied has no membership to leave: they apply from the dashboard.
+  if (!member) redirect("/dashboard");
 
   const { data: setting } = await supabase
     .from("community_settings")

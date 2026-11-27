@@ -11,11 +11,20 @@ import { isDivision } from "@/lib/structure";
 
 const PLACEHOLDER_INSTITUTIONS = ["Tidak disebutkan", "Kampus lain di Indonesia"];
 
-/** The registration page body, shared by /onboarding (Indonesian) and /en/onboarding (English). */
-export default async function OnboardingView({ locale }: { locale: Locale }) {
+/**
+ * The application form.
+ *
+ * Embedded (inside the dashboard, for someone who signed in with GitHub and has not applied yet) it only renders the form.
+ * Standalone (/onboarding, /en/onboarding) the form no longer comes before sign-in: a visitor who is signed out is sent to
+ * GitHub sign-in, and someone signed in without an application is sent to the dashboard, where they apply. What stays
+ * here is a rejected applicant whose cooldown is over, who comes back to reapply with their earlier answers filled in.
+ */
+export default async function OnboardingView({ locale, embedded = false }: { locale: Locale; embedded?: boolean }) {
   const t = ONBOARDING_COPY[normalizeLocale(locale)];
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+
+  if (!embedded && !user) redirect(normalizeLocale(locale) === "en" ? "/en/join" : "/api/auth/login");
 
   const { data: positionsSetting } = await supabase
     .from("community_settings")
@@ -38,13 +47,15 @@ export default async function OnboardingView({ locale }: { locale: Locale }) {
   let initialData: Partial<PoWInput> | undefined = undefined;
   let rejectionReason: string | undefined = undefined;
 
-  if (user) {
+  if (user && !embedded) {
     const privileged = await createPrivilegedClient();
     const { data: member } = await privileged
       .from("members")
       .select("id, registration_status, full_name, affiliation, campus, phone_wa, telegram_username, portfolio_url, division, track, secondary_division, secondary_track, join_reason, bio, toolchain_narrative, website_url, linkedin_url, instagram_url, threads_url, x_url, rejection_reason, reviewed_at, updated_at, created_at")
       .eq("id", user.id)
       .maybeSingle();
+
+    if (!member) redirect("/dashboard");
 
     if (member?.registration_status === "approved" || member?.registration_status === "pending") {
       redirect("/dashboard");
@@ -88,9 +99,8 @@ export default async function OnboardingView({ locale }: { locale: Locale }) {
     : undefined;
 
   return (
-    <div className="py-16 px-4 sm:px-6 lg:px-8">
+    <div className={embedded ? "" : "py-16 px-4 sm:px-6 lg:px-8"}>
       <PoWForm
-        authenticated={Boolean(user)}
         githubUsername={githubUsername}
         initialData={initialData}
         rejectionReason={rejectionReason}

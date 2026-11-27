@@ -58,7 +58,9 @@ export default function MemberShell({ member, locale = "id", children }: MemberS
           <div className="mt-2 flex items-center gap-1.5">
             <span
               className={`h-2 w-2 ${
-                member.registration_status === "pending"
+                member.registration_status === "applicant"
+                  ? "bg-slate-400"
+                  : member.registration_status === "pending"
                   ? "bg-amber-500"
                   : member.registration_status === "rejected"
                   ? "bg-rose-500"
@@ -68,7 +70,9 @@ export default function MemberShell({ member, locale = "id", children }: MemberS
               }`}
             />
             <span className="text-[10px] font-mono uppercase text-slate-600 font-semibold">
-              {member.registration_status === "pending"
+              {member.registration_status === "applicant"
+                ? t.status.applicant
+                : member.registration_status === "pending"
                 ? t.status.pending
                 : member.registration_status === "rejected"
                 ? t.status.rejected

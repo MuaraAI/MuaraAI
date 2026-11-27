@@ -28,9 +28,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         </div>
         <div>
           <p className="mt-4 text-[15px] leading-relaxed text-secondary">
-            Gunakan akun GitHub yang terdaftar. Belum jadi anggota? Isi{" "}
-            <Link href="/onboarding" className="font-semibold text-muara-ocean underline-offset-4 hover:underline">form onboarding</Link>{" "}
-            dulu, lalu kirim Proof of Work.
+            Masuk dengan akun GitHub kamu. Belum jadi anggota? Setelah masuk, ajukan keanggotaan dari dashboard dengan mengisi form dan mengirim
+            Proof of Work.
           </p>
         </div>
 
@@ -59,9 +58,6 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
                 Login GitHub belum aktif
               </span>
             )}
-            <Link href="/onboarding" className="px-btn-ghost inline-flex min-h-12 items-center justify-center gap-2 px-5 py-3 text-sm font-semibold">
-              Daftar anggota baru
-            </Link>
           </div>
         </div>
 

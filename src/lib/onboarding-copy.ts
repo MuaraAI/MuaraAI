@@ -53,12 +53,10 @@ export interface OnboardingCopy {
   next: string;
   submit: string;
   submitting: string;
-  toGithub: string;
   agreeRequired: string;
   submitFailed: string;
   affiliations: Record<Affiliation, string>;
   /** Where GitHub sends a new account back to, so the form keeps its language. */
-  loginHref: string;
   preparingTitle: string;
   preparingBody: string;
   /** Placeholder of an empty select. */
@@ -119,11 +117,9 @@ export const ONBOARDING_COPY: Record<Locale, OnboardingCopy> = {
     next: "Lanjut",
     submit: "Kirim pendaftaran",
     submitting: "Mengirim...",
-    toGithub: "Lanjut ke GitHub",
     agreeRequired: "Setujui Privacy Policy, Terms of Service, dan Code of Conduct sebelum lanjut.",
     submitFailed: "Gagal mengirimkan Proof of Work.",
     affiliations: { mahasiswa: "Mahasiswa", pelajar: "Pelajar", umum: "Umum", lainnya: "Lainnya" },
-    loginHref: "/api/auth/login?next=/onboarding",
     preparingTitle: "Pendaftaran sedang disiapkan",
     preparingBody: "Daftar posisi belum tersedia. Coba lagi beberapa saat lagi.",
     choose: "Pilih…",
@@ -180,11 +176,9 @@ export const ONBOARDING_COPY: Record<Locale, OnboardingCopy> = {
     next: "Next",
     submit: "Submit application",
     submitting: "Sending...",
-    toGithub: "Continue to GitHub",
     agreeRequired: "Accept the Privacy Policy, Terms of Service and Code of Conduct before continuing.",
     submitFailed: "Could not submit your Proof of Work.",
     affiliations: { mahasiswa: "Student", pelajar: "Learner", umum: "General", lainnya: "Other" },
-    loginHref: "/api/auth/login?next=/en/onboarding",
     preparingTitle: "Registration is being prepared",
     preparingBody: "The position list is not available yet. Please try again in a moment.",
     choose: "Choose…",

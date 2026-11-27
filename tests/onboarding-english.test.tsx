@@ -85,7 +85,7 @@ describe("registration form in English", () => {
     fillEnglish();
     expect(screen.getByText("Review your application")).toBeTruthy();
     expect(screen.getByText("Position")).toBeTruthy();
-    const submit = screen.getByRole("button", { name: "Continue to GitHub" }) as HTMLButtonElement;
+    const submit = screen.getByRole("button", { name: "Submit application" }) as HTMLButtonElement;
     expect(submit.disabled).toBe(true);
     expect(screen.getByRole("link", { name: "Privacy Policy" }).getAttribute("href")).toBe("/en/privacy");
     expect(screen.getByRole("link", { name: "Terms of Service" }).getAttribute("href")).toBe("/en/terms");
@@ -96,21 +96,25 @@ describe("registration form in English", () => {
     expect(submit.disabled).toBe(false);
   });
 
-  it("explains in English when the legal box is not ticked, and sends visitors to GitHub with the English form as the return page", () => {
+  it("explains in English when the legal box is not ticked, and never submits before it is", () => {
     render(<PoWForm positions={positions} locale="en" />);
     fillEnglish();
-    fireEvent.submit(screen.getByRole("button", { name: "Continue to GitHub" }).closest("form") as HTMLFormElement);
+    fireEvent.submit(screen.getByRole("button", { name: "Submit application" }).closest("form") as HTMLFormElement);
     expect(screen.getByRole("alert").textContent).toBe("Accept the Privacy Policy, Terms of Service and Code of Conduct before continuing.");
+    expect(submitMock).not.toHaveBeenCalled();
+  });
 
+  it("no longer keeps a draft in the browser or sends anyone to GitHub from the form: sign-in comes first", () => {
+    render(<PoWForm positions={positions} locale="en" />);
+    fillEnglish();
     fireEvent.click(screen.getByRole("checkbox"));
-    fireEvent.click(screen.getByRole("button", { name: "Continue to GitHub" }));
-    expect(window.location.href).toBe("/api/auth/login?next=/en/onboarding");
-    expect(storage.get("muaraai_onboarding_draft")).toContain("Budi Santoso");
+    expect(screen.queryByRole("button", { name: /GitHub/ })).toBeNull();
+    expect(window.localStorage.getItem("muaraai_onboarding_draft")).toBeNull();
   });
 
   it("submits for a signed-in applicant with the language, and shows English errors", async () => {
     submitMock.mockResolvedValueOnce({ success: false });
-    render(<PoWForm positions={positions} locale="en" authenticated githubUsername="budi" />);
+    render(<PoWForm positions={positions} locale="en" githubUsername="budi" />);
     expect(screen.getByText(/GitHub account connected/)).toBeTruthy();
     fillEnglish();
     fireEvent.click(screen.getByRole("checkbox"));
@@ -127,7 +131,7 @@ describe("registration form in English", () => {
 
   it("stays Indonesian by default, including the language it tells the server", async () => {
     submitMock.mockResolvedValue({ success: true });
-    render(<PoWForm positions={positions} authenticated />);
+    render(<PoWForm positions={positions} />);
     fireEvent.change(screen.getByLabelText(/Nama Lengkap/i), { target: { value: "Budi Santoso" } });
     fireEvent.change(screen.getByLabelText(/WhatsApp/i), { target: { value: "081234567890" } });
     next(/^Lanjut$/);

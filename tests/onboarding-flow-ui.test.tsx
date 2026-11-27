@@ -92,7 +92,7 @@ describe("open global onboarding", () => {
     expect(nextButton().disabled).toBe(false);
   });
 
-  it("requires legal agreement before the GitHub handoff and shows status and position in the review", () => {
+  it("requires legal agreement before submitting and shows status and position in the review", () => {
     renderForm();
     fillStepOne();
     next();
@@ -100,7 +100,7 @@ describe("open global onboarding", () => {
     next();
     next();
     expect(screen.getByText("Web", { exact: false })).toBeTruthy();
-    const githubButton = screen.getByRole("button", { name: /Lanjut ke GitHub/i }) as HTMLButtonElement;
+    const githubButton = screen.getByRole("button", { name: /Kirim Pendaftaran/i }) as HTMLButtonElement;
     expect(githubButton.disabled).toBe(true);
     expect(screen.getByRole("link", { name: /Privacy Policy/i })).toBeTruthy();
     fireEvent.click(screen.getByRole("checkbox"));
