@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 import Hero from "../src/components/landing/hero";
-import MetricsBar from "../src/components/landing/metrics-bar";
 
 describe("MuaraAI public redesign", () => {
   it("reads its headline as one sentence, with spaces between the lines", () => {
@@ -21,7 +20,7 @@ describe("MuaraAI public redesign", () => {
   });
 
   it("does not render unsupported engineering metrics as the public story", () => {
-    render(<MetricsBar />);
+    render(<Hero stats={{ maintainers: 3, members: 4 }} />);
     expect(screen.queryByText(/Automated Tests/i)).toBeNull();
     expect(screen.queryByText(/AI-Slop Tolerance/i)).toBeNull();
     expect(screen.queryByText(/Open Source/i)).toBeNull();

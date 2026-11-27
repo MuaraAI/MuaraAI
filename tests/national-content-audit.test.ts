@@ -4,7 +4,8 @@ import path from "node:path";
 
 const publicFiles = [
   "src/components/landing/footer.tsx",
-  "src/components/landing/projects-grid.tsx",
+  "src/components/landing/hero-showcase.tsx",
+  "src/components/landing/product-list.tsx",
   "src/components/landing/manifesto.tsx",
   "src/components/landing/donate-cta.tsx",
   "src/components/landing/syndicate-roster.tsx",

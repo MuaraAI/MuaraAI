@@ -1,8 +1,5 @@
 import React from "react";
 import Hero from "@/components/landing/hero";
-import MetricsBar from "@/components/landing/metrics-bar";
-import VisionMission from "@/components/landing/vision-mission";
-import ProjectsGrid from "@/components/landing/projects-grid";
 import AccoladesGrid from "@/components/landing/accolades-grid";
 import Manifesto from "@/components/landing/manifesto";
 import SyndicateRoster from "@/components/landing/syndicate-roster";
@@ -14,6 +11,9 @@ import JoinFlow from "@/components/landing/join-flow";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { Member, Achievement } from "@/types/database";
 import { redirect } from "next/navigation";
+import { buildHeroStats } from "@/components/landing/hero-showcase";
+import { fetchOrgRepos } from "@/lib/github-repos";
+import { GITHUB_ORG_URL } from "@/lib/constants";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = { alternates: { canonical: "https://muaraai.com/", languages: { id: "https://muaraai.com/", en: "https://muaraai.com/en", "x-default": "https://muaraai.com/" } } };
@@ -74,19 +74,19 @@ export default async function LandingPage({
     : { data: null };
   const positions = parsePositions(positionsSetting?.value);
 
+  // Real numbers for the hero: people from our own table, stars from GitHub (cached for an hour, left out if GitHub is unreachable).
+  const stats = buildHeroStats(members, await fetchOrgRepos(GITHUB_ORG_URL.split("/").pop() ?? "MuaraAI", { token: process.env.GITHUB_ORG_TOKEN }));
+
   return (
     <div className="flex flex-col">
-      <Hero />
-      <MetricsBar />
-      <VisionMission />
-      <ProjectsGrid />
-      <AccoladesGrid initialAchievements={achievements} />
-      <Manifesto />
+      <Hero stats={stats} />
       <CommunityStructure positions={positions} />
       <SyndicateRoster initialMembers={members} />
+      <AccoladesGrid initialAchievements={achievements} />
+      <Manifesto />
       <BenefitsGrid />
-      <DonateCta />
       <JoinFlow />
+      <DonateCta />
     </div>
   );
 }

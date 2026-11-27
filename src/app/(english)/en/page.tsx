@@ -4,7 +4,8 @@ import Link from "next/link";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import { parseRules } from "@/lib/contributions/rules";
-import ProductList from "@/components/landing/product-list";
+import HeroShowcase, { buildHeroStats } from "@/components/landing/hero-showcase";
+import { fetchOrgRepos } from "@/lib/github-repos";
 import { GITHUB_ORG_URL, SOCIABUZZ_URL } from "@/lib/constants";
 import { Section, SectionHeader } from "@/components/ui/section";
 import CommunityStructure from "@/components/landing/community-structure";
@@ -50,10 +51,16 @@ export default async function EnglishHomePage() {
   const positions = parsePositions(positionsValue);
   const { builder, creative } = parseRules(rulesValue);
 
+  const { data: people } = supabase
+    ? await supabase.from("members").select("hierarchy, roles").eq("registration_status", "approved").eq("is_active", true)
+    : { data: null };
+  const stats = buildHeroStats(people ?? [], await fetchOrgRepos(GITHUB_ORG_URL.split("/").pop() ?? "MuaraAI", { token: process.env.GITHUB_ORG_TOKEN }));
+
   return (
     <div className="flex flex-col">
       <section className="border-b border-stroke bg-background px-4 pb-16 pt-12 sm:px-6 md:pb-24 md:pt-20 lg:px-8">
-        <div className="mx-auto max-w-[100rem]">
+        <div className="mx-auto grid max-w-[100rem] items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-16">
+          <div>
           <h1 className="max-w-4xl font-display text-[2.6rem] font-bold leading-[1.02] tracking-[-0.04em] text-foreground sm:text-6xl lg:text-7xl xl:text-[5.25rem]">
             Learn, build, <span className="text-muara-ocean">contribute.</span>
           </h1>
@@ -69,6 +76,8 @@ export default async function EnglishHomePage() {
               See the members
             </Link>
           </div>
+          </div>
+          <HeroShowcase locale="en" stats={stats} />
         </div>
       </section>
 
@@ -109,16 +118,6 @@ export default async function EnglishHomePage() {
       </Section>
 
       <CommunityStructure positions={positions} locale="en" />
-
-      <Section tone="tint">
-        <SectionHeader eyebrow="Projects" title="What the community has built." />
-        <ProductList locale="en" />
-        <p className="mt-8 text-sm">
-          <a href={GITHUB_ORG_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-muara-ocean hover:underline">
-            All repositories on GitHub
-          </a>
-        </p>
-      </Section>
 
       <Section tone="white">
         <SectionHeader eyebrow="Support" title="Help keep MuaraAI running." />

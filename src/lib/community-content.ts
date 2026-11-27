@@ -5,6 +5,8 @@ export interface Product {
   url: string;
   /** GitHub repository in the MuaraAI org. */
   repo: string;
+  /** Screenshot of the live site (public/products, 960x600). Refresh it when the site's front page changes a lot. */
+  image: string;
   tags: readonly string[];
   /** One-line descriptions per language. */
   id: string;
@@ -19,6 +21,7 @@ const products: readonly Product[] = [
     name: "Mira",
     url: "https://mira.muaraai.com",
     repo: "https://github.com/MuaraAI/Mira",
+    image: "/products/mira.jpg",
     tags: ["SIAKAD", "MyBest", "REST API", "MCP"],
     id: "Dashboard mahasiswa UBSI untuk SIAKAD dan MyBest, lengkap dengan REST API dan MCP server untuk enam layanan kampus.",
     en: "A student dashboard for UBSI's SIAKAD and MyBest, with a REST API and an MCP server for six campus services.",
@@ -29,6 +32,7 @@ const products: readonly Product[] = [
     name: "FluxCode",
     url: "https://fluxcode.muaraai.com",
     repo: "https://github.com/MuaraAI/FluxCode",
+    image: "/products/fluxcode.jpg",
     tags: ["Rust", "Editor kode", "Agen AI"],
     id: "Editor kode native yang ditulis dengan Rust, dengan agen AI bawaan, untuk Windows, macOS, dan Linux.",
     en: "A native code editor written in Rust with built-in AI agents, for Windows, macOS and Linux.",

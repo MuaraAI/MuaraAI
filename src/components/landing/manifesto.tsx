@@ -7,12 +7,16 @@ export default function Manifesto() {
     { title: "Belajar dari sumber yang jelas", description: "Kami mulai dari materi, konteks, dan pertanyaan yang bisa ditelusuri." },
     { title: "Membuat sesuatu yang bisa dilihat", description: "Ide menjadi project dan Proof of Work, bukan berhenti di wacana." },
     { title: "Terbuka untuk semua", description: "Mahasiswa, pelajar, atau umum, dari mana saja, saling membuka jalur belajar dan kontribusi." },
-    { title: "Menjaga kualitas bersama", description: "Review, tanggung jawab, dan kontribusi nyata menjadi dasar komunitas." },
+    { title: "Menjaga kualitas bersama", description: "Review, tanggung jawab, dan kontribusi nyata menjadi dasar komunitas: tanpa AI-slop, dengan tes, dan tanpa kredensial di repo." },
   ];
 
   return (
     <Section id="manifesto" tone="tint">
-      <SectionHeader eyebrow="Cara Kami Berjalan" title="Komunitas yang bergerak dari rasa ingin tahu ke karya nyata." />
+      <SectionHeader
+        eyebrow="Cara Kami Bekerja"
+        title="Komunitas yang bergerak dari rasa ingin tahu ke karya nyata."
+        description="Menjadi muara komunitas praktisi dan pengembang AI yang terbuka untuk siapa saja: tempat orang belajar, membangun, dan berkontribusi lewat karya nyata yang bisa diperiksa, dari Kalimantan Barat untuk dunia."
+      />
       <div className="p-[2px]">
         <ol className="px-frame grid gap-[2px] bg-[#163A55] sm:grid-cols-2">
           {principles.map((principle, idx) => (

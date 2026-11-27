@@ -6,13 +6,18 @@ let configured = true;
 let settings: Record<string, unknown> = {};
 
 vi.mock("next/navigation", () => ({ usePathname: () => "/en" }));
+vi.mock("@/lib/github-repos", () => ({ fetchOrgRepos: async () => ({ ok: true, repos: [{ name: "FluxCode", description: "", url: "", language: "", stars: 123, pushedAt: "" }] }) }));
 vi.mock("@/lib/supabase/server", () => ({
   isSupabaseConfigured: () => configured,
   createClient: async () => ({
-    from: () => ({
-      select: () => ({
-        eq: (_column: string, key: string) => ({ maybeSingle: async () => ({ data: key in settings ? { value: settings[key] } : null }) }),
-      }),
+    from: (table: string) => ({
+      select: () => {
+        // settings lookups end in .maybeSingle(); the member count is awaited after two .eq() filters
+        const people = { eq: () => people, then: (resolve: (value: unknown) => unknown) => resolve({ data: table === "members" ? [{ hierarchy: "maintainer", roles: [] }, { hierarchy: "member", roles: [] }] : [] }) };
+        return {
+          eq: (column: string, key: string) => (table === "members" ? people : { maybeSingle: async () => ({ data: key in settings ? { value: settings[key] } : null }), column }),
+        };
+      },
     }),
     auth: { getUser: async () => ({ data: { user: null } }) },
   }),
@@ -67,7 +72,13 @@ describe("English landing", () => {
     expect(sites).toEqual(["https://mira.muaraai.com", "https://fluxcode.muaraai.com"]);
     expect(document.body.textContent).toMatch(/native code editor written in Rust/i);
     expect(document.body.textContent).not.toMatch(/Muara Arus|Hugging Face|Ollama/);
-    expect(screen.getByRole("link", { name: /All repositories/i }).getAttribute("href")).toBe("https://github.com/MuaraAI");
+    expect(screen.getByRole("link", { name: /See all projects/i }).getAttribute("href")).toBe("https://github.com/MuaraAI");
+    expect(screen.getAllByRole("img", { name: /Front page of the/ })).toHaveLength(2);
+  });
+
+  it("shows real numbers under the products: people from the members table and the stars from GitHub", async () => {
+    render(await EnglishHomePage());
+    expect(screen.getByText("1 maintainer · 2 members · FluxCode 123 stars")).toBeTruthy();
   });
 
   it("is written in English with no em dashes, fake numbers or enforcement claims", async () => {

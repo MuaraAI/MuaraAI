@@ -1,14 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import React from "react";
-import ProjectsGrid from "../src/components/landing/projects-grid";
-import MetricsBar from "../src/components/landing/metrics-bar";
+import Hero from "../src/components/landing/hero";
 import Manifesto from "../src/components/landing/manifesto";
 import BenefitsGrid from "../src/components/landing/benefits-grid";
 
 describe("Landing Core Sections", () => {
   it("features Mira and FluxCode with their real sites and marks the AI portal as coming soon", () => {
-    render(<ProjectsGrid />);
+    render(<Hero />);
     for (const name of ["Mira", "FluxCode"]) expect(screen.getByRole("heading", { name })).toBeDefined();
     const sites = screen.getAllByRole("link", { name: /Buka web/i }).map((link) => link.getAttribute("href"));
     expect(sites).toEqual(["https://mira.muaraai.com", "https://fluxcode.muaraai.com"]);
@@ -19,18 +18,12 @@ describe("Landing Core Sections", () => {
     expect(screen.queryByText(/Muara Arus/i)).toBeNull();
   });
 
-  it("displays the Learn Build Contribute current", () => {
-    render(<MetricsBar />);
-    expect(screen.getByText("Belajar")).toBeDefined();
-    expect(screen.getByText("Membangun")).toBeDefined();
-    expect(screen.getByText("Berkontribusi")).toBeDefined();
-    expect(screen.queryByText(/126\+/)).toBeNull();
-  });
-
   it("renders the community principles", () => {
     render(<Manifesto />);
     expect(screen.getByText(/Belajar dari sumber yang jelas/i)).toBeDefined();
     expect(screen.getByText(/Terbuka untuk semua/i)).toBeDefined();
+    expect(screen.getByText(/Menjadi muara komunitas praktisi/i)).toBeDefined();
+    expect(screen.getByText(/tanpa AI-slop, dengan tes, dan tanpa kredensial di repo/i)).toBeDefined();
   });
 
   it("renders member benefits", () => {

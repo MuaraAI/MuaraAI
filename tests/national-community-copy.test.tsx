@@ -2,13 +2,13 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 import Footer from "../src/components/landing/footer";
-import ProjectsGrid from "../src/components/landing/projects-grid";
+import Hero from "../src/components/landing/hero";
 import Manifesto from "../src/components/landing/manifesto";
 import DonateCta from "../src/components/landing/donate-cta";
 
 describe("national community public copy", () => {
   it("says plainly that Mira is independent of UBSI", () => {
-    render(<ProjectsGrid />);
+    render(<Hero />);
     expect(screen.getByText(/tidak berafiliasi dengan UBSI/i)).toBeTruthy();
   });
 
