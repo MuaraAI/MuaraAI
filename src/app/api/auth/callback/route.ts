@@ -10,7 +10,6 @@ export async function GET(request: Request) {
   const next = requestUrl.searchParams.get("next");
   // Only the exact English form path switches language; any other next value for a new account is ignored.
   const english = next === "/en/onboarding";
-  const onboardingPath = english ? "/en/onboarding" : "/onboarding";
   // The member portal has no /en URLs, so remember the language the applicant came in with.
   const redirectTo = (target: string) => {
     const response = NextResponse.redirect(`${requestUrl.origin}${target}`);
@@ -42,15 +41,12 @@ export async function GET(request: Request) {
           return redirectTo(target);
         }
 
-        // Only a GitHub account without a member profile needs onboarding.
-        return redirectTo(onboardingPath);
+        // A GitHub account without a member profile has just signed in: it applies for membership inside the dashboard.
+        return redirectTo("/dashboard");
       }
     }
   }
 
-  const error = requestUrl.searchParams.get("error_description") || requestUrl.searchParams.get("error");
-  const target = error
-    ? `${onboardingPath}?error=${encodeURIComponent(error)}`
-    : `${onboardingPath}?error=oauth_callback_failed`;
-  return redirectTo(target);
+  // Any failure goes to the login page (never back to the form), so a failing sign-in can not loop.
+  return redirectTo("/login?error=oauth_failed");
 }

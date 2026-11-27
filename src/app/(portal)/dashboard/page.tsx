@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import Icon from "@/components/ui/icon";
 import { getEarliestExitDate } from "@/lib/membership";
 import type { MembershipIntakePolicy } from "@/types/database";
+import OnboardingView from "@/components/auth/onboarding-view";
 import { currentLocale } from "@/lib/locale-server";
 import { AFFILIATION_LABELS_BY_LOCALE, DATE_LOCALE, PORTAL_COPY } from "@/lib/portal-copy";
 import { PortalHeader } from "@/components/ui/section";
@@ -29,7 +30,15 @@ export default async function DashboardProfilePage() {
     : { data: null };
 
   if (!memberData) {
-    redirect(PORTAL_COPY[locale].onboardingHref);
+    // Signed in but not applied yet: the application form lives here, inside the dashboard.
+    return (
+      <div className="space-y-8">
+        <PortalHeader eyebrow={t.eyebrow} title={t.applyTitle}>
+          {t.applyIntro}
+        </PortalHeader>
+        {await OnboardingView({ locale, embedded: true })}
+      </div>
+    );
   }
 
   const member = memberData as Member;

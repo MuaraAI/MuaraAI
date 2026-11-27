@@ -39,7 +39,7 @@ export default async function LandingPage({
   }
 
   if (params.error) {
-    redirect(`/onboarding?error=${encodeURIComponent(params.error)}`);
+    redirect("/login?error=oauth_failed");
   }
 
   // Without Supabase env (e.g. fresh local clone) render the static landing with empty data.

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { submitProofOfWork } from "@/app/actions/pow";
 import { AFFILIATIONS, MIN_JOIN_REASON_LENGTH, type Division, type PoWInput } from "@/lib/validation";
@@ -12,8 +12,6 @@ import Icon from "@/components/ui/icon";
 import PixelSelect from "@/components/ui/pixel-select";
 
 type Step = 0 | 1 | 2 | 3;
-
-const DRAFT_KEY = "muaraai_onboarding_draft";
 
 
 function buildInitial(positions: PositionsConfig, initial?: Partial<PoWInput>): PoWInput {
@@ -64,14 +62,12 @@ function canContinue(step: Step, data: PoWInput): boolean {
 }
 
 export default function PoWForm({
-  authenticated = false,
   githubUsername,
   initialData,
   rejectionReason,
   positions,
   locale = "id",
 }: {
-  authenticated?: boolean;
   githubUsername?: string;
   initialData?: Partial<PoWInput>;
   rejectionReason?: string;
@@ -84,22 +80,6 @@ export default function PoWForm({
   const [loading, setLoading] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!authenticated || typeof window === "undefined" || !window.localStorage) return;
-    const draft = window.localStorage.getItem(DRAFT_KEY);
-    if (!draft) return;
-    try {
-      const parsed = JSON.parse(draft) as Partial<PoWInput>;
-      setFormData(buildInitial(positions, parsed));
-      if (parsed.fullName && parsed.joinReason && parsed.portfolioUrl) {
-        setStep(3);
-        setAgreed(true);
-      }
-    } catch {
-      window.localStorage.removeItem(DRAFT_KEY);
-    }
-  }, [authenticated, positions]);
 
   const update = <K extends keyof PoWInput>(key: K, value: PoWInput[K]) => {
     setFormData((current) => ({ ...current, [key]: value }));
@@ -137,18 +117,10 @@ export default function PoWForm({
       return;
     }
     setError(null);
-    if (!authenticated) {
-      window.localStorage.setItem(DRAFT_KEY, JSON.stringify(formData));
-      window.location.href = t.loginHref;
-      return;
-    }
     setLoading(true);
     const result = await submitProofOfWork(formData, locale);
     setLoading(false);
     if (result.success) {
-      if (typeof window !== "undefined" && window.localStorage) {
-        window.localStorage.removeItem(DRAFT_KEY);
-      }
       window.location.href = "/dashboard";
       return;
     }
@@ -195,8 +167,7 @@ export default function PoWForm({
         </div>
       )}
 
-      {authenticated && (
-        <div className="px-frame [--px-line:#7DD3FC] mb-8 bg-sky-50/80 p-4 text-xs text-sky-900 flex items-start gap-3">
+      <div className="px-frame [--px-line:#7DD3FC] mb-8 bg-sky-50/80 p-4 text-xs text-sky-900 flex items-start gap-3">
           <Icon name="check_circle" className="w-5 h-5 text-muara-ocean shrink-0 mt-0.5" />
           <div className="space-y-1">
             <div className="font-bold text-sm text-foreground">
@@ -206,8 +177,7 @@ export default function PoWForm({
               {t.connectedBody}
             </p>
           </div>
-        </div>
-      )}
+      </div>
 
       <ol aria-label={t.progress} className="mb-8 grid grid-cols-4 gap-2">
         {t.steps.map((label, index) => (
@@ -323,7 +293,7 @@ export default function PoWForm({
           {step < 3 ? (
             <button type="button" onClick={next} disabled={!canContinue(step, formData)} className="px-btn min-h-11 px-5 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50">{t.next}</button>
           ) : (
-            <button type="submit" disabled={loading || !agreed} className="px-btn min-h-11 px-5 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50">{authenticated ? (loading ? t.submitting : t.submit) : t.toGithub}</button>
+            <button type="submit" disabled={loading || !agreed} className="px-btn min-h-11 px-5 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50">{loading ? t.submitting : t.submit}</button>
           )}
         </div>
       </form>

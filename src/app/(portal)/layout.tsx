@@ -5,7 +5,6 @@ import { Member } from "@/types/database";
 import PortalShell from "@/components/portal/portal-shell";
 import { isMaintainer } from "@/lib/guards";
 import { currentLocale } from "@/lib/locale-server";
-import { PORTAL_COPY } from "@/lib/portal-copy";
 
 export default async function PortalLayout({
   children,
@@ -35,7 +34,17 @@ export default async function PortalLayout({
     redirect("/membership-exit?status=banned");
   }
   if (!member) {
-    redirect(PORTAL_COPY[locale].onboardingHref);
+    // Signed in with GitHub but not applied yet: they are inside the portal and apply from the dashboard.
+    const meta = user.user_metadata ?? {};
+    const github: string = meta.user_name || meta.preferred_username || "";
+    return (
+      <PortalShell
+        locale={locale}
+        member={{ full_name: meta.full_name || meta.name || github || "GitHub", github_username: github, is_active: true, registration_status: "applicant", is_maintainer: false }}
+      >
+        {children}
+      </PortalShell>
+    );
   }
 
   return (

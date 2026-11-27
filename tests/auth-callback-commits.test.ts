@@ -10,9 +10,9 @@ describe("OAuth callback", () => {
     expect(source).not.toContain("total_commits");
   });
 
-  it("still routes members to the dashboard, newcomers to onboarding, and rejects open redirects", () => {
+  it("routes everyone to the dashboard (newcomers apply there), failures to the login page, and rejects open redirects", () => {
     expect(source).toContain('"/dashboard"');
-    expect(source).toContain("/onboarding");
+    expect(source).toContain("/login?error=oauth_failed");
     expect(source).toContain('next.startsWith("/") && !next.startsWith("//")');
   });
 });

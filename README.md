@@ -10,7 +10,7 @@ MuaraAI adalah komunitas terbuka untuk siapa saja yang mau belajar, membangun pr
 
 ## Cara kerja komunitas
 
-**Pendaftaran.** Wajib punya akun GitHub. Alur: isi form onboarding (alasan bergabung minimal 50 karakter), setujui Privacy Policy, Terms of Service, dan Code of Conduct, login GitHub OAuth, lalu kirim Proof of Work. Maintainer me-review, dan anggota yang disetujui otomatis diundang ke GitHub org. Dukungan finansial sukarela lewat https://sociabuzz.com/muaraai.
+**Pendaftaran.** Wajib punya akun GitHub. Alur: login dengan GitHub (OAuth) dan langsung masuk ke dashboard yang masih terkunci; di sana ada kartu "Ajukan keanggotaan" berisi form (alasan bergabung minimal 50 karakter), lalu setujui Privacy Policy, Terms of Service, dan Code of Conduct dan kirim Proof of Work. Dashboard terbuka penuh setelah disetujui. Maintainer me-review, dan anggota yang disetujui otomatis diundang ke GitHub org. Dukungan finansial sukarela lewat https://sociabuzz.com/muaraai.
 
 **Divisi dan posisi.** Pilih satu divisi utama dan posisi resmi, divisi kedua opsional. Daftar posisi bisa diubah admin di `/admin/settings`.
 
@@ -52,11 +52,11 @@ Tim inti: Yuken Velino (`@Curzyori`, Founder), Muhammad Raffli Aldiansyah (`@See
 ```text
 muaraai.com/
 ├── /                      # Landing (Indonesia)
-├── /en, /en/join, /en/onboarding  # Landing, cara daftar, dan form pendaftaran (English)
+├── /en, /en/join                  # Landing dan cara daftar (English); /en/onboarding hanya meneruskan
 ├── /en/terms, /en/privacy, /en/code-of-conduct  # Terjemahan dokumen legal
 ├── /projects              # Repo publik org dari GitHub
 ├── /members               # Direktori publik, urut tier lalu streak
-├── /onboarding            # Form pendaftaran + legal gate + GitHub OAuth
+├── /onboarding            # Meneruskan: belum login ke GitHub, sudah login ke dashboard (form ada di dashboard); pendaftar yang ditolak mengisi ulang di sini
 ├── /login                 # Masuk dengan GitHub
 ├── /terms, /privacy, /code-of-conduct
 ├── /dashboard             # Workspace member: status, kontribusi bulan ini, sesi Discord

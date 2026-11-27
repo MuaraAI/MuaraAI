@@ -10,7 +10,9 @@ describe("language alternates", () => {
     const urls = sitemap().map((entry) => entry.url);
     expect(urls).toContain("https://muaraai.com/en");
     expect(urls).toContain("https://muaraai.com/en/join");
-    expect(urls).toContain("https://muaraai.com/en/onboarding");
+    // The registration pages only forward to GitHub sign-in or the dashboard now, so they do not belong in a sitemap.
+    expect(urls).not.toContain("https://muaraai.com/onboarding");
+    expect(urls).not.toContain("https://muaraai.com/en/onboarding");
     expect(urls).toContain("https://muaraai.com/karya");
     expect(urls).toContain("https://muaraai.com/en/karya");
     for (const page of ["terms", "privacy", "code-of-conduct"]) {
