@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { GITHUB_ORG_URL } from "@/lib/constants";
 import Icon from "@/components/ui/icon";
 
-export type Locale = "id" | "en";
+type Locale = "id" | "en";
 
 interface NavbarProps {
   locale?: Locale;
@@ -41,7 +41,7 @@ const COPY = {
     join: "/en/join",
     links: [
       { href: "/projects", label: "Projects" },
-      { href: "/karya", label: "Works" },
+      { href: "/en/karya", label: "Works" },
       { href: "/en#struktur", label: "Structure" },
       { href: "/members", label: "Members" },
       { href: "/en/code-of-conduct", label: "Rules" },

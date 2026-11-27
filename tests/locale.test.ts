@@ -3,7 +3,7 @@ import { LOCALE_COOKIE, LOCALE_HEADER, localeFor } from "../src/lib/locale";
 
 describe("localeFor", () => {
   it("is English only on the pages that really are English", () => {
-    for (const path of ["/en", "/en/", "/en/join", "/en/join/", "/en/onboarding", "/en/terms", "/en/privacy", "/en/code-of-conduct"]) expect(localeFor(path)).toBe("en");
+    for (const path of ["/en", "/en/", "/en/join", "/en/join/", "/en/onboarding", "/en/terms", "/en/privacy", "/en/code-of-conduct", "/en/karya"]) expect(localeFor(path)).toBe("en");
   });
 
   it("stays Indonesian everywhere else, including look-alikes such as /english", () => {

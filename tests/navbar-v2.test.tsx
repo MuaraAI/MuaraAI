@@ -89,7 +89,7 @@ describe("English navigation", () => {
     const links = Object.fromEntries(screen.getAllByRole("link").map((link) => [link.textContent?.trim(), link.getAttribute("href")]));
 
     expect(links["Projects"]).toBe("/projects");
-    expect(links["Works"]).toBe("/karya");
+    expect(links["Works"]).toBe("/en/karya");
     expect(links["Structure"]).toBe("/en#struktur");
     expect(links["Members"]).toBe("/members");
     expect(links["Rules"]).toBe("/en/code-of-conduct");

@@ -1,5 +1,5 @@
-export type MemberHierarchy = "maintainer" | "head" | "lead" | "member";
-export type MemberDivision = "builder" | "creative" | "cybersecurity";
+type MemberHierarchy = "maintainer" | "head" | "lead" | "member";
+type MemberDivision = "builder" | "creative" | "cybersecurity";
 export type RegistrationStatus = "pending" | "approved" | "rejected";
 export type MembershipStatus = "active" | "exited" | "banned";
 export type Affiliation = "mahasiswa" | "pelajar" | "umum" | "lainnya";
@@ -82,13 +82,6 @@ export interface LearningMaterial {
   updated_at: string;
 }
 
-export interface LearningMaterialRead {
-  id: string;
-  material_id: string;
-  member_id: string;
-  opened_at: string;
-}
-
 export interface Achievement {
   id: string;
   title: string;
@@ -101,9 +94,3 @@ export interface Achievement {
   created_at: string;
 }
 
-export interface CommunitySetting {
-  key: string;
-  value: Record<string, unknown>;
-  description: string | null;
-  updated_at: string;
-}

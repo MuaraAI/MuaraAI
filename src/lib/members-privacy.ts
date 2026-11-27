@@ -23,4 +23,4 @@ export const PRIVATE_MEMBER_COLUMNS = [
   "contribution_standing",
 ] as const;
 
-export type PrivateMemberColumn = (typeof PRIVATE_MEMBER_COLUMNS)[number];
+type PrivateMemberColumn = (typeof PRIVATE_MEMBER_COLUMNS)[number];

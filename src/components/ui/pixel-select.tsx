@@ -2,7 +2,7 @@
 
 import React, { useEffect, useId, useRef, useState } from "react";
 
-export type SelectOption = { value: string; label: string; hint?: string };
+type SelectOption = { value: string; label: string; hint?: string };
 
 interface PixelSelectProps {
   value: string;
