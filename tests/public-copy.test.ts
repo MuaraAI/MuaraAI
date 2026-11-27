@@ -8,10 +8,10 @@ const read = (file: string) => fs.readFileSync(path.join(root, file), "utf8");
 const COPY_FILES = [
   "src/app/layout.tsx",
   "src/components/landing/hero.tsx",
-  "src/components/landing/vision-mission.tsx",
+  "src/components/landing/hero-showcase.tsx",
+  "src/components/landing/product-list.tsx",
   "src/components/landing/manifesto.tsx",
   "src/components/landing/benefits-grid.tsx",
-  "src/components/landing/metrics-bar.tsx",
   "src/components/landing/join-flow.tsx",
   "src/components/landing/footer.tsx",
   "src/components/landing/syndicate-roster.tsx",

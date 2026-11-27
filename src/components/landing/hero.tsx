@@ -2,11 +2,13 @@ import React from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/icon";
 import HeroHeadline from "@/components/landing/hero-headline";
+import HeroShowcase, { type HeroStats } from "@/components/landing/hero-showcase";
 
-export default function Hero() {
+export default function Hero({ stats }: { stats?: HeroStats }) {
   return (
     <section className="border-b border-stroke bg-background px-4 pb-16 pt-12 sm:px-6 md:pb-24 md:pt-20 lg:px-8">
-      <div className="mx-auto max-w-[100rem]">
+      <div className="mx-auto grid max-w-[100rem] items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-16">
+        <div>
         <HeroHeadline />
         <p className="mt-7 max-w-xl text-base leading-relaxed text-secondary sm:text-lg">
           Komunitas terbuka untuk siapa saja. MuaraAI adalah ruang kerja untuk belajar, membuat project, dan menunjukkan Proof of Work lewat GitHub. Mahasiswa, pelajar, atau umum, dari mana saja, semua boleh bergabung.
@@ -20,6 +22,8 @@ export default function Hero() {
             Lihat anggota
           </Link>
         </div>
+        </div>
+        <HeroShowcase stats={stats} />
       </div>
     </section>
   );
