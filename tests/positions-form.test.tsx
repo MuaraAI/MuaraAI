@@ -20,6 +20,15 @@ describe("PositionsForm", () => {
     render(<PositionsForm initial={initial} />);
     expect((screen.getByLabelText(/Builder/i) as HTMLTextAreaElement).value).toBe("Web\nBackend");
     expect((screen.getByLabelText(/Creative/i) as HTMLTextAreaElement).value).toBe("Video");
+    expect((screen.getByLabelText(/Cybersecurity/i) as HTMLTextAreaElement).value).toBe("");
+  });
+
+  it("saves the Cybersecurity positions too", async () => {
+    render(<PositionsForm initial={initial} />);
+    fireEvent.change(screen.getByLabelText(/Cybersecurity/i), { target: { value: "Pentester\nCTF Player" } });
+    fireEvent.click(screen.getByRole("button", { name: /Simpan/i }));
+
+    await waitFor(() => expect(updatePositionsMock).toHaveBeenCalledWith({ builder: ["Web", "Backend"], creative: ["Video"], cybersecurity: ["Pentester", "CTF Player"] }));
   });
 
   it("saves the edited lists, one position per non-empty line", async () => {
@@ -28,7 +37,7 @@ describe("PositionsForm", () => {
     fireEvent.click(screen.getByRole("button", { name: /Simpan/i }));
 
     await waitFor(() => expect(updatePositionsMock).toHaveBeenCalledTimes(1));
-    expect(updatePositionsMock).toHaveBeenCalledWith({ builder: ["Web", "Game"], creative: ["Video"] });
+    expect(updatePositionsMock).toHaveBeenCalledWith({ builder: ["Web", "Game"], creative: ["Video"], cybersecurity: [] });
     expect(await screen.findByText("Posisi tersimpan.")).toBeTruthy();
   });
 

@@ -165,7 +165,7 @@ export default async function DashboardProfilePage() {
 
       {contribution && (
         <ContributionCard
-          division={member.division}
+          division={member.division === "creative" ? "creative" : "builder"}
           stats={contribution.stats}
           rules={contribution.rules}
           standing={member.contribution_standing ?? "good"}

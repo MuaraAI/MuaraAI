@@ -29,23 +29,8 @@ describe("national community content", () => {
     for (const item of communityContent.comingSoon) expect(item).not.toHaveProperty("url");
   });
 
-  it("keeps corrected maintainer identity and order", () => {
-    expect(communityContent.coreMaintainers.map((member) => member.github)).toEqual([
-      "Curzyori",
-      "Seeyaa77",
-      "MyKineID",
-    ]);
-    expect(communityContent.coreMaintainers[1]).toMatchObject({
-      name: "Muhammad Raffli Aldiansyah",
-      division: "Builder",
-    });
-    expect(communityContent.coreMaintainers[2]).toMatchObject({
-      name: "Verzio Yamanansyah",
-      division: "Builder",
-    });
-    for (const maintainer of communityContent.coreMaintainers) {
-      expect(maintainer).not.toHaveProperty("nim");
-    }
+  it("no longer carries a hand-written maintainer list (the team comes from the members table)", () => {
+    expect(communityContent).not.toHaveProperty("coreMaintainers");
   });
 
 });

@@ -7,8 +7,8 @@ import { Member } from "@/types/database";
 import Icon from "@/components/ui/icon";
 import FadeIn from "@/components/ui/fade-in";
 import { Section, SectionHeader } from "@/components/ui/section";
-import { communityContent } from "@/lib/community-content";
 import { isMaintainer } from "@/lib/guards";
+import { DIVISION_NAMES, divisionsOf, headOf, isDivision, roleBadges } from "@/lib/structure";
 
 export type RosterFilter =
   | "maintainer"
@@ -16,6 +16,7 @@ export type RosterFilter =
   | "head"
   | "creative"
   | "builder"
+  | "cybersecurity"
   | "top-tier"
   | "all";
 
@@ -27,8 +28,9 @@ export function filterMembers(members: Member[], filter: RosterFilter): Member[]
   }
   // One rule per filter. "Maintainer" follows isMaintainer (the same rule the database uses for access).
   if (filter === "maintainer") return members.filter((m) => isMaintainer(m));
-  if (filter === "lead" || filter === "head") return members.filter((m) => m.hierarchy === filter);
-  if (filter === "creative" || filter === "builder") return members.filter((m) => m.division === filter);
+  if (filter === "head") return members.filter((m) => headOf(m).length > 0 || m.hierarchy === "head");
+  if (filter === "lead") return members.filter((m) => m.hierarchy === "lead");
+  if (isDivision(filter)) return members.filter((m) => divisionsOf(m).includes(filter));
   return members;
 }
 
@@ -41,14 +43,22 @@ const TITLE_STYLES: Record<"Founder" | "Co-Founder", React.CSSProperties> = {
   "Co-Founder": { color: "#075985", backgroundColor: "#FFFFFF", ["--px-line" as string]: "#0369A1" },
 };
 
-// Role chips stay inside the Fluid Currents palette: ink, river blue, teal, amber, indigo.
-const ROLE_STYLES: Record<string, { fg: string; bg: string }> = {
-  Maintainer: { fg: "#163A55", bg: "#EEF3F7" },
-  Builder: { fg: "#075985", bg: "#E6F1F8" },
-  "AI Engineer": { fg: "#0F766E", bg: "#E6F6F4" },
-  Desainer: { fg: "#B45309", bg: "#FDF3E3" },
-  Backend: { fg: "#4338CA", bg: "#EEEDFD" },
-};
+function ChipList({ label, title, items }: { label: string; title: string; items: string[] }) {
+  if (items.length === 0) return null;
+  return (
+    <>
+      <p className="mb-3 mt-5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-secondary/70">{title}</p>
+      <ul className="flex flex-wrap gap-2.5" aria-label={label}>
+        {items.map((item) => (
+          <li key={item} className="px-chip inline-flex items-center gap-1.5 bg-[#EEF3F7] px-2 py-0.5 font-mono text-[11px] font-semibold text-[#163A55]">
+            <span className="h-1.5 w-1.5 bg-current" aria-hidden="true" />
+            {item}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
 
 const WAVE = [2, 3, 3, 4, 4, 3, 3, 2];
 
@@ -85,35 +95,34 @@ function PixelEstuary({ seed }: { seed: number }) {
   );
 }
 
-const CORE_MAINTAINERS = communityContent.coreMaintainers.map((member) => ({
-  githubUsername: member.github,
-  fullName: member.name,
-  title: member.title,
-  roleBadge: member.title as "Founder" | "Co-Founder",
-  division: member.division.toLowerCase() as "builder" | "creative",
-  roles: [...member.roles] as string[],
-}));
+const honorificOf = (member: Member) => roleBadges(member)[0];
+const HONORIFIC_RANK: Record<string, number> = { Founder: 0, "Co-Founder": 1 };
+
+/** The maintainers, straight from the members table: founders first, then co-founders, then by name. */
+export function coreTeam(members: Member[]): Member[] {
+  const rank = (member: Member) => HONORIFIC_RANK[honorificOf(member) ?? ""] ?? 2;
+  return members.filter((member) => isMaintainer(member)).sort((a, b) => rank(a) - rank(b) || a.full_name.localeCompare(b.full_name));
+}
 
 export default function SyndicateRoster({ initialMembers = [] }: SyndicateRosterProps) {
-  // Merge live DB data if member has registered in public.members
-  const maintainers = CORE_MAINTAINERS.map((core) => {
-    const liveMatch = initialMembers.find(
-      (m) => m.github_username?.toLowerCase() === core.githubUsername.toLowerCase()
-    );
+  const maintainers = coreTeam(initialMembers).map((member) => {
+    const badges = roleBadges(member);
+    const honorific = HONORIFIC_RANK[badges[0] ?? ""] !== undefined ? badges[0] : "Maintainer";
     return {
-      id: liveMatch?.id || core.githubUsername,
-      fullName: liveMatch?.full_name || core.fullName,
-      githubUsername: core.githubUsername,
-      title: liveMatch?.role_title || core.title,
-      roleBadge: liveMatch?.sub_hierarchy === "founder" ? ("Founder" as const) : core.roleBadge,
-      division: core.division,
-      roles: core.roles,
-      avatarUrl: `https://github.com/${core.githubUsername}.png`,
-      githubUrl: `https://github.com/${core.githubUsername}`,
-      linkedinUrl: liveMatch?.linkedin_url,
-      portfolioUrl: liveMatch?.portfolio_url,
+      id: member.id,
+      fullName: member.full_name,
+      githubUsername: member.github_username,
+      honorific,
+      roles: badges.filter((badge) => badge !== honorific),
+      divisions: divisionsOf(member).map((division) => DIVISION_NAMES[division]),
+      tracks: member.tracks ?? [],
+      avatarUrl: member.avatar_url || `https://github.com/${member.github_username}.png`,
+      githubUrl: member.github_url || `https://github.com/${member.github_username}`,
+      linkedinUrl: member.linkedin_url,
     };
   });
+
+  if (maintainers.length === 0) return null;
 
   return (
     <Section id="syndicate" tone="white">
@@ -146,9 +155,9 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                   </span>
                   <span
                     className="px-chip absolute right-4 top-3.5 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider"
-                    style={TITLE_STYLES[m.roleBadge === "Founder" ? "Founder" : "Co-Founder"]}
+                    style={TITLE_STYLES[m.honorific === "Founder" ? "Founder" : "Co-Founder"]}
                   >
-                    {m.roleBadge}
+                    {m.honorific}
                   </span>
                 </div>
 
@@ -172,24 +181,9 @@ export default function SyndicateRoster({ initialMembers = [] }: SyndicateRoster
                     <span>@{m.githubUsername}</span>
                   </p>
 
-                  <p className="mb-3 mt-5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-secondary/70">
-                    Peran
-                  </p>
-                  <ul className="flex flex-wrap gap-2.5" aria-label={`Peran ${m.fullName}`}>
-                    {m.roles.map((role) => {
-                      const tone = ROLE_STYLES[role] ?? ROLE_STYLES.Maintainer;
-                      return (
-                        <li
-                          key={role}
-                          className="px-chip inline-flex items-center gap-1.5 px-2 py-0.5 font-mono text-[11px] font-semibold"
-                          style={{ color: tone.fg, backgroundColor: tone.bg, ["--px-line" as string]: `color-mix(in srgb, ${tone.fg} 45%, transparent)` }}
-                        >
-                          <span className="h-1.5 w-1.5 bg-current" aria-hidden="true" />
-                          {role}
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  <ChipList label={`Peran ${m.fullName}`} title="Peran" items={m.roles} />
+                  <ChipList label={`Divisi ${m.fullName}`} title="Anggota divisi" items={m.divisions} />
+                  <ChipList label={`Posisi ${m.fullName}`} title="Posisi" items={m.tracks} />
 
                   {/* Footer */}
                   <div className="mt-auto pt-6">

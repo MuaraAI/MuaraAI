@@ -15,20 +15,26 @@ vi.mock("@/app/actions/admin", () => ({
 }));
 vi.mock("@/components/ui/feedback", () => ({ useFeedback: () => ({ confirm, notify, prompt: async () => null }) }));
 
-const positions = { builder: ["Frontend", "Backend"], creative: ["Video"] };
+const positions = { builder: ["Frontend", "Backend"], creative: ["Video"], cybersecurity: ["Pentester"] };
 const person = (over: Record<string, unknown> = {}) =>
   ({
     id: "1",
     full_name: "Amel Tester",
     github_username: "ameltester",
     hierarchy: "member",
+    roles: [],
+    titles: [],
     division: "builder",
-    track: null,
+    divisions: ["builder"],
+    head_of: [],
+    tracks: [],
     is_active: true,
     membership_status: "active",
     reapply_blocked: false,
     ...over,
   }) as never;
+
+const box = (label: string) => screen.getByRole("checkbox", { name: label }) as HTMLInputElement;
 
 beforeEach(() => {
   setMemberRole.mockReset().mockResolvedValue({ success: true });
@@ -38,63 +44,92 @@ beforeEach(() => {
 });
 
 describe("admin role editor", () => {
-  it("saves rank, division and position together and shows the new role name", async () => {
+  it("saves access, divisions, heads, primary division and positions together", async () => {
     render(<AdminMembersClient initialMembers={[person()]} positions={positions} />);
-    expect(screen.getByText("Member", { selector: "div.font-bold" })).toBeTruthy();
 
-    fireEvent.change(screen.getByLabelText("Peringkat Amel Tester"), { target: { value: "head" } });
-    fireEvent.change(screen.getByLabelText("Divisi Amel Tester"), { target: { value: "creative" } });
-    fireEvent.change(screen.getByLabelText("Posisi Amel Tester"), { target: { value: "Video" } });
+    fireEvent.click(box("Divisi Creative Amel Tester"));
+    fireEvent.click(box("Divisi Cybersecurity Amel Tester"));
+    fireEvent.click(box("Head of Creative Amel Tester"));
+    fireEvent.click(box("Posisi Video Amel Tester"));
+    fireEvent.click(box("Posisi Pentester Amel Tester"));
+    fireEvent.change(screen.getByLabelText("Divisi utama Amel Tester"), { target: { value: "creative" } });
     fireEvent.click(screen.getByRole("button", { name: "Simpan peran" }));
 
-    await waitFor(() => expect(setMemberRole).toHaveBeenCalledWith("1", { hierarchy: "head", division: "creative", track: "Video" }));
-    expect(await screen.findByText("Head of Creative")).toBeTruthy();
+    await waitFor(() =>
+      expect(setMemberRole).toHaveBeenCalledWith("1", {
+        maintainer: false,
+        divisions: ["builder", "creative", "cybersecurity"],
+        primary: "creative",
+        headOf: ["creative"],
+        tracks: ["Video", "Pentester"],
+      }),
+    );
+    expect(await screen.findAllByText("Head of Creative")).not.toHaveLength(0);
     expect(notify).toHaveBeenCalledWith(expect.objectContaining({ tone: "success" }));
   });
 
-  it("only offers the positions of the chosen division, and clears the position when the division changes", () => {
-    render(<AdminMembersClient initialMembers={[person({ track: "Frontend" })]} positions={positions} />);
-    const position = screen.getByLabelText("Posisi Amel Tester") as HTMLSelectElement;
-    expect(Array.from(position.options).map((option) => option.value)).toEqual(["", "Frontend", "Backend"]);
+  it("only offers positions and Head roles for the divisions the person is in, and drops them when a division is removed", () => {
+    render(<AdminMembersClient initialMembers={[person({ divisions: ["builder", "creative"], head_of: ["creative"], tracks: ["Video", "Backend"] })]} positions={positions} />);
+    expect(screen.queryByRole("checkbox", { name: "Posisi Pentester Amel Tester" })).toBeNull();
+    expect(box("Head of Creative Amel Tester").checked).toBe(true);
 
-    fireEvent.change(screen.getByLabelText("Divisi Amel Tester"), { target: { value: "creative" } });
-    expect(Array.from((screen.getByLabelText("Posisi Amel Tester") as HTMLSelectElement).options).map((option) => option.value)).toEqual(["", "Video"]);
-    expect((screen.getByLabelText("Posisi Amel Tester") as HTMLSelectElement).value).toBe("");
+    fireEvent.click(box("Divisi Creative Amel Tester"));
+    expect(screen.queryByRole("checkbox", { name: "Head of Creative Amel Tester" })).toBeNull();
+    expect(screen.queryByRole("checkbox", { name: "Posisi Video Amel Tester" })).toBeNull();
+    expect(box("Posisi Backend Amel Tester").checked).toBe(true);
   });
 
-  it("does nothing until something changed, and nothing when the admin declines the confirmation", async () => {
-    render(<AdminMembersClient initialMembers={[person()]} positions={positions} />);
-    const save = screen.getByRole("button", { name: "Simpan peran" }) as HTMLButtonElement;
-    expect(save.disabled).toBe(true);
+  it("starts from what the person already is, and does nothing until something changes", () => {
+    render(<AdminMembersClient initialMembers={[person({ hierarchy: "maintainer", roles: ["maintainer"], divisions: ["builder", "creative"], head_of: ["builder"] })]} positions={positions} />);
+    expect(box("Maintainer Amel Tester").checked).toBe(true);
+    expect(box("Divisi Creative Amel Tester").checked).toBe(true);
+    expect(box("Divisi Cybersecurity Amel Tester").checked).toBe(false);
+    expect(box("Head of Builder Amel Tester").checked).toBe(true);
+    expect((screen.getByRole("button", { name: "Simpan peran" }) as HTMLButtonElement).disabled).toBe(true);
+  });
 
+  it("will not save a person with no division", () => {
+    render(<AdminMembersClient initialMembers={[person()]} positions={positions} />);
+    fireEvent.click(box("Divisi Builder Amel Tester"));
+    expect((screen.getByRole("button", { name: "Simpan peran" }) as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it("does nothing when the admin declines the confirmation", async () => {
     confirmAnswer = false;
-    fireEvent.change(screen.getByLabelText("Peringkat Amel Tester"), { target: { value: "lead" } });
-    fireEvent.click(save);
+    render(<AdminMembersClient initialMembers={[person()]} positions={positions} />);
+    fireEvent.click(box("Divisi Creative Amel Tester"));
+    fireEvent.click(screen.getByRole("button", { name: "Simpan peran" }));
     await waitFor(() => expect(confirm).toHaveBeenCalled());
     expect(setMemberRole).not.toHaveBeenCalled();
   });
 
-  it("warns that maintainer means full admin access", async () => {
-    render(<AdminMembersClient initialMembers={[person()]} positions={positions} />);
-    fireEvent.change(screen.getByLabelText("Peringkat Amel Tester"), { target: { value: "maintainer" } });
+  it("warns that maintainer means full admin access, both when giving and when taking it", async () => {
+    const { unmount } = render(<AdminMembersClient initialMembers={[person()]} positions={positions} />);
+    fireEvent.click(box("Maintainer Amel Tester"));
     fireEvent.click(screen.getByRole("button", { name: "Simpan peran" }));
+    await waitFor(() => expect(confirm).toHaveBeenCalledWith(expect.objectContaining({ title: "Ubah akses maintainer?", message: expect.stringContaining("diberikan") })));
+    unmount();
 
-    await waitFor(() => expect(confirm).toHaveBeenCalledWith(expect.objectContaining({ title: "Ubah akses maintainer?" })));
+    confirm.mockClear();
+    render(<AdminMembersClient initialMembers={[person({ hierarchy: "maintainer", roles: ["maintainer"] })]} positions={positions} />);
+    fireEvent.click(box("Maintainer Amel Tester"));
+    fireEvent.click(screen.getByRole("button", { name: "Simpan peran" }));
+    await waitFor(() => expect(confirm).toHaveBeenCalledWith(expect.objectContaining({ message: expect.stringContaining("dicabut") })));
   });
 
   it("shows the server's refusal and keeps the old role", async () => {
     setMemberRole.mockResolvedValue({ success: false, error: "Tidak bisa menurunkan maintainer terakhir." });
-    render(<AdminMembersClient initialMembers={[person({ hierarchy: "maintainer" })]} positions={positions} />);
-    fireEvent.change(screen.getByLabelText("Peringkat Amel Tester"), { target: { value: "member" } });
+    render(<AdminMembersClient initialMembers={[person({ hierarchy: "maintainer", roles: ["maintainer"] })]} positions={positions} />);
+    fireEvent.click(box("Maintainer Amel Tester"));
     fireEvent.click(screen.getByRole("button", { name: "Simpan peran" }));
 
     await waitFor(() => expect(notify).toHaveBeenCalledWith(expect.objectContaining({ tone: "error", message: "Tidak bisa menurunkan maintainer terakhir." })));
     expect(screen.getAllByText("Maintainer").length).toBeGreaterThan(0);
   });
 
-  it("shows the role as plain text when the official positions are not set up", () => {
-    render(<AdminMembersClient initialMembers={[person({ hierarchy: "lead" })]} positions={null} />);
-    expect(screen.getByText("Builder Lead")).toBeTruthy();
+  it("shows the role badges as plain text when the official positions are not set up", () => {
+    render(<AdminMembersClient initialMembers={[person({ hierarchy: "maintainer", roles: ["maintainer"], titles: ["Founder"], head_of: ["builder"] })]} positions={null} />);
+    expect(screen.getByText("Founder · Maintainer · Head of Builder")).toBeTruthy();
     expect(screen.queryByRole("button", { name: "Simpan peran" })).toBeNull();
   });
 });

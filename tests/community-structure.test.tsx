@@ -3,14 +3,21 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import CommunityStructure from "../src/components/landing/community-structure";
 
-const positions = { builder: ["Web", "Backend", "Game"], creative: ["Video", "Copywriting"] };
+const positions = { builder: ["Web", "Backend", "Game"], creative: ["Video", "Copywriting"], cybersecurity: ["Pentester", "CTF"] };
 
 describe("CommunityStructure", () => {
   it("shows both divisions with their positions from the settings", () => {
     render(<CommunityStructure positions={positions} />);
     expect(screen.getByRole("heading", { name: "Builder" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Creative" })).toBeTruthy();
-    for (const position of [...positions.builder, ...positions.creative]) expect(screen.getByText(position)).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Cybersecurity" })).toBeTruthy();
+    for (const position of [...positions.builder, ...positions.creative, ...positions.cybersecurity]) expect(screen.getByText(position)).toBeTruthy();
+  });
+
+  it("shows the Cybersecurity division even before it has positions", () => {
+    render(<CommunityStructure positions={{ builder: ["Web"], creative: ["Video"] }} />);
+    expect(screen.getByRole("heading", { name: "Cybersecurity" })).toBeTruthy();
+    expect(screen.getByText(/tiga divisi/i)).toBeTruthy();
   });
 
   it("lists the member roles and the four tiers", () => {

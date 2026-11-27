@@ -8,8 +8,9 @@ import { RANKS, type Rank } from "@/lib/structure";
 const COPY = {
   id: {
     eyebrow: "Struktur",
-    title: "Satu komunitas, dua divisi, banyak cara berkontribusi.",
+    title: "Satu komunitas, tiga divisi, banyak cara berkontribusi.",
     builder: "Membangun aplikasi, sistem, dan project lewat kode.",
+    cybersecurity: "Mengamankan sistem: menguji, menganalisis, dan bertahan, dikerjakan lewat PR dan write-up di repo org.",
     creative: "Membuat karya, konten, dan ide yang dikerjakan lewat PR di repo org.",
     roles: "Peran",
     rankText: {
@@ -23,8 +24,9 @@ const COPY = {
   },
   en: {
     eyebrow: "Structure",
-    title: "One community, two divisions, many ways to contribute.",
+    title: "One community, three divisions, many ways to contribute.",
     builder: "Building apps, systems and projects with code.",
+    cybersecurity: "Securing systems: testing, analysing and defending, delivered as pull requests and write-ups in the org's repos.",
     creative: "Making work, content and ideas, delivered as pull requests to the org's repos.",
     roles: "Roles",
     rankText: {
@@ -70,6 +72,11 @@ export default function CommunityStructure({ positions, locale = "id" }: { posit
             <h3 className="font-display text-xl font-bold text-foreground">Creative</h3>
             <p className="mt-2 text-sm leading-relaxed text-secondary">{copy.creative}</p>
             {positions ? <Chips items={positions.creative} /> : null}
+          </div>
+          <div>
+            <h3 className="font-display text-xl font-bold text-foreground">Cybersecurity</h3>
+            <p className="mt-2 text-sm leading-relaxed text-secondary">{copy.cybersecurity}</p>
+            {positions?.cybersecurity?.length ? <Chips items={positions.cybersecurity} /> : null}
           </div>
         </div>
 

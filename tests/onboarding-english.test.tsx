@@ -51,12 +51,12 @@ describe("registration form in English", () => {
   });
 
   it("says Choose instead of Pilih on an empty select, and keeps Pilih in Indonesian", () => {
-    const empty = { builder: [], creative: ["Video"] };
+    const empty = { builder: [], creative: [] };
     render(<PoWForm positions={empty} locale="en" />);
     fireEvent.change(screen.getByLabelText(/Full name/i), { target: { value: "Budi Santoso" } });
     fireEvent.change(screen.getByLabelText(/WhatsApp/i), { target: { value: "081234567890" } });
     next(/^Next$/);
-    expect(screen.getByText("Choose…")).toBeTruthy();
+    expect(screen.getAllByText("Choose…").length).toBeGreaterThan(0);
     expect(screen.queryByText("Pilih…")).toBeNull();
   });
 

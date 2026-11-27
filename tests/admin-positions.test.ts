@@ -31,7 +31,7 @@ describe("updatePositions", () => {
     expect(upsertMock).toHaveBeenCalledWith(
       expect.objectContaining({
         key: "positions",
-        value: { builder: ["Web", "Backend"], creative: ["Video"] },
+        value: { builder: ["Web", "Backend"], creative: ["Video"], cybersecurity: [] },
       }),
       { onConflict: "key" }
     );

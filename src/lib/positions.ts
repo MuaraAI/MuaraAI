@@ -1,6 +1,8 @@
 export interface PositionsConfig {
   builder: string[];
   creative: string[];
+  /** Optional so settings saved before the third division existed still parse. */
+  cybersecurity?: string[];
 }
 
 export const POSITIONS_SETTING_KEY = "positions";
@@ -17,10 +19,11 @@ function cleanList(value: unknown): string[] | null {
 
 export function parsePositions(value: unknown): PositionsConfig | null {
   if (!value || typeof value !== "object") return null;
-  const { builder, creative } = value as Record<string, unknown>;
+  const { builder, creative, cybersecurity } = value as Record<string, unknown>;
   const builderList = cleanList(builder);
   const creativeList = cleanList(creative);
-  return builderList && creativeList ? { builder: builderList, creative: creativeList } : null;
+  if (!builderList || !creativeList) return null;
+  return { builder: builderList, creative: creativeList, cybersecurity: cleanList(cybersecurity) ?? [] };
 }
 
 function dedupe(list: unknown): string[] {
@@ -42,5 +45,5 @@ export function normalizePositions(input: PositionsConfig): PositionsConfig | nu
   if (!input || typeof input !== "object") return null;
   const builder = dedupe(input.builder);
   const creative = dedupe(input.creative);
-  return builder.length > 0 && creative.length > 0 ? { builder, creative } : null;
+  return builder.length > 0 && creative.length > 0 ? { builder, creative, cybersecurity: dedupe(input.cybersecurity) } : null;
 }

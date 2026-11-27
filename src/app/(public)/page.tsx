@@ -49,7 +49,7 @@ export default async function LandingPage({
   const { data: membersData } = supabase
     ? await supabase
     .from("members")
-    .select("id, full_name, avatar_url, github_username, hierarchy, sub_hierarchy, roles, titles, division, track, tier, streak, website_url, github_url, linkedin_url, portfolio_url")
+    .select("id, full_name, avatar_url, github_username, hierarchy, sub_hierarchy, roles, titles, division, divisions, head_of, tracks, track, tier, streak, website_url, github_url, linkedin_url, portfolio_url")
     .eq("registration_status", "approved")
     .eq("is_active", true)
     .order("tier", { ascending: false })

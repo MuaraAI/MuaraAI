@@ -7,6 +7,7 @@ import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import { ONBOARDING_COPY } from "@/lib/onboarding-copy";
 import type { PoWInput } from "@/lib/validation";
 import { normalizeLocale, type Locale } from "@/lib/locale";
+import { isDivision } from "@/lib/structure";
 
 const PLACEHOLDER_INSTITUTIONS = ["Tidak disebutkan", "Kampus lain di Indonesia"];
 
@@ -66,7 +67,7 @@ export default async function OnboardingView({ locale }: { locale: Locale }) {
         institution: PLACEHOLDER_INSTITUTIONS.includes(member.campus) ? "" : member.campus || "",
         phoneWa: member.phone_wa || "",
         telegramUsername: member.telegram_username || "",
-        division: member.division === "creative" ? "creative" : "builder",
+        division: isDivision(member.division) ? member.division : "builder",
         track: member.track || "",
         secondaryDivision: member.secondary_division || undefined,
         secondaryTrack: member.secondary_track || undefined,
