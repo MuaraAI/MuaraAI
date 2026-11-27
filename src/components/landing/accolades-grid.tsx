@@ -15,6 +15,9 @@ interface AccoladesGridProps {
 export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGridProps) {
   const [activeImage, setActiveImage] = useState<string | null>(null);
 
+  // An empty "coming soon" block on the landing page hurts trust more than no block: show the section only when there is something to show.
+  if (initialAchievements.length === 0) return null;
+
   return (
     <Section id="accolades" tone="white">
       <SectionHeader
@@ -23,20 +26,7 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
         description="Arsip kredensial, kejuaraan hackathon, dan sertifikasi profesional anggota yang dapat diverifikasi secara publik."
       />
 
-        {initialAchievements.length === 0 ? (
-          <FadeIn className="p-[2px]">
-            <div className="flex flex-col items-center border-2 border-dashed border-[#CFE2EE] bg-surface-alt/60 px-6 py-14 text-center">
-              <span className="px-icon mb-5 h-14 w-14">
-                <Icon name="workspace_premium" className="h-7 w-7" />
-              </span>
-              <p className="font-display text-lg font-bold text-foreground">Arsip prestasi segera hadir</p>
-              <p className="mt-2 max-w-md text-sm leading-relaxed text-secondary">
-                Arsip prestasi dan sertifikat kompetisi sedang dikurasi.
-              </p>
-            </div>
-          </FadeIn>
-        ) : (
-          <div className="rail grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="rail grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {initialAchievements.map((item, idx) => (
               <FadeIn key={item.id} delay={(idx % 3) * 0.1} className="h-full p-[2px]">
                 <div
@@ -111,7 +101,6 @@ export default function AccoladesGrid({ initialAchievements = [] }: AccoladesGri
               </FadeIn>
             ))}
           </div>
-        )}
 
         {/* Lightbox Modal */}
         {activeImage && (

@@ -16,6 +16,8 @@ describe("Public navigation", () => {
     const links = Object.fromEntries(screen.getAllByRole("link").map((link) => [link.textContent?.trim(), link.getAttribute("href")]));
 
     expect(links["Project"]).toBe("/projects");
+    expect(links["Karya"]).toBe("/karya");
+    expect(links["Struktur"]).toBe("/#struktur");
     expect(links["Anggota"]).toBe("/members");
     expect(links["Aturan"]).toBe("/code-of-conduct");
     expect(links["Masuk"]).toBe("/login");
@@ -87,6 +89,8 @@ describe("English navigation", () => {
     const links = Object.fromEntries(screen.getAllByRole("link").map((link) => [link.textContent?.trim(), link.getAttribute("href")]));
 
     expect(links["Projects"]).toBe("/projects");
+    expect(links["Works"]).toBe("/karya");
+    expect(links["Structure"]).toBe("/en#struktur");
     expect(links["Members"]).toBe("/members");
     expect(links["Rules"]).toBe("/en/code-of-conduct");
     expect(links["Log in"]).toBe("/login");
