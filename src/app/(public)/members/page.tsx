@@ -6,10 +6,12 @@ import MembersDirectory from "@/components/members/members-directory";
 import Link from "next/link";
 import Icon from "@/components/ui/icon";
 import { PageHeader } from "@/components/ui/section";
+import { getSessionUser } from "@/lib/session-user";
 
 export const revalidate = 60; // ISR 60 seconds
 
 export default async function MembersPage() {
+  const signedIn = Boolean(await getSessionUser());
   const supabase = isSupabaseConfigured() ? await createClient() : null;
 
   // Fetch all approved active members
@@ -40,9 +42,9 @@ export default async function MembersPage() {
         title="Direktori Anggota Muara AI"
         description="Kenali anggota yang belajar, membangun project, dan berkontribusi bersama MuaraAI."
         actions={
-          <Link href="/onboarding" className="px-btn inline-flex w-fit items-center gap-2 px-5 py-2.5 font-sans text-xs font-bold">
-            <Icon name="github" className="h-4 w-4" />
-            <span>Daftar dengan GitHub</span>
+          <Link href={signedIn ? "/dashboard" : "/onboarding"} className="px-btn inline-flex w-fit items-center gap-2 px-5 py-2.5 font-sans text-xs font-bold">
+            <Icon name={signedIn ? "dashboard" : "github"} className="h-4 w-4" />
+            <span>{signedIn ? "Buka dashboard" : "Daftar dengan GitHub"}</span>
           </Link>
         }
       />

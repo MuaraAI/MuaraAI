@@ -5,7 +5,7 @@ import FadeIn from "@/components/ui/fade-in";
 import DrawLine from "@/components/ui/draw-line";
 import { Section, SectionHeader } from "@/components/ui/section";
 
-export default function JoinFlow() {
+export default function JoinFlow({ signedIn = false }: { signedIn?: boolean }) {
   const steps: { num: string; title: string; desc: string; icon: IconName }[] = [
     {
       num: "01",
@@ -68,11 +68,11 @@ export default function JoinFlow() {
 
         <FadeIn className="mt-12 text-center" delay={0.2}>
           <Link
-            href="/api/auth/login"
+            href={signedIn ? "/dashboard" : "/api/auth/login"}
             className="px-btn inline-flex items-center gap-2 px-8 py-3.5 text-sm font-bold"
           >
             <Icon name="arrow_forward" className="w-4 h-4 text-white" />
-            Mulai Kirim Proof of Work Sekarang
+            {signedIn ? "Buka dashboard" : "Mulai Kirim Proof of Work Sekarang"}
           </Link>
         </FadeIn>
     </Section>

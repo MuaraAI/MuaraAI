@@ -6,6 +6,7 @@ import { POSITIONS_SETTING_KEY, parsePositions } from "@/lib/positions";
 import { parseRules } from "@/lib/contributions/rules";
 import HeroShowcase, { buildHeroStats } from "@/components/landing/hero-showcase";
 import { fetchOrgRepos } from "@/lib/github-repos";
+import { getSessionUser } from "@/lib/session-user";
 import { GITHUB_ORG_URL, SOCIABUZZ_URL } from "@/lib/constants";
 import { Section, SectionHeader } from "@/components/ui/section";
 import CommunityStructure from "@/components/landing/community-structure";
@@ -44,6 +45,7 @@ const STEPS = [
 ];
 
 export default async function EnglishHomePage() {
+  const signedIn = Boolean(await getSessionUser());
   const supabase = isSupabaseConfigured() ? await createClient() : null;
   const read = async (key: string) =>
     supabase ? (await supabase.from("community_settings").select("value").eq("key", key).maybeSingle()).data?.value : undefined;
@@ -69,8 +71,8 @@ export default async function EnglishHomePage() {
             and build a track record anyone can check. Students, learners and professionals from anywhere are welcome.
           </p>
           <div className="mt-9 grid grid-cols-[1fr_auto] gap-3 sm:flex sm:gap-4">
-            <Link href="/en/join" className="px-btn inline-flex min-h-11 items-center justify-center px-4 py-3 text-sm font-bold sm:px-5">
-              Join with GitHub
+            <Link href={signedIn ? "/dashboard" : "/en/join"} className="px-btn inline-flex min-h-11 items-center justify-center px-4 py-3 text-sm font-bold sm:px-5">
+              {signedIn ? "Open your dashboard" : "Join with GitHub"}
             </Link>
             <Link href="/members" className="px-btn-ghost inline-flex min-h-11 items-center justify-center px-4 py-3 text-sm font-semibold sm:px-5">
               See the members

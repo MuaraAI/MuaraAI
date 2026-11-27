@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Icon from "@/components/ui/icon";
 import { PageHeader } from "@/components/ui/section";
+import { getSessionUser } from "@/lib/session-user";
 
 export const metadata: Metadata = {
   title: "Join MuaraAI | How membership works",
@@ -47,6 +48,7 @@ const STEPS = [
 ];
 
 export default async function EnglishJoinPage() {
+  const signedIn = Boolean(await getSessionUser());
   return (
     <div className="mx-auto max-w-[100rem] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <PageHeader
@@ -55,9 +57,9 @@ export default async function EnglishJoinPage() {
         title="Join MuaraAI"
         description="Membership is open to anyone with a GitHub account. This is what happens, step by step."
         actions={
-          <Link href="/api/auth/login?next=/en/onboarding" className="px-btn inline-flex w-fit items-center gap-2 px-5 py-2.5 text-xs font-bold">
-            <Icon name="github" className="h-4 w-4" />
-            <span>Continue with GitHub</span>
+          <Link href={signedIn ? "/dashboard" : "/api/auth/login?next=/en/onboarding"} className="px-btn inline-flex w-fit items-center gap-2 px-5 py-2.5 text-xs font-bold">
+            <Icon name={signedIn ? "dashboard" : "github"} className="h-4 w-4" />
+            <span>{signedIn ? "Go to your dashboard" : "Continue with GitHub"}</span>
           </Link>
         }
       />
