@@ -12,6 +12,7 @@ import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { Member, Achievement } from "@/types/database";
 import { redirect } from "next/navigation";
 import { buildHeroStats } from "@/components/landing/hero-showcase";
+import { getSessionUser } from "@/lib/session-user";
 import { fetchOrgRepos } from "@/lib/github-repos";
 import { GITHUB_ORG_URL } from "@/lib/constants";
 import type { Metadata } from "next";
@@ -75,17 +76,18 @@ export default async function LandingPage({
   const positions = parsePositions(positionsSetting?.value);
 
   // Real numbers for the hero: people from our own table, stars from GitHub (cached for an hour, left out if GitHub is unreachable).
+  const signedIn = Boolean(await getSessionUser());
   const stats = buildHeroStats(members, await fetchOrgRepos(GITHUB_ORG_URL.split("/").pop() ?? "MuaraAI", { token: process.env.GITHUB_ORG_TOKEN }));
 
   return (
     <div className="flex flex-col">
-      <Hero stats={stats} />
+      <Hero stats={stats} signedIn={signedIn} />
       <CommunityStructure positions={positions} />
       <SyndicateRoster initialMembers={members} />
       <AccoladesGrid initialAchievements={achievements} />
       <Manifesto />
       <BenefitsGrid />
-      <JoinFlow />
+      <JoinFlow signedIn={signedIn} />
       <DonateCta />
     </div>
   );

@@ -1,8 +1,10 @@
 import React from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import Icon from "@/components/ui/icon";
 import { isDevMockEnabled } from "@/lib/dev-mock";
 import { isSupabaseConfigured } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/session-user";
 
 export const metadata = { title: "Masuk | MuaraAI" };
 
@@ -13,6 +15,8 @@ const ERRORS: Record<string, string> = {
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;
+  // Someone who is already signed in has no use for a login form.
+  if (await getSessionUser()) redirect("/dashboard");
   const devMock = isDevMockEnabled();
   const oauthReady = isSupabaseConfigured() && !devMock;
 

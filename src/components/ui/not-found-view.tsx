@@ -44,11 +44,11 @@ const COPY = {
   },
 } as const;
 
-export default function NotFoundView({ locale }: { locale: Locale }) {
+export default function NotFoundView({ locale, user = null }: { locale: Locale; user?: { id: string } | null }) {
   const t = COPY[locale];
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar locale={locale} />
+      <Navbar locale={locale} user={user} />
       <main className="flex flex-1 items-center">
         <StatusScene
           code="404"
