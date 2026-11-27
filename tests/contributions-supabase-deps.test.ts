@@ -39,6 +39,14 @@ function fakeClient(responses: Record<string, unknown> = {}) {
 const github = { token: "tok" };
 
 describe("buildSupabaseDeps", () => {
+  it("judges a Cybersecurity member by the Builder targets, and only Creative members by the Creative ones", async () => {
+    const row = (id: string, division: string) => ({ id, github_username: id, full_name: id, division, streak: 0 });
+    const { client } = fakeClient({ "members.list": [row("a", "cybersecurity"), row("b", "builder"), row("c", "creative"), row("d", "something-else")] });
+    const members = await buildSupabaseDeps(client, github).loadMembers();
+
+    expect(Object.fromEntries(members.map((member) => [member.id, member.division]))).toEqual({ a: "builder", b: "builder", c: "creative", d: "builder" });
+  });
+
   it("loads only approved, active members and maps them to engine members", async () => {
     const { client, ops } = fakeClient({
       "members.list": [

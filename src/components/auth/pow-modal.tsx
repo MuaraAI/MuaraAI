@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { submitProofOfWork } from "@/app/actions/pow";
 import { AFFILIATIONS, MIN_JOIN_REASON_LENGTH, type Division, type PoWInput } from "@/lib/validation";
+import { DIVISIONS, DIVISION_NAMES, isDivision, positionsOf } from "@/lib/structure";
 import { normalizeLocale, type Locale } from "@/lib/locale";
 import { ONBOARDING_COPY } from "@/lib/onboarding-copy";
 import type { PositionsConfig } from "@/lib/positions";
@@ -14,18 +15,18 @@ type Step = 0 | 1 | 2 | 3;
 
 const DRAFT_KEY = "muaraai_onboarding_draft";
 
-const DIVISION_LABELS: Record<Division, string> = { builder: "Builder", creative: "Creative" };
-const DIVISIONS: readonly Division[] = ["builder", "creative"];
 
 function buildInitial(positions: PositionsConfig, initial?: Partial<PoWInput>): PoWInput {
-  const division: Division = initial?.division === "creative" ? "creative" : "builder";
-  const track = positions[division].includes(initial?.track ?? "") ? (initial?.track as string) : positions[division][0] ?? "";
+  const hasPositions = (candidate: Division) => positionsOf(positions, candidate).length > 0;
+  // The main division is the person's own pick when it can be chosen, otherwise the first division that has positions.
+  const division: Division = isDivision(initial?.division) && hasPositions(initial.division) ? initial.division : DIVISIONS.find(hasPositions) ?? "builder";
+  const track = positionsOf(positions, division).includes(initial?.track ?? "") ? (initial?.track as string) : positionsOf(positions, division)[0] ?? "";
   const secondaryDivision =
     initial?.secondaryDivision && initial.secondaryDivision !== division ? initial.secondaryDivision : undefined;
   const secondaryTrack = secondaryDivision
-    ? positions[secondaryDivision].includes(initial?.secondaryTrack ?? "")
+    ? positionsOf(positions, secondaryDivision).includes(initial?.secondaryTrack ?? "")
       ? initial?.secondaryTrack
-      : positions[secondaryDivision][0]
+      : positionsOf(positions, secondaryDivision)[0]
     : undefined;
 
   return {
@@ -111,7 +112,7 @@ export default function PoWForm({
       return {
         ...current,
         division,
-        track: positions[division][0] ?? "",
+        track: positionsOf(positions, division)[0] ?? "",
         secondaryDivision: stillSecondary ? current.secondaryDivision : undefined,
         secondaryTrack: stillSecondary ? current.secondaryTrack : undefined,
       };
@@ -122,7 +123,7 @@ export default function PoWForm({
     setFormData((current) =>
       value === ""
         ? { ...current, secondaryDivision: undefined, secondaryTrack: undefined }
-        : { ...current, secondaryDivision: value as Division, secondaryTrack: positions[value as Division][0] ?? "" }
+        : { ...current, secondaryDivision: value as Division, secondaryTrack: positionsOf(positions, value as Division)[0] ?? "" }
     );
   };
 
@@ -154,17 +155,19 @@ export default function PoWForm({
     setError(result.error || t.submitFailed);
   };
 
+  // A division can only be chosen once it has at least one official position (the form requires one).
+  const offered = DIVISIONS.filter((division) => positionsOf(positions, division).length > 0);
   const secondaryOptions = [
     { value: "", label: t.none },
-    ...DIVISIONS.filter((division) => division !== formData.division).map((division) => ({
+    ...offered.filter((division) => division !== formData.division).map((division) => ({
       value: division,
-      label: DIVISION_LABELS[division],
+      label: DIVISION_NAMES[division],
     })),
   ];
   const reasonLength = formData.joinReason.trim().length;
   const positionSummary = [
-    `${DIVISION_LABELS[formData.division]} · ${formData.track}`,
-    formData.secondaryDivision ? `${DIVISION_LABELS[formData.secondaryDivision]} · ${formData.secondaryTrack}` : "",
+    `${DIVISION_NAMES[formData.division]} · ${formData.track}`,
+    formData.secondaryDivision ? `${DIVISION_NAMES[formData.secondaryDivision]} · ${formData.secondaryTrack}` : "",
   ]
     .filter(Boolean)
     .join("  +  ");
@@ -246,14 +249,14 @@ export default function PoWForm({
                 id="division"
                 label={t.division}
                 value={formData.division}
-                options={DIVISIONS.map((value) => ({ value, label: DIVISION_LABELS[value] }))}
+                options={offered.map((value) => ({ value, label: DIVISION_NAMES[value] }))}
                 onChange={changeDivision}
               />
               <SelectField placeholder={t.choose}
                 id="track"
                 label={t.track}
                 value={formData.track}
-                options={positions[formData.division].map((value) => ({ value, label: value }))}
+                options={positionsOf(positions, formData.division).map((value) => ({ value, label: value }))}
                 onChange={(value) => update("track", value)}
               />
               <SelectField placeholder={t.choose}
@@ -269,7 +272,7 @@ export default function PoWForm({
                   id="secondaryTrack"
                   label={t.secondaryTrack}
                   value={formData.secondaryTrack ?? ""}
-                  options={positions[formData.secondaryDivision].map((value) => ({ value, label: value }))}
+                  options={positionsOf(positions, formData.secondaryDivision).map((value) => ({ value, label: value }))}
                   onChange={(value) => update("secondaryTrack", value)}
                 />
               )}

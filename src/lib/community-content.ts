@@ -59,9 +59,4 @@ export const communityContent = {
   },
   products,
   comingSoon,
-  coreMaintainers: [
-    { name: "Yuken Velino", github: "Curzyori", title: "Founder", roles: ["Maintainer", "Builder", "AI Engineer"], division: "Builder" },
-    { name: "Muhammad Raffli Aldiansyah", github: "Seeyaa77", title: "Co-Founder", roles: ["Maintainer", "Builder", "Backend"], division: "Builder" },
-    { name: "Verzio Yamanansyah", github: "MyKineID", title: "Co-Founder", roles: ["Maintainer", "Desainer"], division: "Builder" },
-  ],
 } as const;

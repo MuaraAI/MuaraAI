@@ -15,7 +15,7 @@ export default async function AdminSettingsPage() {
     .eq("key", POSITIONS_SETTING_KEY)
     .single();
 
-  const positions = parsePositions(data?.value) ?? { builder: [], creative: [] };
+  const positions = parsePositions(data?.value) ?? { builder: [], creative: [], cybersecurity: [] };
 
   const { data: rulesSetting } = await supabase
     .from("community_settings")

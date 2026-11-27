@@ -10,6 +10,7 @@ import FadeIn from "@/components/ui/fade-in";
 import { filterMembers, RosterFilter } from "@/components/landing/syndicate-roster";
 import { PixelTabs, TabSlide } from "@/components/ui/pixel-tabs";
 import TierBadge from "@/components/members/tier-badge";
+import { DIVISION_NAMES, divisionsOf, roleBadges } from "@/lib/structure";
 
 interface MembersDirectoryProps {
   initialMembers: Member[];
@@ -17,14 +18,15 @@ interface MembersDirectoryProps {
   positions?: PositionsConfig;
 }
 
-const DIVISION_LABEL: Record<string, string> = { builder: "Builder", creative: "Creative" };
 const PLACEHOLDER_INSTITUTIONS = ["Tidak disebutkan", "Kampus lain di Indonesia"];
 
 const filters: { id: RosterFilter; label: string }[] = [
   { id: "all", label: "Semua" },
   { id: "maintainer", label: "Maintainer" },
+  { id: "head", label: "Head" },
   { id: "builder", label: "Builder" },
   { id: "creative", label: "Creative" },
+  { id: "cybersecurity", label: "Cybersecurity" },
   { id: "top-tier", label: "Peringkat tier" },
 ];
 const FILTER_ORDER = filters.map((f) => f.id);
@@ -33,15 +35,17 @@ export default function MembersDirectory({ initialMembers, positions }: MembersD
   const [filter, setFilter] = useState<RosterFilter>("all");
   const [search, setSearch] = useState("");
 
-  const isOfficial = (division?: string | null, track?: string | null) =>
-    Boolean(positions && division && track && (positions as unknown as Record<string, string[]>)[division]?.includes(track));
+  const official = new Set(positions ? Object.values(positions).flat() : []);
+  // Show only positions that are on the official list, from the new tracks list or (older rows) the track columns.
+  const officialTracks = (member: Member) =>
+    [...new Set([...(member.tracks ?? []), member.track, member.secondary_track].filter((track): track is string => Boolean(track) && official.has(track as string)))];
 
   const filtered = useMemo(() => {
     const list = filterMembers(initialMembers, filter);
     const query = search.trim().toLowerCase();
     if (!query) return list;
     return list.filter((member) =>
-      [member.full_name, member.github_username, member.campus, member.track, member.division, member.role_title]
+      [member.full_name, member.github_username, member.campus, ...(member.tracks ?? []), ...divisionsOf(member), ...roleBadges(member)]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(query)),
     );
@@ -79,7 +83,6 @@ export default function MembersDirectory({ initialMembers, positions }: MembersD
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((member, index) => {
-            const titles = Array.from(new Set([member.role_title, ...(member.titles || [])].filter(Boolean)));
             return (
               <FadeIn key={member.id} delay={index * 0.04}>
                 <article className="px-card px-card-hover flex h-full flex-col justify-between bg-white p-5">
@@ -99,10 +102,9 @@ export default function MembersDirectory({ initialMembers, positions }: MembersD
                       </div>
                     </div>
                     <div className="mt-5 flex flex-wrap gap-1.5">
-                      {titles.map((title) => <span key={title} className="px-chip bg-surface-alt px-2 py-0.5 font-mono text-[11px] font-medium text-foreground">{title}</span>)}
-                      <span className="px-chip px-2 py-0.5 font-mono text-[11px] font-medium capitalize text-secondary">{member.division}</span>
-                      {isOfficial(member.division, member.track) ? <span className="px-chip px-2 py-0.5 font-mono text-[11px] font-medium text-foreground">{member.track}</span> : null}
-                      {isOfficial(member.secondary_division, member.secondary_track) ? <span className="px-chip px-2 py-0.5 font-mono text-[11px] font-medium text-secondary">+ {DIVISION_LABEL[member.secondary_division as string]} · {member.secondary_track}</span> : null}
+                      {roleBadges(member).map((badge) => <span key={badge} className="px-chip bg-white px-2 py-0.5 font-mono text-[11px] font-semibold text-muara-ocean">{badge}</span>)}
+                      {divisionsOf(member).map((division) => <span key={division} className="px-chip px-2 py-0.5 font-mono text-[11px] font-medium text-secondary">{DIVISION_NAMES[division]}</span>)}
+                      {officialTracks(member).map((track) => <span key={track} className="px-chip px-2 py-0.5 font-mono text-[11px] font-medium text-foreground">{track}</span>)}
                     </div>
                     {member.campus && !PLACEHOLDER_INSTITUTIONS.includes(member.campus) ? (
                       <dl className="mt-5 space-y-2 text-xs">

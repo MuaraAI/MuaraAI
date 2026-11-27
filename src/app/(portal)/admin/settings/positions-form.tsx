@@ -16,6 +16,7 @@ type Message = { tone: "success" | "error"; text: string };
 export default function PositionsForm({ initial }: { initial: PositionsConfig }) {
   const [builder, setBuilder] = useState(toLines(initial.builder));
   const [creative, setCreative] = useState(toLines(initial.creative));
+  const [cybersecurity, setCybersecurity] = useState(toLines(initial.cybersecurity ?? []));
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<Message | null>(null);
 
@@ -23,7 +24,7 @@ export default function PositionsForm({ initial }: { initial: PositionsConfig })
     event.preventDefault();
     setSaving(true);
     setMessage(null);
-    const result = await updatePositions({ builder: fromLines(builder), creative: fromLines(creative) });
+    const result = await updatePositions({ builder: fromLines(builder), creative: fromLines(creative), cybersecurity: fromLines(cybersecurity) });
     setSaving(false);
     setMessage(
       result.success
@@ -37,7 +38,7 @@ export default function PositionsForm({ initial }: { initial: PositionsConfig })
       <p className="text-sm text-secondary">
         Daftar posisi yang bisa dipilih pendaftar. Tulis satu posisi per baris. Mengubah daftar ini tidak mengubah posisi anggota yang sudah ada.
       </p>
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         <div>
           <label htmlFor="positions-builder" className="mb-1.5 block text-sm font-medium text-foreground">Posisi Builder (satu per baris)</label>
           <textarea
@@ -55,6 +56,16 @@ export default function PositionsForm({ initial }: { initial: PositionsConfig })
             rows={9}
             value={creative}
             onChange={(event) => setCreative(event.target.value)}
+            className="border-2 border-[#CFE2EE] w-full bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white"
+          />
+        </div>
+        <div>
+          <label htmlFor="positions-cybersecurity" className="mb-1.5 block text-sm font-medium text-foreground">Posisi Cybersecurity (satu per baris)</label>
+          <textarea
+            id="positions-cybersecurity"
+            rows={9}
+            value={cybersecurity}
+            onChange={(event) => setCybersecurity(event.target.value)}
             className="border-2 border-[#CFE2EE] w-full bg-surface-alt px-3.5 py-2.5 text-sm text-foreground focus:bg-white"
           />
         </div>

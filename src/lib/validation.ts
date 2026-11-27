@@ -1,3 +1,4 @@
+import { isDivision, positionsOf, type Division } from "@/lib/structure";
 import type { Affiliation } from "@/types/database";
 import type { PositionsConfig } from "@/lib/positions";
 import { normalizeLocale, type Locale } from "@/lib/locale";
@@ -9,7 +10,7 @@ export const AFFILIATION_LABELS: Record<Affiliation, string> = {
   umum: "Umum",
   lainnya: "Lainnya",
 };
-export type Division = "builder" | "creative";
+export type { Division } from "@/lib/structure";
 export const MIN_JOIN_REASON_LENGTH = 50;
 
 export type { Locale };
@@ -120,7 +121,6 @@ export function normalizeTelegram(value?: string): string | null {
   return handle ? handle : null;
 }
 
-const isDivision = (value: unknown): value is Division => value === "builder" || value === "creative";
 
 export function validatePoWSubmission(
   data: PoWInput,
@@ -166,7 +166,7 @@ export function validatePoWSubmission(
   if (!isDivision(data.division)) {
     return { isValid: false, error: m.division };
   }
-  if (!positions[data.division].includes(data.track)) {
+  if (!positionsOf(positions, data.division).includes(data.track)) {
     return { isValid: false, error: m.track };
   }
   if (data.secondaryTrack && !data.secondaryDivision) {
@@ -179,7 +179,7 @@ export function validatePoWSubmission(
     if (data.secondaryDivision === data.division) {
       return { isValid: false, error: m.secondarySame };
     }
-    if (!data.secondaryTrack || !positions[data.secondaryDivision].includes(data.secondaryTrack)) {
+    if (!data.secondaryTrack || !positionsOf(positions, data.secondaryDivision).includes(data.secondaryTrack)) {
       return { isValid: false, error: m.secondaryTrack };
     }
   }

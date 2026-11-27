@@ -1,5 +1,5 @@
 export type MemberHierarchy = "maintainer" | "head" | "lead" | "member";
-export type MemberDivision = "builder" | "creative";
+export type MemberDivision = "builder" | "creative" | "cybersecurity";
 export type RegistrationStatus = "pending" | "approved" | "rejected";
 export type MembershipStatus = "active" | "exited" | "banned";
 export type Affiliation = "mahasiswa" | "pelajar" | "umum" | "lainnya";
@@ -26,6 +26,12 @@ export interface Member {
   angkatan: number | null;
   hierarchy: MemberHierarchy;
   sub_hierarchy: string | null;
+  /** Every division the person belongs to; division stays their primary one (it decides their contribution target). */
+  divisions: MemberDivision[];
+  /** Divisions they lead (Head of X). */
+  head_of: MemberDivision[];
+  /** Positions they hold, across divisions. */
+  tracks: string[];
   role_title: string | null;
   roles: string[];
   titles: string[];
