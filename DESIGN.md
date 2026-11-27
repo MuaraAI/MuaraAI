@@ -1,16 +1,17 @@
 ---
 version: alpha
-name: Muara AI Flowing Ocean Light
-description: Light-first design system with flowing oceanic currents, fresh water-mist canvas, marine ink typography, and luminous tropical cyan accents. Local craft flows global.
+name: Muara AI Fluid Currents Light v2
+description: Ocean currents and river-mouth fluid dynamics. Light-mode canvas, deep riverbed ink, luminous estuary cyan, and hydro-motion easing.
 
 colors:
-  primary: "#0B253A"
-  secondary: "#476175"
+  primary: "#072033"
+  secondary: "#3B5A70"
   accent: "#0369A1"
   accent-hover: "#075985"
   surface: "#FFFFFF"
-  surface-alt: "#F0F7FA"
-  background: "#F8FAFC"
+  surface-alt: "#F0F7FB"
+  background: "#F7FAFC"
+  stroke: "#D9E5ED"
   success: "#0F766E"
   warning: "#9A3412"
   danger: "#BE123C"
@@ -18,7 +19,7 @@ colors:
 typography:
   h1:
     fontFamily: Space Grotesk
-    fontSize: 3.25rem
+    fontSize: 3.5rem
     fontWeight: 700
     lineHeight: 1.1
     letterSpacing: "-0.03em"
@@ -49,18 +50,17 @@ typography:
     fontSize: 0.875rem
     fontWeight: 500
     lineHeight: 1.5
-  mono-label:
-    fontFamily: Space Grotesk
-    fontSize: 0.75rem
-    fontWeight: 600
-    lineHeight: 1.4
-    letterSpacing: "0.05em"
+  code:
+    fontFamily: JetBrains Mono
+    fontSize: 0.875rem
+    fontWeight: 400
+    lineHeight: 1.7
 
 rounded:
   sm: 6px
   md: 10px
   lg: 18px
-  xl: 24px
+  xl: 28px
   full: 9999px
 
 spacing:
@@ -107,6 +107,11 @@ components:
     textColor: "{colors.primary}"
     rounded: "{rounded.sm}"
     padding: 12px
+  badge-current:
+    backgroundColor: "{colors.surface-alt}"
+    textColor: "{colors.accent}"
+    rounded: "{rounded.full}"
+    padding: 6px
   chip-status-success:
     backgroundColor: "{colors.surface-alt}"
     textColor: "{colors.success}"
@@ -122,73 +127,78 @@ components:
     textColor: "{colors.danger}"
     rounded: "{rounded.full}"
     padding: 4px
+  divider-current:
+    backgroundColor: "{colors.stroke}"
+    height: 1px
 ---
 
 ## Overview
 
-Muara AI mengadopsi identitas visual **Flowing Ocean Light (Light-First & Ocean Theme)**.
-Filosofi "Muara" adalah muara sungai Kapuas yang mengalir jernih menuju laut lepas global.
-Tema ini secara tegas **MENGHAPUS DARK MODE KLISYEN (AI-Slop Black & Neon Glow)** dan menggantikannya dengan kanvas air laut yang segar, terang, bersih, berwibawa, serta nyaman dibaca sepanjang hari.
+Muara AI mengadopsi spesifikasi desain **Fluid Currents Light (v2 - Option A)**.
+Filosofi "Muara" adalah titik temu dinamis antara aliran Sungai Kapuas Pontianak dan keterbukaan Samudra global.
+V2 mempertajam tema air dengan menambahkan **karakter arus hidrodinamis (fluid dynamics)**, transisi gelombang halus, serta kanvas terang yang bersih tanpa silau.
 
-Prinsip Utama:
-1. **Light Mode Eksklusif:** Menggunakan latar kanvas air laut segar (`#F8FAFC`) dengan aksen aliran arus laut cerulean (`#0369A1`) dan bayangan difusi lembut.
-2. **Marine Ink Contrast (WCAG AA/AAA):** Judul dan teks utama menggunakan warna tinta laut dalam (`#0B253A`) yang memberikan keterbacaan super tajam (14.5:1) tanpa kekakuan hitam pekat (`#000000`).
-3. **Fluid Currents & Asymmetry:** Aliran layout bernapas dengan ruang putih luas, menghindari kartu bertumpuk kaku atau gradien murahan.
-4. **Anti-Slop Hardening:** Zero emoji di elemen UI, zero font CDN pihak ketiga (self-hosted Google Fonts), zero neon glow kabur.
+Prinsip Inti:
+1. **Light-First Estuary Canvas:** Kanvas air jernih terang (`#F7FAFC`) berpadu dengan panel putih kristal (`#FFFFFF`) dan permukaan sekunder bernuansa air tawar muara (`#F0F7FB`).
+2. **Current-Line & Hydro-Motion:** Menghadirkan ritme aliran air melalui garis arus pandu (1px subtle vector stroke) dan kurva transisi fluida `cubic-bezier(0.16, 1, 0.3, 1)`.
+3. **Deep Riverbed Contrast:** Teks utama memakai warna tinta dasar sungai (`#072033`, rasio kontras 15.5:1 terhadap putih) untuk kenyamanan baca jangka panjang.
+4. **Anti-Slop Hardening:** Zero dark-mode default, zero artificial neon glow, zero emoji sebagai ikon UI, dan font self-hosted tanpa CDN eksternal.
 
 ## Colors
 
-- **Primary (`#0B253A`):** Tinta laut dalam (Deep Marine Ink) untuk headline H1-H3, nama brand, dan elemen prioritas tertinggi. Memberikan kontras 14.5:1 terhadap kanvas.
-- **Secondary (`#476175`):** Slate samudra untuk teks deskripsi pendukung, metadata, dan garis divider halus.
-- **Accent (`#0369A1`):** Biru arus laut (Ocean Current) sebagai aksen tindakan utama, status aktif, dan indikator navigasi (5.5:1 kontras terhadap putih, memenuhi WCAG AA).
-- **Accent Hover (`#075985`):** Arus samudra dalam saat interaksi hover (6.8:1 kontras terhadap putih).
-- **Background (`#F8FAFC`):** Kanvas kabut air laut bersih yang menyejukkan mata.
-- **Surface (`#FFFFFF`):** Kartu dan panel putih murni bertepi tipis air laut (`#D1E2EC`).
-- **Surface Alt (`#F0F7FA`):** Bidang sekunder dengan rona air laut lembut untuk membedakan kontainer data.
-- **Status (Success/Warning/Danger):** Menggunakan rona bahari alami yang lolos uji kontras WCAG AA: Emerald karang (`#0F766E`), Amber mercusuar (`#9A3412`), dan Coral crimson (`#BE123C`).
+- **Primary (`#072033`):** Tinta palung sungai muara (Deep Riverbed Ink). Digunakan untuk H1-H3, nama brand, dan elemen prioritas tertinggi. Kontras 15.5:1 terhadap putih.
+- **Secondary (`#3B5A70`):** Abu-biru samudra teduh untuk body pendukung, sub-heading, dan label metadata. Kontras 6.6:1 terhadap putih.
+- **Accent (`#0369A1`):** Biru arus utama (River Current Blue). Digunakan untuk tombol interaktif, link aktif, dan garis fokus interaksi. Kontras 5.6:1 terhadap putih.
+- **Accent Hover (`#075985`):** Rona arus deras saat cursor hover (6.8:1 terhadap putih).
+- **Background (`#F7FAFC`):** Kanvas kabut air muara terang yang sejuk di mata.
+- **Surface (`#FFFFFF`):** Kartu data utama dan dialog dengan tepian halus.
+- **Surface Alt (`#F0F7FB`):** Wadah sekunder dengan rona air jernih untuk membedakan kelompok data.
+- **Stroke (`#D9E5ED`):** Garis tepi air tenang untuk memisahkan section tanpa kontras kasar.
+- **Status (Success/Warning/Danger):** Menggunakan palet ekosistem bahari yang teruji kontras: Teal laguna (`#0D9488`), Amber mercusuar (`#D97706`), dan Coral koral (`#E11D48`).
 
 ## Typography
 
-Kombinasi dua jenis huruf sans-serif geometris dan fungsional self-hosted:
-- **Headlines (Space Grotesk):** Karakter tegas dan futuristik untuk H1, H2, dan H3 dengan letter-spacing rapat (`-0.03em`) agar terasa padat dan terarah.
-- **Body & Interface (Inter):** Keterbacaan optimal untuk teks panjang, form, dan label tabel.
-- **Kode & Data (Space Grotesk / Monospace):** Presisi teknis untuk metrik numerik dan log transaksi kas.
+Kombinasi tipografi self-hosted yang tersimpan di direktori lokal:
+- **Headlines (Space Grotesk):** Bobot 700 dengan letter-spacing rapat (`-0.03em`) menghadirkan kesan modern, teknikal, dan tegas.
+- **Body & Controls (Inter):** Keterbacaan optimal dan netral untuk teks paragraf, deskripsi fitur, serta form input.
+- **Code & Metrics (JetBrains Mono):** Presisi tabular untuk kunci API, cuplikan kode cURL/TypeScript, dan angka performa.
 
 ## Layout
 
-- **Grid Asimetris & Fluid Flow:** Mengutamakan CSS Grid dengan pembagian kolom dinamis (2-kolom zig-zag, kartu berbobot visual berbeda) dibanding grid 3-kolom generatif template biasa.
-- **Responsive Floor 360px:** Struktur layout dijamin mengalir tanpa pergeseran horizontal (`scrollWidth <= clientWidth`) mulai dari ponsel layar ramping hingga layar desktop lebar.
-- **Breathing Space:** Spasi antar seksi bernapas lega (`padding 80px`), menghilangkan kesan sempit dan berjejal.
+- **Fluid Wave Dividers:** Pemisah antar seksi menggunakan kurva SVG bergelombang asimetris tipis (stroke 1.5px, tanpa fill berat) yang mencerminkan pasang-surut muara.
+- **Current Flow Alignment:** Layout dua kolom zig-zag dengan alur visual diagonal (dari kiri atas mengalir ke kanan bawah).
+- **Responsive Floor 360px:** Memastikan seluruh hierarki komponen tetap proporsional dan bebas horizontal-overflow dari ponsel 360px hingga layar monitor 4K.
+- **Breathing Space:** Spasi antar blok konsisten dengan modular scale 8px, padding seksi lega (`xxl: 80px`).
 
 ## Elevation & Depth
 
-- Menggantikan bayangan gelap kaku dengan **Ocean Diffusion Shadow**:
-  `box-shadow: 0 10px 30px -10px rgba(11, 37, 58, 0.06), 0 2px 6px -1px rgba(11, 37, 58, 0.04);`
-- Garis tepi (border) menggunakan warna surut air laut transparan (`#D1E2EC`), menjaga batas visual tetap rapi tanpa merusak kelembutan kanvas.
+- **Diffusion Shadow (Bayangan Air Difus):** Menghindari drop-shadow hitam pekat; memakai pembiasan cahaya air:
+  `box-shadow: 0 12px 32px -8px rgba(7, 32, 51, 0.05), 0 2px 6px -1px rgba(7, 32, 51, 0.03);`
+- **Subtle Surface Lift:** Pada interaksi hover, kartu terangkat halus 2px dengan intensitas difusi sedikit melebar tanpa pergeseran warna yang menyolok.
 
 ## Shapes
 
-- **Radius Terukur:** Sudut membulat modern (`rounded-xl` / 18px untuk kontainer besar, `rounded-md` / 10px untuk tombol, `rounded-full` untuk badge status).
-- Menghindari radius hiperbolis yang kekanak-kanakan, mempertahankan kesan studio teknologi profesional.
+- **Smooth Hydro Radii:** Radius melengkung alami: 6px untuk input/badge kecil, 10px untuk tombol, 18px untuk kartu konten, 28px untuk modal/hero callout, dan 9999px (full) untuk pill status.
+- Tidak menggunakan sudut tajam 0px yang kaku atau radius bulat berlebihan yang memakan ruang konten.
 
 ## Components
 
-- **Navbar:** Header mengambang dengan latar semi-transparan air laut murni (`rgba(255, 255, 255, 0.85)` + `backdrop-blur-md`) dan border bawah tipis.
-- **Button Primary:** Tombol kontras tinggi dengan warna Deep Marine Ink (`#0B253A`) berteks putih murni, memberikan otoritas klik tegas.
-- **Button Accent:** Tombol arus laut (`#0369A1`) untuk aksi sekunder penting (seperti submit karya).
-- **Cards & Bento Cells:** Kartu putih murni (`#FFFFFF`) dengan border halus `#D1E2EC` yang bertransformasi lembut saat disentuh kursor.
-- **Terminal Mockup:** Mockup terminal terang bergaya terminal modern minimalis dengan latar `#F0F7FA` dan teks sintaks bahari.
+- **Navbar:** Header mengambang dengan latar semi-transparan air muara (`rgba(255, 255, 255, 0.88)` + `backdrop-blur-md`) bertepi bawah `#D9E5ED`.
+- **Button Primary:** Tombol berbasis warna tinta dasar muara (`#072033`) dengan teks putih untuk aksi utama yang tegas.
+- **Button Accent:** Tombol arus biru (`#0369A1`) untuk aksi eksplorasi sekunder.
+- **Fluid Cards:** Kontainer latar putih (`#FFFFFF`) dengan border halus `#D9E5ED` dan bayangan difusi air.
+- **Current Badge:** Pill mungil dengan background `#F0F7FB` dan teks `#0369A1` untuk status atau kategori.
 
 ## Do's and Don'ts
 
 ### Do's
-- Gunakan kanvas putih/terang dengan aksen biru arus laut yang mengalir.
-- Pertahankan kontras teks minimal 4.5:1 untuk teks normal dan 3.0:1 untuk teks besar (WCAG AA).
-- Gunakan Material Symbols Rounded berpadu warna laut untuk menandakan aksi.
-- Berikan ruang bernapas yang cukup antar elemen.
+- Gunakan kanvas terang segar (`#F7FAFC`) dan aksen biru arus (`#0369A1`).
+- Gunakan kurva transisi `cubic-bezier(0.16, 1, 0.3, 1)` untuk animasi entrance dan hover.
+- Pertahankan rasio kontras teks minimal 4.5:1 terhadap background.
+- Gunakan Material Symbols Rounded berpadu warna arus untuk penunjuk navigasi.
 
 ### Don'ts
-- **DILARANG menggunakan Dark Mode / latar belakang hitam / abu-abu gelap.**
-- **DILARANG menggunakan teks neon glow, bayangan ungu/pink klise AI.**
+- **DILARANG menggunakan Dark Mode atau kanvas hitam pekat.**
+- **DILARANG menggunakan neon glow, bayangan ungu/pink klise AI.**
 - **DILARANG menggunakan emoji sebagai ikon UI.**
-- **DILARANG menggunakan font CDN eksternal.**
+- **DILARANG menggunakan font pihak ketiga via CDN publik.**

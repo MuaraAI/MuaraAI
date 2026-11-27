@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { GITHUB_ORG_URL } from "@/lib/constants";
 import Icon from "@/components/ui/icon";
 
-export type Locale = "id" | "en";
+type Locale = "id" | "en";
 
 interface NavbarProps {
   locale?: Locale;
