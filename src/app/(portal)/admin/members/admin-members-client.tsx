@@ -219,6 +219,8 @@ export default function AdminMembersClient({ initialMembers, positions }: AdminM
           <tbody className="divide-y divide-stroke text-slate-700">
             {members.map((m) => {
               const exited = m.membership_status === "exited" || m.reapply_blocked;
+              // A new applicant is stored as membership "active" and is_active true by default, so those only mean something once approved.
+              const applicant = m.registration_status === "pending" || m.registration_status === "rejected";
               return (
                 <tr key={m.id} className="hover:bg-surface-alt/60">
                   <td className="py-3 px-3">
@@ -234,9 +236,23 @@ export default function AdminMembersClient({ initialMembers, positions }: AdminM
                   </td>
                   <td className="py-3 px-3">
                     <span className={`px-chip inline-block px-2 py-0.5 text-[10px] font-bold uppercase ${
-                      exited ? "bg-slate-100 text-slate-700 border border-stroke" : "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                      m.registration_status === "pending"
+                        ? "bg-amber-50 text-amber-800 border border-amber-200"
+                        : m.registration_status === "rejected"
+                        ? "bg-rose-50 text-rose-800 border border-rose-200"
+                        : exited
+                        ? "bg-slate-100 text-slate-700 border border-stroke"
+                        : "bg-emerald-50 text-emerald-800 border border-emerald-200"
                     }`}>
-                      {m.membership_status === "exited" ? "Exited" : m.membership_status === "banned" ? "Banned" : "Active"}
+                      {m.registration_status === "pending"
+                        ? "Pending"
+                        : m.registration_status === "rejected"
+                        ? "Ditolak"
+                        : m.membership_status === "exited"
+                        ? "Exited"
+                        : m.membership_status === "banned"
+                        ? "Banned"
+                        : "Active"}
                     </span>
                     {exited && (
                       <div className="mt-1 text-[10px] text-rose-700 font-semibold">Tidak dapat daftar ulang</div>
@@ -249,24 +265,32 @@ export default function AdminMembersClient({ initialMembers, positions }: AdminM
                     {m.total_commits || 0}
                   </td>
                   <td className="py-3 px-3 text-[10px] text-secondary">
-                    {m.intake_policy_version || "Grandfathered"}
+                    {applicant ? "-" : m.intake_policy_version || "Grandfathered"}
                   </td>
                   <td className="py-3 px-3 text-[10px] text-secondary">
-                    {m.membership_started_at
+                    {applicant
+                      ? "-"
+                      : m.membership_started_at
                       ? new Date(m.membership_started_at).toLocaleDateString("id-ID")
                       : "Historis / belum dicatat"}
                   </td>
                   <td className="py-3 px-3 text-center">
-                    <span className={`px-chip inline-block px-2 py-0.5 text-[10px] font-bold uppercase ${
-                      m.is_active
-                        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                        : "bg-rose-50 text-rose-800 border border-rose-200"
-                    }`}>
-                      {m.is_active ? "Aktif" : "Nonaktif"}
-                    </span>
+                    {applicant ? (
+                      <span className="text-[10px] text-secondary">-</span>
+                    ) : (
+                      <span className={`px-chip inline-block px-2 py-0.5 text-[10px] font-bold uppercase ${
+                        m.is_active
+                          ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                          : "bg-rose-50 text-rose-800 border border-rose-200"
+                      }`}>
+                        {m.is_active ? "Aktif" : "Nonaktif"}
+                      </span>
+                    )}
                   </td>
                   <td className="py-3 px-3 text-right">
-                    {exited ? (
+                    {applicant ? (
+                      <span className="text-[10px] text-secondary">Belum menjadi anggota</span>
+                    ) : exited ? (
                       <span className="text-[10px] text-secondary">Lifecycle terkunci</span>
                     ) : (
                       <button
