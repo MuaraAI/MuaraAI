@@ -8,7 +8,8 @@ vi.mock("@/lib/github-repos", async (importOriginal) => ({
   fetchOrgRepos: (...args: unknown[]) => fetchMock(...args),
 }));
 
-import KaryaPage from "../src/app/(public)/karya/page";
+import KaryaPage, { metadata as idMeta } from "../src/app/(public)/karya/page";
+import EnglishKaryaPage, { metadata as enMeta } from "../src/app/(english)/en/karya/page";
 
 const repo = (name: string, over: Record<string, unknown> = {}) => ({
   name,
@@ -59,5 +60,41 @@ describe("Karya page", () => {
     render(await KaryaPage());
     expect(screen.getByRole("alert").textContent).toContain("belum bisa dimuat");
     expect(screen.getByRole("link", { name: /Buka di GitHub/ })).toBeTruthy();
+  });
+});
+
+describe("English Works page", () => {
+  it("lists the same work in English, with English dates, and stays on the English site", async () => {
+    fetchMock.mockResolvedValue({ ok: true, repos: [repo("Mira"), repo("chess-agent", { stars: 1 }), repo("site", { description: "", language: "", stars: 0 })] });
+    const { container } = render(await EnglishKaryaPage());
+
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Works");
+    expect(screen.getByRole("link", { name: /chess-agent/ }).getAttribute("href")).toBe("https://github.com/MuaraAI/chess-agent");
+    expect(screen.queryByRole("link", { name: /^Mira$/ })).toBeNull();
+    expect(screen.getByText("1 star")).toBeTruthy();
+    expect(screen.getByText("No description yet.")).toBeTruthy();
+    expect(screen.getAllByText("Updated 20 Nov 2026")).toHaveLength(2);
+    expect(screen.getByRole("link", { name: /See the main projects/ }).getAttribute("href")).toBe("/en");
+    expect(screen.getByRole("link", { name: /Open on GitHub/ }).getAttribute("href")).toBe("https://github.com/MuaraAI");
+    expect(container.textContent).not.toMatch(/\b(Karya|Belum|bintang|Diperbarui|Buka|Punya)\b/);
+  });
+
+  it("explains an empty list and a failure in English", async () => {
+    fetchMock.mockResolvedValue({ ok: true, repos: [repo("Mira")] });
+    const { unmount } = render(await EnglishKaryaPage());
+    expect(screen.getByText("No other works yet.")).toBeTruthy();
+    unmount();
+
+    fetchMock.mockResolvedValue({ ok: false, repos: [] });
+    render(await EnglishKaryaPage());
+    expect(screen.getByRole("alert").textContent).toContain("cannot be loaded right now");
+  });
+
+  it("is a searchable pair with the Indonesian page", () => {
+    const pair = { id: "https://muaraai.com/karya", en: "https://muaraai.com/en/karya", "x-default": "https://muaraai.com/karya" };
+    expect(enMeta.alternates?.canonical).toBe("https://muaraai.com/en/karya");
+    expect(enMeta.alternates?.languages).toMatchObject(pair);
+    expect(idMeta.alternates?.canonical).toBe("https://muaraai.com/karya");
+    expect(idMeta.alternates?.languages).toMatchObject(pair);
   });
 });
